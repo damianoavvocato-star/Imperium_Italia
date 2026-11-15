@@ -69,9 +69,9 @@ test("mappa strategica dell'Italia presente e interattiva", () => {
   assert.match(script, /const strategicMapPositions=\[\[/);
 });
 
-test("versione 5.0.0 coerente tra app e pacchetto", () => {
+test("versione 5.1.0 coerente tra app e pacchetto", () => {
   assert.match(html, /BUILD 5\.0\.0/);
-  assert.equal(packageJson.version, "5.0.0");
+  assert.equal(packageJson.version, "5.1.0");
 });
 
 
@@ -254,9 +254,9 @@ test("l'esercito può essere ridislocato dopo la perdita di una provincia", () =
   assert.match(script, /const lostIndex=regions\.indexOf\(target\)/);
 });
 
-test("versione 5.0.0 coerente tra applicazione e pacchetto", () => {
+test("versione 5.1.0 coerente tra applicazione e pacchetto", () => {
   assert.match(html, /BUILD 5\.0\.0/);
-  assert.equal(packageJson.version, "5.0.0");
+  assert.equal(packageJson.version, "5.1.0");
 });
 
 test("scenari campagna e sandbox con modificatori", () => {
