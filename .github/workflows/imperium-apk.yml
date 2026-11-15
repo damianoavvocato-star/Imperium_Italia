@@ -4,7 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - "www/imperium.html"
+      - "www/**"
+      - "tests/**"
+      - "package.json"
+      - "capacitor.config.json"
       - ".github/workflows/imperium-apk.yml"
   workflow_dispatch:
 
@@ -26,31 +29,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Run existing repository tests
+      - name: Install dependencies
+        run: npm install
+      - name: Run Imperium Italiae tests
         run: npm test
-      - name: Validate Imperium Italiae JavaScript
+      - name: Validate game JavaScript
         run: |
-          node -e "const fs=require('fs');const h=fs.readFileSync('www/imperium.html','utf8');const a=h.indexOf('<script>');const b=h.indexOf('</script>',a);if(a<0||b<0)process.exit(1);fs.writeFileSync('/tmp/imperium.js',h.slice(a+8,b));"
+          node -e "const fs=require('fs');const h=fs.readFileSync('www/index.html','utf8');const a=h.indexOf('<script>');const b=h.indexOf('</script>',a);if(a<0||b<0)throw Error('Script di gioco non trovato');fs.writeFileSync('/tmp/imperium.js',h.slice(a+8,b));"
           node --check /tmp/imperium.js
-      - name: Configure Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - name: Prepare standalone Imperium Italiae app
-        run: |
-          cp www/imperium.html www/index.html
-          cat > capacitor.config.json <<'JSON'
-          {
-            "appId": "com.imperiumitaliae.game",
-            "appName": "Imperium Italiae",
-            "webDir": "www",
-            "bundledWebRuntime": false
-          }
-          JSON
-      - name: Install Capacitor dependencies
-        run: npm install
-      - name: Generate Android project
+      - name: Prepare Android project
         run: npx cap add android
       - name: Sync Android assets
         run: npx cap sync android
