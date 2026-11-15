@@ -1,4 +1,4 @@
-name: Deploy Imperium Italiae Web Preview
+name: Deploy Imperium_Italia Web Preview
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
-      - name: Upload Imperium Italiae web game
+      - name: Upload Imperium_Italia web game
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./www
