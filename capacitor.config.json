@@ -1,6 +1,6 @@
 {
-  "appId": "com.imperiumitaliae.game",
-  "appName": "Imperium Italiae",
+  "appId": "com.imperium_italia.game",
+  "appName": "Imperium_Italia",
   "webDir": "www",
   "bundledWebRuntime": false
 }
