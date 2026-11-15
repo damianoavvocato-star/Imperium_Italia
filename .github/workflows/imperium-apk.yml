@@ -1,0 +1,86 @@
+name: Imperium Italiae Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "www/imperium.html"
+      - ".github/workflows/imperium-apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: imperium-italiae-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Imperium Italiae debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run existing repository tests
+        run: npm test
+
+      - name: Validate Imperium Italiae HTML and JavaScript
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('www/imperium.html', 'utf8');
+          const script = html.match(/<script>([\\s\\S]*?)<\\/script>/);
+          if (!script) throw new Error('Script Imperium Italiae non trovato');
+          fs.writeFileSync('/tmp/imperium-italiae.js', script[1]);
+          const ids = [...html.matchAll(/\\bid=["']([^"']+)["']/g)].map(m => m[1]);
+          const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
+          if (duplicates.length) throw new Error('ID duplicati: ' + [...new Set(duplicates)].join(', '));
+          console.log('HTML verificato: ' + ids.length + ' ID univoci.');
+          NODE
+          node --check /tmp/imperium-italiae.js
+
+      - name: Configure Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Prepare standalone Imperium Italiae web app
+        run: |
+          cp www/imperium.html www/index.html
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.imperiumitaliae.game",
+            "appName": "Imperium Italiae",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          JSON
+
+      - name: Install Capacitor dependencies
+        run: npm install
+
+      - name: Generate Android project
+        run: npx cap add android
+
+      - name: Sync Android assets
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Upload Imperium Italiae APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: IMPERIUM-ITALIAE-debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
