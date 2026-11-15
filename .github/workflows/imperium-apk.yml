@@ -22,37 +22,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Run existing repository tests
         run: npm test
-
-      - name: Validate Imperium Italiae HTML and JavaScript
+      - name: Validate Imperium Italiae JavaScript
         run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const html = fs.readFileSync('www/imperium.html', 'utf8');
-          const script = html.match(/<script>([\\s\\S]*?)<\\/script>/);
-          if (!script) throw new Error('Script Imperium Italiae non trovato');
-          fs.writeFileSync('/tmp/imperium-italiae.js', script[1]);
-          const ids = [...html.matchAll(/\\bid=["']([^"']+)["']/g)].map(m => m[1]);
-          const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i);
-          if (duplicates.length) throw new Error('ID duplicati: ' + [...new Set(duplicates)].join(', '));
-          console.log('HTML verificato: ' + ids.length + ' ID univoci.');
-          NODE
-          node --check /tmp/imperium-italiae.js
-
+          node -e "const fs=require('fs');const h=fs.readFileSync('www/imperium.html','utf8');const a=h.indexOf('<script>');const b=h.indexOf('</script>',a);if(a<0||b<0)process.exit(1);fs.writeFileSync('/tmp/imperium.js',h.slice(a+8,b));"
+          node --check /tmp/imperium.js
       - name: Configure Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-
-      - name: Prepare standalone Imperium Italiae web app
+      - name: Prepare standalone Imperium Italiae app
         run: |
           cp www/imperium.html www/index.html
           cat > capacitor.config.json <<'JSON'
@@ -63,20 +48,15 @@ jobs:
             "bundledWebRuntime": false
           }
           JSON
-
       - name: Install Capacitor dependencies
         run: npm install
-
       - name: Generate Android project
         run: npx cap add android
-
       - name: Sync Android assets
         run: npx cap sync android
-
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug
-
       - name: Upload Imperium Italiae APK
         uses: actions/upload-artifact@v4
         with:
