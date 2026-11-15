@@ -37,7 +37,8 @@ test("difficoltà campagna configurabile, bilanciata e salvata", () => {
     assert.match(html, new RegExp('option value="' + level + '"'));
   }
   assert.match(script, /difficultyFactor=difficulty==="hard"/);
-  assert.match(script, /JSON.stringify\(\{player,difficulty,turn,res/);
+  assert.match(script, /function createSaveSnapshot\(\)/);
+  assert.match(script, /saveFormat:5,savedAt:new Date\(\)\.toISOString\(\),scenario,pendingEventId,player,difficulty,turn,res/);
   assert.match(script, /difficulty=\["easy","standard","hard"\]\.includes\(s\.difficulty\)/);
 });
 
