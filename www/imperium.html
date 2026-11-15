@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101820">
+<title>Imperium Italiae · Campagna strategica</title>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#1a2934;--panel2:#223541;--gold:#d8b45a;--muted:#a9b8bd;--line:#42545b;--green:#67c69a;--red:#d97870}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#2a3d43 0,var(--bg) 65%);color:#f5f0e4;font:15px system-ui,Arial,sans-serif;min-height:100vh}.app{max-width:1100px;margin:auto;padding:env(safe-area-inset-top) 14px calc(22px + env(safe-area-inset-bottom))}header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 2px;border-bottom:1px solid var(--line)}.brand{font-weight:900;letter-spacing:2px;color:var(--gold)}.sub{font-size:10px;color:var(--muted);letter-spacing:1.5px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.stat,.panel{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:13px;padding:12px}.stat b{display:block;font-size:20px;color:var(--gold)}.stat span{font-size:10px;color:var(--muted);letter-spacing:1px}.layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.8fr);gap:12px}.panel h2{font-size:13px;color:var(--gold);letter-spacing:1.2px;margin:0 0 10px}.map-wrap{background:#0b2028;border:1px solid #66716a;border-radius:13px;overflow:hidden}.map-wrap canvas{display:block;width:100%;height:auto;touch-action:manipulation}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted);padding:10px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.region-name{font-size:19px;font-weight:800}.muted{color:var(--muted);font-size:12px;line-height:1.5}.resource{display:flex;justify-content:space-between;border-bottom:1px solid #3c4d54;padding:7px 0;font-size:13px}.resource:last-child{border:0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}button{border:1px solid #b99a4c;border-radius:9px;padding:12px 10px;background:linear-gradient(110deg,#c5a14b,#e4c875);color:#1a2224;font-weight:800;font-size:11px;letter-spacing:.5px;cursor:pointer;min-height:42px}button.secondary{background:#263c47;color:#f0e8d2;border-color:#52656a}button:disabled{opacity:.4;cursor:not-allowed}.wide{width:100%;margin-top:10px}.log{max-height:160px;overflow:auto;font-size:12px;color:#d5ded9;line-height:1.55}.log p{margin:5px 0;border-bottom:1px solid #35474e;padding-bottom:5px}.tag{font-size:10px;color:var(--gold);border:1px solid #806d3d;padding:3px 7px;border-radius:99px}.topline{display:flex;justify-content:space-between;align-items:center;gap:8px}.footer{font-size:10px;color:var(--muted);text-align:center;padding:16px 0}@media(max-width:720px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}header{align-items:flex-start}.region-name{font-size:18px}}@media(min-width:721px){.app{padding-top:22px}.map-wrap canvas{max-height:680px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div><div class="brand">IMPERIUM ITALIAE</div><div class="sub">CAMPAGNA STRATEGICA · EDIZIONE 1.0</div></div><span class="tag" id="turn">TURNO 1</span></header>
+<section class="stats">
+ <div class="stat"><b id="totalGold">0</b><span>TESORO TOTALE · DENARI</span></div>
+ <div class="stat"><b id="ownedCount">0/20</b><span>REGIONI CONTROLLATE</span></div>
+ <div class="stat"><b id="totalArmy">0</b><span>UNITÀ MILITARI</span></div>
+</section>
+<div class="layout">
+ <section class="panel"><div class="topline"><h2>TEATRO OPERATIVO · ITALIA</h2><span class="tag">20 REGIONI</span></div>
+ <div class="map-wrap"><canvas id="map" width="760" height="900" aria-label="Mappa strategica schematica dell'Italia"></canvas></div>
+ <div class="legend"><span><i class="dot" style="background:#b58a3b"></i>Tuoi territori</span><span><i class="dot" style="background:#8d4d45"></i>Altre fazioni</span><span><i class="dot" style="background:#536d78"></i>Neutrali</span></div>
+ <p class="muted">Seleziona un territorio sulla mappa per amministrarlo, vedere le entrate e reclutare il suo esercito.</p></section>
+ <aside>
+  <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div>
+   <div class="resource"><span>Controllo</span><b id="regionOwner">Tuo</b></div>
+   <div class="resource"><span>Denaro regionale</span><b id="regionGold">0</b></div>
+   <div class="resource"><span>Entrate per turno</span><b id="regionIncome">0</b></div>
+   <div class="resource"><span>Popolazione</span><b id="regionPopulation">0</b></div>
+   <div class="resource"><span>Fanteria</span><b id="infantryCount">0</b></div>
+   <div class="resource"><span>Arcieri</span><b id="archerCount">0</b></div>
+   <div class="resource"><span>Cavalleria</span><b id="cavalryCount">0</b></div>
+   <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
+   <button class="wide secondary" id="claim">PRENDI IL CONTROLLO · 1.200</button>
+  </section>
+  <section class="panel"><div class="topline"><h2>TESORERIA NAZIONALE</h2><span class="tag">BILANCIO</span></div><div class="resource"><span>Entrate previste</span><b id="income">0</b></div><div class="resource"><span>Regioni produttive</span><b id="incomeRegions">0</b></div><button class="wide" id="endTurn">CONCLUDI TURNO</button><button class="wide secondary" id="save">SALVA CAMPAGNA</button><button class="wide secondary" id="reset">NUOVA CAMPAGNA</button></section>
+  <section class="panel"><h2>CRONACA DEL REGNO</h2><div id="log" class="log" aria-live="polite"></div></section>
+ </aside>
+</div>
+<div class="footer">Partita salvata localmente su questo dispositivo · Imperium Italiae</div>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const regions=[
+{name:"Valle d'Aosta",x:235,y:95,pop:125,income:105,owner:"neutral"},
+{name:"Piemonte",x:190,y:180,pop:430,income:260,owner:"neutral"},
+{name:"Liguria",x:260,y:270,pop:150,income:150,owner:"neutral"},
+{name:"Lombardia",x:355,y:180,pop:1000,income:520,owner:"neutral"},
+{name:"Trentino-Alto Adige",x:470,y:105,pop:180,income:170,owner:"neutral"},
+{name:"Veneto",x:525,y:205,pop:490,income:320,owner:"neutral"},
+{name:"Friuli-Venezia Giulia",x:640,y:190,pop:120,income:135,owner:"neutral"},
+{name:"Emilia-Romagna",x:405,y:300,pop:450,income:300,owner:"neutral"},
+{name:"Toscana",x:345,y:410,pop:370,income:270,owner:"player"},
+{name:"Umbria",x:445,y:455,pop:145,income:135,owner:"neutral"},
+{name:"Marche",x:545,y:420,pop:150,income:145,owner:"neutral"},
+{name:"Lazio",x:420,y:555,pop:580,income:430,owner:"player"},
+{name:"Abruzzo",x:565,y:530,pop:130,income:125,owner:"neutral"},
+{name:"Molise",x:600,y:605,pop:65,income:70,owner:"neutral"},
+{name:"Campania",x:475,y:675,pop:560,income:380,owner:"player"},
+{name:"Puglia",x:650,y:685,pop:390,income:275,owner:"neutral"},
+{name:"Basilicata",x:570,y:750,pop:95,income:90,owner:"neutral"},
+{name:"Calabria",x:535,y:820,pop:175,income:145,owner:"neutral"},
+{name:"Sicilia",x:335,y:850,pop:480,income:310,owner:"neutral"},
+{name:"Sardegna",x:105,y:565,pop:160,income:145,owner:"neutral"}
+].map((r,i)=>({...r,id:i,gold:r.owner==="player"?1800:0,level:1,units:{infantry:r.owner==="player"?2:0,archers:0,cavalry:0}}));
+let state={turn:1,selected:11,regions,log:[]};
+function fmt(n){return Math.floor(n).toLocaleString("it-IT")+" ₳"}
+function note(message){state.log.unshift("T"+state.turn+" · "+message);state.log=state.log.slice(0,12);renderLog()}
+function owned(){return state.regions.filter(r=>r.owner==="player")}
+function incomeTotal(){return owned().reduce((sum,r)=>sum+Math.round(r.income*r.level),0)}
+function goldTotal(){return owned().reduce((sum,r)=>sum+r.gold,0)}
+function armyTotal(){return owned().reduce((sum,r)=>sum+r.units.infantry+r.units.archers+r.units.cavalry,0)}
+function selected(){return state.regions[state.selected]}
+function drawMap(){
+ const c=$("map"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);
+ const bg=ctx.createLinearGradient(0,0,0,c.height);bg.addColorStop(0,"#173b43");bg.addColorStop(1,"#10282e");ctx.fillStyle=bg;ctx.fillRect(0,0,c.width,c.height);
+ ctx.strokeStyle="rgba(213,194,142,.14)";ctx.lineWidth=1;
+ for(let y=40;y<c.height;y+=55){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke()}
+ // Collegamenti territoriali schematici
+ const links=[[0,1],[1,2],[1,3],[2,7],[3,4],[3,5],[3,7],[4,5],[5,6],[5,7],[7,8],[7,9],[7,10],[8,9],[8,11],[9,10],[9,11],[10,12],[11,12],[11,14],[12,13],[12,15],[13,14],[13,15],[14,16],[14,17],[15,16],[16,17],[17,18]];
+ ctx.strokeStyle="#9aa18a";ctx.globalAlpha=.45;ctx.lineWidth=3;links.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(state.regions[a].x,state.regions[a].y);ctx.lineTo(state.regions[b].x,state.regions[b].y);ctx.stroke()});ctx.globalAlpha=1;
+ // sagoma decorativa della penisola
+ ctx.strokeStyle="rgba(219,199,143,.35)";ctx.lineWidth=8;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(215,75);ctx.lineTo(310,105);ctx.lineTo(410,150);ctx.lineTo(520,180);ctx.lineTo(565,245);ctx.lineTo(470,330);ctx.lineTo(415,420);ctx.lineTo(455,535);ctx.lineTo(520,640);ctx.lineTo(560,770);ctx.stroke();
+ state.regions.forEach(r=>{
+  const color=r.owner==="player"?"#b58a3b":r.owner==="enemy"?"#8d4d45":"#536d78";
+  ctx.beginPath();ctx.arc(r.x,r.y,r.id===state.selected?25:19,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=r.id===state.selected?4:2;ctx.strokeStyle=r.id===state.selected?"#fff0b4":"#d8d0b8";ctx.stroke();
+  ctx.fillStyle="#fff";ctx.font="bold 13px system-ui";ctx.textAlign="center";ctx.fillText(r.name,r.x,r.y-29);
+  if(r.owner==="player"){ctx.fillStyle="#172027";ctx.font="bold 11px system-ui";ctx.fillText("✦",r.x,r.y+4)}
+ });
+}
+function renderLog(){$("log").innerHTML=state.log.map(x=>"<p>"+x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+"</p>").join("")||"<p>La cronaca è ancora vuota.</p>"}
+function render(){
+ const r=selected();$("turn").textContent="TURNO "+state.turn;$("totalGold").textContent=fmt(goldTotal());$("ownedCount").textContent=owned().length+"/20";$("totalArmy").textContent=armyTotal();$("income").textContent=fmt(incomeTotal());$("incomeRegions").textContent=owned().length;
+ $("regionName").textContent=r.name;$("regionInfo").textContent="Provincia strategica · sviluppo livello "+r.level;
+ $("regionOwner").textContent=r.owner==="player"?"Tuo":r.owner==="enemy"?"Avversario":"Neutrale";$("regionGold").textContent=fmt(r.gold);$("regionIncome").textContent=fmt(r.income*r.level);$("regionPopulation").textContent=r.pop+" mila";
+ $("infantryCount").textContent=r.units.infantry;$("archerCount").textContent=r.units.archers;$("cavalryCount").textContent=r.units.cavalry;
+ const active=r.owner==="player";["recruitInfantry","recruitArchers","recruitCavalry","develop"].forEach(id=>$(id).disabled=!active);$("claim").disabled=active||r.owner==="enemy";$("claim").textContent=active?"TERRITORIO GIÀ TUO":"PRENDI IL CONTROLLO · 1.200";
+ renderLog();drawMap();
+}
+function spend(r,cost){if(r.gold<cost){note("Fondi insufficienti a "+r.name+". Entrate necessarie: "+fmt(cost)+".");return false}r.gold-=cost;return true}
+function recruit(kind,cost){const r=selected();if(r.owner!=="player")return;if(!spend(r,cost))return;r.units[kind]++;note("Reclutata unità "+({infantry:"di fanteria",archers:"di arcieri",cavalry:"di cavalleria"}[kind])+" in "+r.name+".");render()}
+$("recruitInfantry").onclick=()=>recruit("infantry",250);$("recruitArchers").onclick=()=>recruit("archers",320);$("recruitCavalry").onclick=()=>recruit("cavalry",500);
+$("develop").onclick=()=>{const r=selected();if(r.owner!=="player"||r.level>=5)return;if(!spend(r,700))return;r.level++;note("Economia di "+r.name+" sviluppata al livello "+r.level+". Entrate aumentate.");render()};
+$("claim").onclick=()=>{const r=selected();if(r.owner==="player"||r.owner==="enemy")return;const capital=selected();if(!spend(capital,1200))return;r.owner="player";r.gold+=350;r.units.infantry+=1;note(r.name+" è entrata sotto il tuo controllo. Presidiata da una nuova unità.");render()};
+$("endTurn").onclick=()=>{state.turn++;let earned=0;owned().forEach(r=>{const amount=Math.round(r.income*r.level);r.gold+=amount;earned+=amount});note("Turno concluso. Le province hanno versato "+fmt(earned)+" nelle tesorerie regionali.");render();save(false)};
+function save(showMessage=true){try{localStorage.setItem("imperiumItaliaeSave",JSON.stringify(state));if(showMessage)note("Campagna salvata su questo dispositivo.");}catch(e){note("Salvataggio non disponibile in questo browser.")}}
+function load(){try{const raw=localStorage.getItem("imperiumItaliaeSave");if(!raw)return false;const parsed=JSON.parse(raw);if(!parsed||!Array.isArray(parsed.regions)||parsed.regions.length!==20)return false;state=parsed;return true}catch(e){return false}}
+$("save").onclick=()=>save(true);
+$("reset").onclick=()=>{if(!confirm("Vuoi iniziare una nuova campagna? Il salvataggio attuale verrà sostituito."))return;localStorage.removeItem("imperiumItaliaeSave");state={turn:1,selected:11,regions:regions.map(r=>({...r,units:{...r.units}})),log:[]};note("Nuova campagna iniziata. Roma e le province centrali sono il tuo punto di partenza.");render()};
+$("map").addEventListener("click",event=>{const rect=$("map").getBoundingClientRect();const x=(event.clientX-rect.left)*$("map").width/rect.width,y=(event.clientY-rect.top)*$("map").height/rect.height;let nearest=-1,distance=Infinity;state.regions.forEach(r=>{const d=Math.hypot(x-r.x,y-r.y);if(d<distance){distance=d;nearest=r.id}});if(nearest>=0&&distance<40){state.selected=nearest;render()}});
+if(!load()){note("Campagna inaugurale avviata. Amministra Lazio, Toscana e Campania, poi espandi il tuo dominio.");}render();
+</script>
+</body>
+</html>
