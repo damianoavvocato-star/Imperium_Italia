@@ -32,6 +32,8 @@
    <div class="resource"><span>Fanteria</span><b id="infantryCount">0</b></div>
    <div class="resource"><span>Arcieri</span><b id="archerCount">0</b></div>
    <div class="resource"><span>Cavalleria</span><b id="cavalryCount">0</b></div>
+   <div class="resource"><span>Destinazione esercito</span><select id="moveDestination" aria-label="Provincia di destinazione" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
+   <button class="wide secondary" id="moveArmy">SPOSTA TUTTO L'ESERCITO</button>
    <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
    <button class="wide secondary" id="claim">PRENDI IL CONTROLLO · 1.200</button>
   </section>
@@ -74,13 +76,15 @@ function incomeTotal(){return owned().reduce((sum,r)=>sum+Math.round(r.income*r.
 function goldTotal(){return owned().reduce((sum,r)=>sum+r.gold,0)}
 function armyTotal(){return owned().reduce((sum,r)=>sum+r.units.infantry+r.units.archers+r.units.cavalry,0)}
 function selected(){return state.regions[state.selected]}
+const links=[[0,1],[1,2],[1,3],[2,7],[3,4],[3,5],[3,7],[4,5],[5,6],[5,7],[7,8],[7,9],[7,10],[8,9],[8,11],[9,10],[9,11],[10,12],[11,12],[11,14],[12,13],[12,15],[13,14],[13,15],[14,16],[14,17],[15,16],[16,17],[17,18]];
+function areAdjacent(a,b){return links.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a))}
+function availableDestinations(from){return links.filter(([a,b])=>a===from||b===from).map(([a,b])=>a===from?b:a).filter(id=>state.regions[id].owner==="player")}
 function drawMap(){
  const c=$("map"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);
  const bg=ctx.createLinearGradient(0,0,0,c.height);bg.addColorStop(0,"#173b43");bg.addColorStop(1,"#10282e");ctx.fillStyle=bg;ctx.fillRect(0,0,c.width,c.height);
  ctx.strokeStyle="rgba(213,194,142,.14)";ctx.lineWidth=1;
  for(let y=40;y<c.height;y+=55){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke()}
- // Collegamenti territoriali schematici
- const links=[[0,1],[1,2],[1,3],[2,7],[3,4],[3,5],[3,7],[4,5],[5,6],[5,7],[7,8],[7,9],[7,10],[8,9],[8,11],[9,10],[9,11],[10,12],[11,12],[11,14],[12,13],[12,15],[13,14],[13,15],[14,16],[14,17],[15,16],[16,17],[17,18]];
+ // Collegamenti definiti una sola volta e condivisi con il movimento.
  ctx.strokeStyle="#9aa18a";ctx.globalAlpha=.45;ctx.lineWidth=3;links.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(state.regions[a].x,state.regions[a].y);ctx.lineTo(state.regions[b].x,state.regions[b].y);ctx.stroke()});ctx.globalAlpha=1;
  // sagoma decorativa della penisola
  ctx.strokeStyle="rgba(219,199,143,.35)";ctx.lineWidth=8;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(215,75);ctx.lineTo(310,105);ctx.lineTo(410,150);ctx.lineTo(520,180);ctx.lineTo(565,245);ctx.lineTo(470,330);ctx.lineTo(415,420);ctx.lineTo(455,535);ctx.lineTo(520,640);ctx.lineTo(560,770);ctx.stroke();
@@ -98,11 +102,13 @@ function render(){
  $("regionOwner").textContent=r.owner==="player"?"Tuo":r.owner==="enemy"?"Avversario":"Neutrale";$("regionGold").textContent=fmt(r.gold);$("regionIncome").textContent=fmt(r.income*r.level);$("regionPopulation").textContent=r.pop+" mila";
  $("infantryCount").textContent=r.units.infantry;$("archerCount").textContent=r.units.archers;$("cavalryCount").textContent=r.units.cavalry;
  const active=r.owner==="player";["recruitInfantry","recruitArchers","recruitCavalry","develop"].forEach(id=>$(id).disabled=!active);$("claim").disabled=active||r.owner==="enemy";$("claim").textContent=active?"TERRITORIO GIÀ TUO":"PRENDI IL CONTROLLO · 1.200";
+ const destinations=active?availableDestinations(r.id):[];const destinationSelect=$("moveDestination");destinationSelect.innerHTML=destinations.map(id=>`<option value="${id}">${state.regions[id].name}</option>`).join("");$("moveArmy").disabled=!active||destinations.length===0||(r.units.infantry+r.units.archers+r.units.cavalry===0);
  renderLog();drawMap();
 }
 function spend(r,cost){if(r.gold<cost){note("Fondi insufficienti a "+r.name+". Entrate necessarie: "+fmt(cost)+".");return false}r.gold-=cost;return true}
 function recruit(kind,cost){const r=selected();if(r.owner!=="player")return;if(!spend(r,cost))return;r.units[kind]++;note("Reclutata unità "+({infantry:"di fanteria",archers:"di arcieri",cavalry:"di cavalleria"}[kind])+" in "+r.name+".");render()}
 $("recruitInfantry").onclick=()=>recruit("infantry",250);$("recruitArchers").onclick=()=>recruit("archers",320);$("recruitCavalry").onclick=()=>recruit("cavalry",500);
+$("moveArmy").onclick=()=>{const from=selected(),toId=Number($("moveDestination").value),to=state.regions[toId];if(!to||from.owner!=="player"||to.owner!=="player"||!areAdjacent(from.id,to.id)){note("Movimento non valido: puoi trasferire truppe solo verso una provincia tua confinante.");return}const count=from.units.infantry+from.units.archers+from.units.cavalry;if(count===0){note("Non ci sono unità da spostare in "+from.name+".");return}for(const kind of ["infantry","archers","cavalry"]){to.units[kind]+=from.units[kind];from.units[kind]=0}state.selected=to.id;note("Esercito trasferito da "+from.name+" a "+to.name+". Unità trasferite: "+count+".");render()};
 $("develop").onclick=()=>{const r=selected();if(r.owner!=="player"||r.level>=5)return;if(!spend(r,700))return;r.level++;note("Economia di "+r.name+" sviluppata al livello "+r.level+". Entrate aumentate.");render()};
 $("claim").onclick=()=>{const r=selected();if(r.owner==="player"||r.owner==="enemy")return;const payer=owned().sort((a,b)=>b.gold-a.gold)[0];if(!payer||!spend(payer,1200))return;r.owner="player";r.gold+=350;r.units.infantry+=1;note(r.name+" è entrata sotto il tuo controllo. I costi sono stati prelevati dalla tesoreria regionale più ricca; nuova fanteria assegnata.");render()};
 $("endTurn").onclick=()=>{state.turn++;let earned=0;owned().forEach(r=>{const amount=Math.round(r.income*r.level);r.gold+=amount;earned+=amount});note("Turno concluso. Le province hanno versato "+fmt(earned)+" nelle tesorerie regionali.");render();save(false)};
