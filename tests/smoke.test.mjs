@@ -70,7 +70,7 @@ test("mappa strategica dell'Italia presente e interattiva", () => {
 });
 
 test("versione 5.1.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.0\.0/);
+  assert.match(html, /BUILD 5\.1\.0/);
   assert.equal(packageJson.version, "5.1.0");
 });
 
@@ -255,7 +255,7 @@ test("l'esercito può essere ridislocato dopo la perdita di una provincia", () =
 });
 
 test("versione 5.1.0 coerente tra applicazione e pacchetto", () => {
-  assert.match(html, /BUILD 5\.0\.0/);
+  assert.match(html, /BUILD 5\.1\.0/);
   assert.equal(packageJson.version, "5.1.0");
 });
 
