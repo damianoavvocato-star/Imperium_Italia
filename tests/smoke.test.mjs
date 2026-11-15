@@ -10,7 +10,7 @@ const script = html.slice(scriptStart + 8, scriptEnd);
 
 test('la pagina principale è Imperium_Italia', () => {
   assert.match(html, /<title>Imperium_Italia/);
-  assert.match(html, /IMPERIUM ITALIAE/);
+  assert.match(html, /IMPERIUM_ITALIA/);
   assert.doesNotMatch(html, /WAR ITALY|WAR_ITALY/i);
 });
 
