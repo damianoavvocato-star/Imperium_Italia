@@ -299,3 +299,23 @@ test("statistiche estese e avanzamento turno univoco", () => {
   assert.match(script, /campaignStats\.regionsLost/);
   assert.match(script, /campaignStats\.eventsResolved/);
 });
+
+test("consigliere IA strategico contestuale e privacy locale 5.1", () => {
+  for (const id of ["aiAdvisorPanel", "aiAdvisorStatus", "aiAdvisorHeadline", "aiAdvisorText", "aiAdvisorReason", "aiAnalyze", "aiAdvisorAction"]) {
+    assert.match(html, new RegExp('id="' + id + '"'));
+  }
+  assert.match(script, /function updateAiAdvisor\(\)/);
+  assert.match(script, /economy\.balance<0/);
+  assert.match(script, /res\.fuel\|\|0/);
+  assert.match(script, /res\.morale\|\|0/);
+  assert.match(script, /unstable\.length/);
+  assert.match(script, /frontier\.length/);
+  assert.match(script, /unfinished\.length/);
+  assert.match(script, /setCommandTab\(\$\("aiAdvisorAction"\)\.dataset\.tab/);
+  assert.match(script, /updateDiplomacyPanel\(\);updateAiAdvisor\(\)/);
+  assert.match(html, /nessuna chiave API o invio di dati esterni/);
+});
+test("versione 5.1.0 coerente tra app e pacchetto", () => {
+  assert.match(html, /BUILD 5\.1\.0/);
+  assert.equal(packageJson.version, "5.1.0");
+});

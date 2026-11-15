@@ -1,5 +1,12 @@
 # WAR ITALY — Cronologia versioni
 
+## 5.1.0 — Consigliere strategico con intelligenza artificiale
+- Aggiunto un consigliere IA interattivo nella panoramica della campagna: analizza bilancio, scorte, consenso, stabilità provinciale, fronti e ricerca.
+- Le raccomandazioni sono contestuali, aggiornate allo stato del turno e collegano direttamente il giocatore al pannello operativo pertinente.
+- L'analisi è eseguita localmente con regole strategiche deterministiche: non richiede API key, connessione a servizi IA esterni o invio dei dati della partita.
+- Mantenuta e integrata l'IA delle fazioni rivali già presente nella campagna 5.0.0.
+- Aggiunti controlli smoke per presenza, aggiornamento e navigazione del consigliere IA.
+
 ## 5.0.0 — Campagna completa, scenari e archivio evoluto
 - Aggiunti quattro scenari giocabili: campagna classica, crisi nazionale, fronte mediterraneo con nave in riserva e sandbox senza sconfitta automatica.
 - Gli eventi strategici richiedono ora una scelta tra due risposte con costi e conseguenze su risorse, consenso, industria e ricerca; un evento in sospeso blocca la fine del turno e viene salvato.
