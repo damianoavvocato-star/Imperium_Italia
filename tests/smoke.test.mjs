@@ -42,3 +42,11 @@ test("il movimento degli eserciti è limitato alle province confinanti controlla
   assert.match(script, /to\.owner!=="player"/);
   assert.match(script, /Esercito trasferito da/);
 });
+
+
+test('sono presenti nomina, statistiche e trasferimento del generale con le truppe', () => {
+  for (const id of ['generalName', 'generalSkill', 'recruitGeneral']) assert.ok(html.includes('id="' + id + '"'));
+  assert.match(script, /r\.general=\{name:generalNames/);
+  assert.match(script, /to\.general=from\.general/);
+  assert.match(script, /Abilità di comando/);
+});
