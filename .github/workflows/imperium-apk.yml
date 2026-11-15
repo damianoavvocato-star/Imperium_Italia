@@ -1,4 +1,4 @@
-name: Imperium Italiae Android APK
+name: Imperium_Italia Android APK
 
 on:
   push:
@@ -15,12 +15,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: imperium-italiae-apk-${{ github.ref }}
+  group: imperium_italia-apk-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build Imperium Italiae debug APK
+    name: Build Imperium_Italia debug APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,7 +31,7 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
-      - name: Run Imperium Italiae tests
+      - name: Run Imperium_Italia tests
         run: npm test
       - name: Validate game JavaScript
         run: |
@@ -49,7 +49,7 @@ jobs:
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug
-      - name: Upload Imperium Italiae APK
+      - name: Upload Imperium_Italia APK
         uses: actions/upload-artifact@v4
         with:
           name: IMPERIUM-ITALIAE-debug-APK
