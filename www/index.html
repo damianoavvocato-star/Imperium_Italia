@@ -107,7 +107,7 @@ input[type=file]::file-selector-button{border:0;border-radius:8px;padding:8px 10
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 </style></head><body><main class="shell">
 <header><div class="brand">WAR ITALY</div><div class="status">● SISTEMA ONLINE · 2035</div></header>
-<section id="home" class="screen"><div class="hero"><div class="eyebrow">SIMULATORE STRATEGICO · ITALIA</div><h1>IL FUTURO<br>SI DECIDE ORA</h1><div class="subtitle">STRATEGIA · DIPLOMAZIA · GUERRA · FUTURO</div></div><div class="panel" style="text-align:center"><div style="font-size:76px">🇮🇹</div><h2>TEATRO OPERATIVO NAZIONALE</h2><p class="muted">Quattro poteri si contendono il futuro della penisola. Scegli la tua fazione, gestisci le risorse e consolida il controllo delle regioni.</p><button class="wide" id="start">AVVIA CAMPAGNA</button><button class="wide secondary" id="continueCampaign" hidden>CONTINUA CAMPAGNA SALVATA</button><div class="home-tools"><button class="secondary" id="openTutorial">GUIDA AL GIOCO</button><button class="secondary" id="openSettings">IMPOSTAZIONI</button></div></div><div class="panel" id="settingsPanel" hidden><h2>IMPOSTAZIONI DI VISUALIZZAZIONE</h2><div class="settings-option"><span>Testo più grande</span><button class="secondary" id="toggleTextSize">DISATTIVATO</button></div><div class="settings-option"><span>Contrasto elevato</span><button class="secondary" id="toggleContrast">DISATTIVATO</button></div><div class="settings-option"><span>Riduci animazioni</span><button class="secondary" id="toggleMotion">DISATTIVATO</button></div><p class="note">Le preferenze vengono conservate su questo dispositivo.</p><button class="wide secondary" id="closeSettings">CHIUDI IMPOSTAZIONI</button></div><p class="note" style="text-align:center">WAR ITALY · BUILD 5.1.0</p></section>
+<section id="home" class="screen"><div class="hero"><div class="eyebrow">SIMULATORE STRATEGICO · ITALIA</div><h1>IL FUTURO<br>SI DECIDE ORA</h1><div class="subtitle">STRATEGIA · DIPLOMAZIA · GUERRA · FUTURO</div></div><div class="panel" style="text-align:center"><div style="font-size:76px">🇮🇹</div><h2>TEATRO OPERATIVO NAZIONALE</h2><p class="muted">Quattro poteri si contendono il futuro della penisola. Scegli la tua fazione, gestisci le risorse e consolida il controllo delle regioni.</p><button class="wide" id="start">AVVIA CAMPAGNA</button><button class="wide secondary" id="continueCampaign" hidden>CONTINUA CAMPAGNA SALVATA</button><div class="home-tools"><button class="secondary" id="openTutorial">GUIDA AL GIOCO</button><button class="secondary" id="openSettings">IMPOSTAZIONI</button></div></div><div class="panel" id="settingsPanel" hidden><h2>IMPOSTAZIONI DI VISUALIZZAZIONE</h2><div class="settings-option"><span>Testo più grande</span><button class="secondary" id="toggleTextSize">DISATTIVATO</button></div><div class="settings-option"><span>Contrasto elevato</span><button class="secondary" id="toggleContrast">DISATTIVATO</button></div><div class="settings-option"><span>Riduci animazioni</span><button class="secondary" id="toggleMotion">DISATTIVATO</button></div><p class="note">Le preferenze vengono conservate su questo dispositivo.</p><button class="wide secondary" id="closeSettings">CHIUDI IMPOSTAZIONI</button></div><p class="note" style="text-align:center">WAR ITALY · BUILD 5.2.0</p></section>
 <section id="selection" class="screen" hidden><div class="screen-title"><div class="eyebrow">CAMPAGNA · ITALIA 2035</div><h2>SCEGLI LA TUA FAZIONE</h2><p class="muted">Ogni schieramento offre un diverso stile strategico.</p></div><div class="grid" id="factionGrid">
 <button class="card" data-faction="italia"><div class="symbol">🇮🇹</div><strong>Repubblica Italiana</strong><small>Equilibrio · Tecnologia · Diplomazia</small></button>
 <button class="card" data-faction="legione"><div class="symbol">⚓</div><strong>Legione Mediterranea</strong><small>Flotta · Mobilità · Coste</small></button>
@@ -123,7 +123,7 @@ input[type=file]::file-selector-button{border:0;border-radius:8px;padding:8px 10
 <button type="button" class="command-tab" data-menu-tab="research" aria-pressed="false"><span>⌘</span><small>Ricerca</small></button>
 <button type="button" class="command-tab" data-menu-tab="system" aria-pressed="false"><span>☷</span><small>Gestione</small></button>
 </nav><p class="command-hint" id="commandHint">Panoramica della campagna · scegli una sezione per aprire gli altri comandi.</p><div class="panel game-menu-panel" data-menu-group="overview" id="strategicDashboard"><div class="topline"><h2>QUADRO STRATEGICO</h2><span class="turn" id="readinessLabel">STABILE</span></div><div class="stats"><div class="stat"><b id="incomeForecast">0€</b><span>ENTRATE / TURNO</span></div><div class="stat"><b id="militaryPower">0</b><span>POTENZA MILITARE</span></div><div class="stat"><b id="activePacts">0</b><span>ACCORDI ATTIVI</span></div><div class="stat"><b id="regionDevelopments">0</b><span>LIVELLI SVILUPPO</span></div></div><p class="note" id="readinessText">Il comando nazionale è pronto a operare.</p></div>
-<div class="panel game-menu-panel" data-menu-group="overview" id="aiAdvisorPanel"><div class="topline"><h2>🧠 CONSIGLIERE STRATEGICO IA</h2><span class="turn" id="aiAdvisorStatus">ANALISI LOCALE</span></div><p class="muted">L'intelligenza artificiale valuta la situazione della campagna e propone la prossima priorità. L'analisi avviene sul dispositivo: nessuna chiave API o invio di dati esterni.</p><div class="detail"><h3 id="aiAdvisorHeadline">Pronto per l'analisi</h3><p class="muted" id="aiAdvisorText">Avvia un'analisi per ricevere indicazioni su economia, difesa, diplomazia e ricerca.</p></div><div class="actions"><button class="secondary" id="aiAnalyze">AGGIORNA ANALISI IA</button><button id="aiAdvisorAction">APRI PRIORITÀ</button></div><p class="note" id="aiAdvisorReason">Consigli basati sullo stato corrente della partita; le decisioni restano sempre al comandante.</p></div>
+<div class="panel game-menu-panel" data-menu-group="overview" id="aiAdvisorPanel"><div class="topline"><h2>🧠 CONSIGLIERE STRATEGICO IA</h2><span class="turn" id="aiAdvisorStatus">ANALISI LOCALE</span></div><p class="muted">L'intelligenza artificiale valuta la situazione della campagna e propone la prossima priorità. L'analisi avviene sul dispositivo: nessuna chiave API o invio di dati esterni.</p><div class="detail"><h3 id="aiAdvisorHeadline">Pronto per l'analisi</h3><p class="muted" id="aiAdvisorText">Avvia un'analisi per ricevere indicazioni su economia, difesa, diplomazia e ricerca.</p></div><div class="actions"><button class="secondary" id="aiAnalyze">AGGIORNA ANALISI IA</button><button id="aiAdvisorAction">APRI PRIORITÀ</button><button class="secondary" id="aiExecutePlan" disabled>ESEGUI PIANO IA</button></div><p class="note" id="aiAdvisorReason">Consigli basati sullo stato corrente della partita; le decisioni restano sempre al comandante.</p></div>
 <div class="panel game-menu-panel" data-menu-group="overview"><div class="topline"><h2>MAPPA STRATEGICA · ITALIA</h2><span class="turn" id="controlCount">1/12 REGIONI</span></div><p class="muted" style="margin:8px 0">Tocca una delle 110 province per selezionarla, spostare l’esercito e impartire ordini sul fronte.</p><div class="map-toolbar" role="group" aria-label="Controlli della mappa">
 <button type="button" class="map-control" id="mapZoomOut" aria-label="Riduci zoom">−</button>
 <button type="button" class="map-control map-zoom-readout" id="mapZoomReadout" aria-live="polite">100%</button>
@@ -386,7 +386,7 @@ M29 119L35 123L42 122M28 126L37 128L45 126"/>
 <div class="panel game-menu-panel" data-menu-group="military" hidden><h2>ARSENALE · PRODUZIONE UNITÀ</h2><p class="muted">Recluta reparti specializzati per rafforzare le operazioni terrestri, aeree e navali.</p><div class="detail" style="padding:10px;margin:10px 0"><b>STATO RIFORNIMENTI</b><p class="muted" id="supplyStatus">Carburante e munizioni disponibili.</p></div><div class="actions-grid"><button id="buyInfantry">FANTERIA · 500€ / 5 MAT.</button><button id="buyTank">CARRO ARIETE · 2.000€ / 20 MAT.</button><button id="buyAircraft">EUROFIGHTER · 3.500€ / 30 MAT.</button><button id="buyShip">CACCIATORPEDINIERE · 2.500€ / 25 MAT.</button><button id="buyCommando">COL MOSCHIN · 4.000€ / 15 MAT.</button></div><div id="units"></div><button class="wide secondary" id="repairUnits">RIPARA REPARTI</button><p class="note">HP effettivi: fanteria 150 · Ariete 800 · Eurofighter 300 · nave 600 · Col Moschin 100.</p></div>
 <div class="panel game-menu-panel" data-menu-group="overview"><h2>REGISTRO OPERATIVO</h2><div class="log" id="log" aria-live="polite"></div></div>
 <button class="wide secondary" id="quit">TORNA AL MENU</button>
-</section><div class="footer">WAR ITALY © 2035 · BUILD 5.1.0</div><div class="tutorial-backdrop" id="tutorialOverlay" hidden><div class="tutorial-card" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle"><div class="tutorial-count" id="tutorialCount">GUIDA · 1/6</div><h2 id="tutorialTitle">BENVENUTO, COMANDANTE</h2><p id="tutorialBody">Questa guida ti accompagna nei primi passi di WAR ITALY.</p><div class="actions"><button class="secondary" id="tutorialClose">CHIUDI</button><button class="secondary" id="tutorialBack">INDIETRO</button><button id="tutorialNext">AVANTI</button></div></div></div></main>
+</section><div class="footer">WAR ITALY © 2035 · BUILD 5.2.0</div><div class="tutorial-backdrop" id="tutorialOverlay" hidden><div class="tutorial-card" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle"><div class="tutorial-count" id="tutorialCount">GUIDA · 1/6</div><h2 id="tutorialTitle">BENVENUTO, COMANDANTE</h2><p id="tutorialBody">Questa guida ti accompagna nei primi passi di WAR ITALY.</p><div class="actions"><button class="secondary" id="tutorialClose">CHIUDI</button><button class="secondary" id="tutorialBack">INDIETRO</button><button id="tutorialNext">AVANTI</button></div></div></div></main>
 <script>
 (()=>{const $=id=>document.getElementById(id);const factionData={
 italia:{name:"Repubblica Italiana",icon:"🇮🇹",desc:"Difendi le istituzioni e ricostruisci la stabilità nazionale.",bonus:"Equilibrio economico e diplomazia: +10 consenso iniziale.",difficulty:"Media",start:"Roma"},
@@ -642,30 +642,58 @@ function processEconomyTurn(){
  else log("BILANCIO NAZIONALE: entrate "+fmt(economyLedger.income)+"€ · spese "+fmt(economyLedger.expenses)+"€ · saldo +"+fmt(economyLedger.balance)+"€.");
  if(economyLedger.energyBalance<0&&res.energy===0){res.morale=Math.max(0,res.morale-1);log("CRISI ENERGETICA: domanda superiore alla produzione. Consenso -1.");}
 }
+let aiCurrentPlan=null;
 function updateAiAdvisor(){
- const owned=regions.filter(r=>r.owner==="player");
+ const owned=regions.map((r,index)=>({r,index})).filter(x=>x.r.owner==="player");
  const economy=calculateEconomySnapshot();
- const frontier=regions.map((r,index)=>({r,index})).filter(x=>x.r.owner==="player"&&hasAdjacentTerritory(x.index,"enemy")).sort((a,b)=>((a.r.garrison||0)+(a.r.fortification||0)*80)-((b.r.garrison||0)+(b.r.fortification||0)*80));
- const unstable=owned.filter(r=>(Number.isFinite(r.stability)?r.stability:70)<45).sort((a,b)=>(a.stability||70)-(b.stability||70));
+ const frontier=owned.filter(x=>hasAdjacentTerritory(x.index,"enemy")).sort((a,b)=>((a.r.garrison||0)+(a.r.fortification||0)*80)-((b.r.garrison||0)+(b.r.fortification||0)*80));
+ const unstable=owned.filter(x=>(Number.isFinite(x.r.stability)?x.r.stability:70)<45).sort((a,b)=>(a.r.stability||70)-(b.r.stability||70));
  const unfinished=Object.keys(techs).filter(key=>!techs[key]);
+ const rivals=Object.keys(rivalNames).filter(key=>key!==player);
+ const hostile=rivals.filter(key=>(rivalTruces[key]||0)===0);
+ const strongestRival=hostile.map(key=>({key,power:regions.filter(r=>r.owner==="enemy"&&r.faction===rivalNames[key]).reduce((sum,r)=>sum+(r.garrison||0)+(r.fortification||0)*80,0),relations:rivalRelations[key]||0})).sort((a,b)=>b.power-a.power)[0];
  const advice=[];
- if(economy.balance<0)advice.push({title:"RIEQUILIBRA IL BILANCIO",text:"Il bilancio è in deficit di "+fmt(Math.abs(economy.balance))+"€ per turno. Sviluppa distretti industriali e infrastrutture prima di ampliare le spese militari.",tab:"economy",reason:"Priorità economica: evitare che il deficit consumi le riserve."});
- if((res.fuel||0)<35||(res.ammo||0)<35)advice.push({title:"RIPRISTINA I RIFORNIMENTI",text:"Le scorte operative sono basse (carburante "+fmt(res.fuel||0)+", munizioni "+fmt(res.ammo||0)+"). Riduci le offensive non essenziali e apri il pannello logistico.",tab:"military",reason:"Priorità logistica: prevenire ordini militari bloccati."});
- if((res.morale||0)<45)advice.push({title:"PROTEGGI IL CONSENSO",text:"Il consenso nazionale è al "+fmt(res.morale)+"/100. Sospendi le iniziative costose e privilegia stabilità civile e accordi diplomatici.",tab:"overview",reason:"Priorità politica: il malcontento aumenta il rischio di instabilità."});
- if(unstable.length)advice.push({title:"PREVIENI LE RIVOLTE",text:unstable.length+" province controllate hanno stabilità inferiore a 45. La più fragile è "+unstable[0].name+" ("+fmt(unstable[0].stability||0)+"/100). Selezionala sulla mappa e avvia un programma civile.",tab:"overview",reason:"Priorità interna: consolidare i territori prima di espandersi."});
- if(frontier.length&&((frontier[0].r.garrison||0)+(frontier[0].r.fortification||0)*80)<150)advice.push({title:"RAFFORZA IL FRONTE",text:"Il settore più vulnerabile è "+frontier[0].r.name+". Valuta rinforzi, fortificazioni o una tregua con la fazione confinante.",tab:"military",reason:"Priorità difensiva: presidiare il confine più debole."});
- if(unfinished.length&&researchPoints>=3)advice.push({title:"ACCELERA LA RICERCA",text:"Hai "+fmt(researchPoints)+" punti ricerca e "+unfinished.length+" tecnologie ancora da sbloccare. Investi nelle tecnologie coerenti con la tua dottrina.",tab:"research",reason:"Priorità tecnologica: trasformare i punti ricerca in vantaggio operativo."});
- if(!advice.length)advice.push({title:"MANTIENI L'INIZIATIVA",text:"La situazione non presenta emergenze immediate. Consolida le province di confine, mantieni scorte adeguate e investi nella tecnologia prima della prossima offensiva.",tab:"overview",reason:"Valutazione generale: nessuna criticità prioritaria rilevata."});
- const selected=advice[0];
- $("aiAdvisorStatus").textContent="TURNO "+turn+" · "+advice.length+" PRIORITÀ";
+ if(economy.balance<0){
+  const target=owned.filter(x=>(x.r.development||0)<3).sort((a,b)=>(b.r.income||0)-(a.r.income||0))[0];
+  advice.push({score:100,title:"RIEQUILIBRA IL BILANCIO",text:"Il bilancio è in deficit di "+fmt(Math.abs(economy.balance))+"€ per turno. "+(target?"Priorità consigliata: sviluppare "+target.r.name+" per aumentare le entrate.":"Riduci le spese e proteggi le riserve."),tab:"economy",reason:"Analisi economica: il deficit è la criticità più urgente.",plan:target&&res.euros>=800&&res.materials>=8?{type:"develop",index:target.index,label:"Sviluppa "+target.r.name}:null});
+ }
+ if((res.fuel||0)<35||(res.ammo||0)<35)advice.push({score:95,title:"RIPRISTINA I RIFORNIMENTI",text:"Scorte operative basse: carburante "+fmt(res.fuel||0)+", munizioni "+fmt(res.ammo||0)+". Limita le offensive e riorganizza la logistica.",tab:"military",reason:"Analisi logistica: le riserve possono bloccare le operazioni."});
+ if(unstable.length){
+  const target=unstable[0];
+  advice.push({score:90,title:"PREVIENI LE RIVOLTE",text:unstable.length+" province hanno stabilità inferiore a 45. La più fragile è "+target.r.name+" ("+fmt(target.r.stability||0)+"/100).",tab:"overview",reason:"Analisi interna: consolidare il territorio riduce il rischio di rivolte.",plan:res.euros>=450&&res.materials>=5?{type:"stabilize",index:target.index,label:"Stabilizza "+target.r.name}:null});
+ }
+ if(frontier.length){
+  const target=frontier[0],defense=(target.r.garrison||0)+(target.r.fortification||0)*80;
+  if(defense<150)advice.push({score:85,title:"RAFFORZA IL FRONTE",text:"Il settore più vulnerabile è "+target.r.name+" con difesa stimata "+fmt(defense)+". Prepara fortificazioni prima di una nuova offensiva.",tab:"military",reason:"Analisi militare: la provincia confinante con il nemico è scarsamente presidiata.",plan:res.euros>=1000&&res.materials>=10&&(target.r.fortification||0)<2?{type:"fortify",index:target.index,label:"Fortifica "+target.r.name}:null});
+ }
+ if((res.morale||0)<45)advice.push({score:80,title:"PROTEGGI IL CONSENSO",text:"Il consenso nazionale è al "+fmt(res.morale)+"/100. Privilegia stabilità civile e accordi diplomatici.",tab:"overview",reason:"Analisi politica: il malcontento aumenta il rischio di instabilità."});
+ if(strongestRival&&strongestRival.power>0)advice.push({score:Math.max(30,70+Math.max(0,strongestRival.power-1200)/100),title:"MONITORA LA MINACCIA ESTERNA",text:"La fazione più potente è "+rivalNames[strongestRival.key]+". Potenza territoriale stimata "+fmt(strongestRival.power)+", relazioni "+strongestRival.relations+"/100. Valuta un'intesa o rafforza i confini.",tab:"diplomacy",reason:"Analisi geopolitica: la valutazione considera forza, relazioni e tregue."});
+ if(unfinished.length&&researchPoints>=3)advice.push({score:45,title:"ACCELERA LA RICERCA",text:"Hai "+fmt(researchPoints)+" punti ricerca e "+unfinished.length+" tecnologie da sbloccare. Investi in tecnologie coerenti con la minaccia principale.",tab:"research",reason:"Analisi tecnologica: convertire i punti ricerca in vantaggio operativo."});
+ if(!advice.length)advice.push({score:10,title:"MANTIENI L'INIZIATIVA",text:"Nessuna emergenza immediata. Consolida i confini, mantieni scorte adeguate e investi nella tecnologia.",tab:"overview",reason:"Analisi generale: postura strategica equilibrata."});
+ advice.sort((a,b)=>b.score-a.score);
+ const selected=advice[0];aiCurrentPlan=selected.plan||null;
+ $("aiAdvisorStatus").textContent="IA 5.2 · TURNO "+turn+" · "+advice.length+" SEGNALI";
  $("aiAdvisorHeadline").textContent=selected.title;
  $("aiAdvisorText").textContent=selected.text;
- $("aiAdvisorReason").textContent=selected.reason+" Analisi delle province: "+owned.length+"/110 controllate.";
- $("aiAdvisorAction").textContent="APRI "+({economy:"ECONOMIA",military:"MILITARE",research:"RICERCA",overview:"PANORAMICA"}[selected.tab]||"PANORAMICA");
+ $("aiAdvisorReason").textContent=selected.reason+" Territori controllati: "+owned.length+"/110. "+(strongestRival?"Minaccia principale: "+rivalNames[strongestRival.key]+".":"");
+ $("aiAdvisorAction").textContent="APRI "+({economy:"ECONOMIA",military:"MILITARE",research:"RICERCA",diplomacy:"DIPLOMAZIA",overview:"PANORAMICA"}[selected.tab]||"PANORAMICA");
  $("aiAdvisorAction").dataset.tab=selected.tab;
+ $("aiExecutePlan").disabled=!aiCurrentPlan;
+ $("aiExecutePlan").textContent=aiCurrentPlan?"ESEGUI: "+aiCurrentPlan.label:"NESSUN PIANO AUTOMATICO";
+}
+function executeAiPlan(){
+ if(!aiCurrentPlan)return;
+ const plan=aiCurrentPlan,target=regions[plan.index];
+ if(!target||target.owner!=="player"){log("Piano IA annullato: il territorio non è più sotto il nostro controllo.");updateAiAdvisor();return;}
+ if(plan.type==="stabilize"){selectedRegion=plan.index;stabilizeSelectedProvince();}
+ else if(plan.type==="fortify"){fortifyRegion(plan.index);}
+ else if(plan.type==="develop"){developRegion(plan.index);}
+ else return;
+ autoSave();updateAiAdvisor();
 }
 $("aiAnalyze").addEventListener("click",updateAiAdvisor);
 $("aiAdvisorAction").addEventListener("click",()=>setCommandTab($("aiAdvisorAction").dataset.tab||"overview"));
+$("aiExecutePlan").addEventListener("click",executeAiPlan);
 function render(){ updateBattleReport();updateEventPanel();updateIntelPanel();updateDiplomacyPanel();updateAiAdvisor();$("euros").textContent=fmt(res.euros);$("energy").textContent=fmt(res.energy);$("materials").textContent=fmt(res.materials);$("morale").textContent=fmt(res.morale);$("fuel").textContent=fmt(res.fuel||0);$("ammo").textContent=fmt(res.ammo||0);$("supplyStatus").textContent="Carburante "+fmt(res.fuel||0)+"/300 · Munizioni "+fmt(res.ammo||0)+"/300 · Le province producono scorte a ogni turno."; $("turnLabel").textContent="TURNO "+turn;$("controlCount").textContent=regions.filter(r=>r.owner==="player").length+"/110 PROVINCE";$("playerFaction").textContent=factionData[player].icon+" "+factionData[player].name;$("difficultyLabel").textContent=({easy:"FACILE",standard:"STANDARD",hard:"DIFFICILE"}[difficulty]||"STANDARD");
 const ownedRegions=regions.filter(r=>r.owner==="player");
 const economySnapshot=calculateEconomySnapshot();economyLedger=economySnapshot;
@@ -1173,12 +1201,20 @@ function processStabilityTurn(){
   }
  });
 }
+function scoreStrategicEvent(event){
+ const economy=calculateEconomySnapshot(),unstable=regions.filter(r=>r.owner==="player"&&(r.stability||70)<45).length;
+ const scores={"fuel-crisis":((res.fuel||0)<70?6:0)+((res.energy||0)<25?2:0),"civil-mobilization":((res.morale||0)<55?6:0)+unstable*2,"industrial-recovery":economy.balance<0?7:0,"cyber-incident":techs.cyber?4:1,"eu-funds":economy.balance<0?4:1,"energy-innovation":economy.energyBalance<0?5:1};
+ return scores[event.id]||0;
+}
 function strategicEvent(){
  if(pendingEventId)return;
  const rules=getScenarioRules();if(Math.random()>rules.eventChance)return;
- const events=getStrategicEvents(),event=events[Math.floor(Math.random()*events.length)];
+ const events=getStrategicEvents(),ranked=events.map(event=>({event,score:scoreStrategicEvent(event)})).sort((a,b)=>b.score-a.score);
+ const bestScore=ranked[0]?.score||0,preferred=ranked.filter(item=>item.score===bestScore).map(item=>item.event);
+ const event=preferred[Math.floor(Math.random()*preferred.length)];
+ if(!event)return;
  pendingEventId=event.id;eventCount++;lastStrategicEvent={turn,title:event.title,description:event.description};
- log("EVENTO STRATEGICO: "+event.title+". Il governo deve scegliere una risposta.");updateEventPanel();
+ log("EVENTO STRATEGICO ADATTIVO: "+event.title+". L'IA ha selezionato l'evento in base alla situazione nazionale.");updateEventPanel();
 }
 function rivalAI(){
  const rivals=Object.keys(rivalNames).filter(k=>k!==player&&(rivalTruces[k]||0)===0);
@@ -1191,6 +1227,9 @@ function rivalAI(){
  const difficultyFactor=difficulty==="hard"?1.25:difficulty==="easy"?0.8:1;
  const scenarioFactor=getScenarioRules().rivalMultiplier;
  const own=regions.filter(r=>r.owner==="enemy"&&r.faction===rivalNames[rival]);
+ const playerMilitary={land:units*70+tanks*180+commandos*220,air:aircraft*140,naval:ships*100};playerMilitary.total=playerMilitary.land+playerMilitary.air+playerMilitary.naval;
+ const rivalDefense=own.reduce((sum,r)=>sum+(r.garrison||0)+(r.fortification||0)*80,0);
+ const adaptivePressure=playerMilitary.total>rivalDefense*1.15?0.22:playerMilitary.air>playerMilitary.land*.65?0.10:0;
  const scoreRegion=r=>(strategy.areas.includes(r.area)?42:0)+(strategy.priority.includes(r.bonus)?48:0)+(r.income||0)/18+(r.coastal&&strategy.style==="marittima"?35:0)+(r.industry||0)*14+(r.infrastructure||0)*8+(100-(r.stability||70))*.12;
  const preferredFree=free.filter(r=>hasAdjacentTerritory(regions.indexOf(r),"enemy",rivalNames[rival])).sort((a,b)=>scoreRegion(b)-scoreRegion(a));
  const ownWeak=own.slice().sort((a,b)=>((a.garrison||0)+(a.fortification||0)*80)-((b.garrison||0)+(b.fortification||0)*80));
@@ -1201,7 +1240,7 @@ function rivalAI(){
  const canExpand=preferredFree.length>0;
  const canAttack=playerTargets.length>0;
  const sanctionPressure=(rivalSanctions[rival]||0)>0?0.18:0;
- const roll=Math.random()+sanctionPressure;
+ const roll=Math.random()+sanctionPressure+adaptivePressure;
  let action="consolidamento";
  if(strategy.style==="marittima")action=canExpand&&roll<0.62?"espansione":canAttack&&roll<0.88?"offensiva":"consolidamento";
  else if(strategy.style==="industriale")action=canExpand&&roll<0.35?"espansione":canAttack&&roll<0.55?"offensiva":"industria";
@@ -1219,7 +1258,7 @@ function rivalAI(){
   const domainBonus=strategy.style==="marittima"&&isCoastalRegion(target.name)?1.18:1;
   const sanctionFactor=(rivalSanctions[rival]||0)>0?0.78:1;
   const electronicFactor=techs.electronicWarfare?0.88:1,airDefenseFactor=techs.airDefense?0.90:1;
-  const attack=Math.floor((78+turn*7+Math.random()*38)*strategy.strength*domainBonus*difficultyFactor*scenarioFactor*sanctionFactor*electronicFactor*airDefenseFactor);
+  const attack=Math.floor((78+turn*7+Math.random()*38)*strategy.strength*domainBonus*difficultyFactor*scenarioFactor*sanctionFactor*electronicFactor*airDefenseFactor*(playerMilitary.air>playerMilitary.land*.65?0.92:1));
   const defense=(target.garrison||90)+(target.fortification||0)*80;
   if(attack>=defense){
    target.owner="enemy";target.faction=rivalNames[rival];target.garrison=Math.max(65,Math.floor(attack-defense+85));target.fortification=0;target.stability=32;campaignStats.regionsLost=(campaignStats.regionsLost||0)+1;

@@ -319,3 +319,30 @@ test("versione 5.1.0 coerente tra app e pacchetto", () => {
   assert.match(html, /BUILD 5\.1\.0/);
   assert.equal(packageJson.version, "5.1.0");
 });
+
+test("IA 5.2: priorità contestuali, piani eseguibili e validazione risorse", () => {
+  for (const id of ["aiExecutePlan", "aiAdvisorPanel", "aiAdvisorStatus"]) assert.match(html, new RegExp('id="' + id + '"'));
+  assert.match(script, /function executeAiPlan\(\)/);
+  assert.match(script, /function updateAiAdvisor\(\)/);
+  assert.match(script, /type:"stabilize"/);
+  assert.match(script, /type:"fortify"/);
+  assert.match(script, /type:"develop"/);
+  assert.match(script, /target\.owner!=="player"/);
+  assert.match(script, /autoSave\(\);updateAiAdvisor\(\)/);
+});
+test("IA rivale adattiva alla forza e alla superiorità aerea del giocatore", () => {
+  assert.match(script, /const playerMilitary=\{land:units\*70/);
+  assert.match(script, /adaptivePressure=playerMilitary\.total>rivalDefense\*1\.15/);
+  assert.match(script, /Math\.random\(\)\+sanctionPressure\+adaptivePressure/);
+  assert.match(script, /playerMilitary\.air>playerMilitary\.land\*\.65\?\.92:1/);
+});
+test("eventi strategici selezionati in base alle condizioni della campagna", () => {
+  assert.match(script, /function scoreStrategicEvent\(event\)/);
+  assert.match(script, /economy\.balance<0\?7:0/);
+  assert.match(script, /unstable\*2/);
+  assert.match(script, /EVENTO STRATEGICO ADATTIVO/);
+});
+test("versione 5.2.0 coerente tra app e pacchetto", () => {
+  assert.match(html, /BUILD 5\.2\.0/);
+  assert.equal(packageJson.version, "5.2.0");
+});

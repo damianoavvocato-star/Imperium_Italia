@@ -1,5 +1,13 @@
 # WAR ITALY — Cronologia versioni
 
+## 5.2.0 — IA adattiva, piani operativi ed eventi contestuali
+- Potenziato il consigliere strategico con valutazione prioritaria di bilancio, scorte, stabilità, fronti, consenso e minacce delle fazioni rivali.
+- Aggiunti piani operativi eseguibili su richiesta del giocatore: stabilizzazione provinciale, fortificazione del fronte e sviluppo economico; ogni piano ricontrolla proprietà e risorse prima dell'esecuzione.
+- L'IA rivale valuta la forza militare del giocatore e adatta la propensione offensiva, tenendo conto della superiorità aerea.
+- Gli eventi nazionali vengono selezionati in base alle condizioni effettive della campagna: crisi energetica, instabilità civile, deficit e tecnologie disponibili.
+- Analisi e decisioni IA restano locali; nessuna API key o trasmissione esterna dei dati di gioco.
+- Aggiunti test smoke per piani IA, adattamento delle fazioni e selezione contestuale degli eventi; salvataggi 4.x/5.x invariati e retrocompatibili.
+
 ## 5.1.0 — Consigliere strategico con intelligenza artificiale
 - Aggiunto un consigliere IA interattivo nella panoramica della campagna: analizza bilancio, scorte, consenso, stabilità provinciale, fronti e ricerca.
 - Le raccomandazioni sono contestuali, aggiornate allo stato del turno e collegano direttamente il giocatore al pannello operativo pertinente.
