@@ -1,8 +1,8 @@
 {
-  "name": "imperium-italiae",
+  "name": "imperium_italia",
   "version": "1.0.0",
   "private": true,
-  "description": "Imperium Italiae - gioco strategico per browser e Android",
+  "description": "Imperium_Italia - gioco strategico per browser e Android",
   "scripts": {
     "android:sync": "cap sync android",
     "test": "node --test"
