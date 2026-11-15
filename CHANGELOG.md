@@ -1,5 +1,15 @@
 # WAR ITALY — Cronologia versioni
 
+## 5.0.0 — Campagna completa, scenari e archivio evoluto
+- Aggiunti quattro scenari giocabili: campagna classica, crisi nazionale, fronte mediterraneo con nave in riserva e sandbox senza sconfitta automatica.
+- Gli eventi strategici richiedono ora una scelta tra due risposte con costi e conseguenze su risorse, consenso, industria e ricerca; un evento in sospeso blocca la fine del turno e viene salvato.
+- Rafforzata l’IA: seleziona le fazioni in base a fronti, opportunità e pressione, quindi valuta province per valore strategico, stabilità, infrastrutture e difese.
+- Estese le statistiche con turni, eventi, province perse, controllo territoriale massimo e decisioni dell’IA.
+- L’archivio passa a cinque slot manuali più autosalvataggio separato; ogni scrittura viene riletta e validata prima di essere considerata riuscita.
+- I salvataggi 4.x restano caricabili; al successivo salvataggio vengono migrati al formato 5 con scenario classico e statistiche mancanti inizializzate.
+- Corretto l’avanzamento del turno: ogni comando Fine turno incrementa il turno una sola volta, aggiorna le statistiche e attiva l’autosalvataggio.
+
+
 ## 4.6.0 — Ricerca avanzata, droni, satelliti e difesa integrata
 - Ampliato l’albero tecnologico da sei a dieci ricerche, con droni tattici, satelliti ISR, guerra elettronica e difesa aerea integrata.
 - I punti ricerca vengono generati a ogni turno in base ai territori controllati; la rete satellitare accelera ulteriormente la ricerca.

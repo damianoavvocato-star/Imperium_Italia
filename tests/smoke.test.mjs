@@ -252,3 +252,49 @@ test("l'esercito può essere ridislocato dopo la perdita di una provincia", () =
   assert.match(script, /SCHIERA ESERCITO QUI/);
   assert.match(script, /const lostIndex=regions\.indexOf\(target\)/);
 });
+
+test("versione 5.0.0 coerente tra applicazione e pacchetto", () => {
+  assert.match(html, /BUILD 5\.0\.0/);
+  assert.equal(packageJson.version, "5.0.0");
+});
+
+test("scenari campagna e sandbox con modificatori", () => {
+  assert.match(html, /id="campaignScenario"/);
+  assert.match(script, /const scenarioDefinitions=/);
+  assert.match(script, /scenario==="sandbox"/);
+  assert.match(script, /rules\.startShip/);
+  assert.match(script, /rules\.rivalMultiplier/);
+});
+
+test("eventi dinamici con due decisioni e scelta persistente", () => {
+  for (const id of ["eventChoices", "eventChoiceA", "eventChoiceB"]) assert.match(html, new RegExp('id="' + id + '"'));
+  assert.match(script, /function getStrategicEvents\(\)/);
+  assert.match(script, /function resolveStrategicEvent\(choiceIndex\)/);
+  assert.match(script, /pendingEventId/);
+});
+
+test("IA 5.0 valuta fronti, minacce e valore territoriale", () => {
+  assert.match(script, /const rivalScore=k=>/);
+  assert.match(script, /const value=r=>/);
+  assert.match(script, /campaignStats\.aiActions/);
+  assert.match(script, /getScenarioRules\(\)\.rivalMultiplier/);
+});
+
+test("cinque slot, autosalvataggio verificato e migrazione 4.x", () => {
+  for (const slot of ["4", "5"]) assert.match(html, new RegExp('option value="' + slot + '"'));
+  assert.match(script, /function createSaveSnapshot\(\)/);
+  assert.match(script, /function writeSaveStorage\(key,data\)/);
+  assert.match(script, /function refreshSaveSlots\(\)/);
+  assert.match(script, /saveFormat:5/);
+  assert.match(script, /if\(!validateSaveData\(s\)\)/);
+  assert.match(script, /scenario=scenarioDefinitions\[s\.scenario\]\?s\.scenario:"classic"/);
+  assert.match(script, /\.\.\.defaultCampaignStats/);
+});
+
+test("statistiche estese e avanzamento turno univoco", () => {
+  for (const id of ["statTurns", "statEvents", "statLost", "statPeak", "statAI", "scenarioLabel"]) assert.match(html, new RegExp('id="' + id + '"'));
+  assert.match(script, /turn\+\+;campaignStats\.turnsPlayed=turn/);
+  assert.match(script, /campaignStats\.peakTerritories/);
+  assert.match(script, /campaignStats\.regionsLost/);
+  assert.match(script, /campaignStats\.eventsResolved/);
+});
