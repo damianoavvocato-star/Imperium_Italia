@@ -30,3 +30,24 @@ Workflow: https://github.com/damianoavvocato-star/War_Italy/actions
 
 ## Nota sui salvataggi
 I salvataggi sono conservati nella memoria locale del browser/dispositivo. Per non perderli, usa gli slot di salvataggio e non cancellare i dati dell'app.
+
+
+## Imperium Italiae · campagna strategica
+
+È stata aggiunta una seconda esperienza di gioco indipendente all'interno dello stesso repository:
+- Pagina web: `www/imperium.html`
+- Mappa strategica schematica con tutte le 20 regioni italiane.
+- Turni, entrate regionali e tesorerie separate per territorio.
+- Reclutamento regionale di fanteria, arcieri e cavalleria.
+- Sviluppo economico delle province e acquisizione dei territori neutrali.
+- Salvataggio locale della campagna.
+- Interfaccia responsive per smartphone e desktop.
+
+### Anteprima web
+Dopo il completamento della pubblicazione GitHub Pages, la pagina è disponibile all'indirizzo:
+https://damianoavvocato-star.github.io/War_Italy/imperium.html
+
+### APK dedicato
+Il workflow `Imperium Italiae Android APK` compila questa esperienza come app Android separata, con identificativo `com.imperiumitaliae.game`. Avvia una build da Actions oppure attendi il completamento automatico dopo un push che modifica `www/imperium.html`. L'artifact si chiama `IMPERIUM-ITALIAE-debug-APK`.
+
+La versione WAR ITALY esistente e il suo workflow APK restano separati e non vengono sostituiti.
