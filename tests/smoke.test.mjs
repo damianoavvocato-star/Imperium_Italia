@@ -68,9 +68,9 @@ test("mappa strategica dell'Italia presente e interattiva", () => {
   assert.match(script, /const strategicMapPositions=\[\[/);
 });
 
-test("versione 4.6.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 4\.6\.0/);
-  assert.equal(packageJson.version, "4.6.0");
+test("versione 5.0.0 coerente tra app e pacchetto", () => {
+  assert.match(html, /BUILD 5\.0\.0/);
+  assert.equal(packageJson.version, "5.0.0");
 });
 
 
@@ -240,7 +240,7 @@ test("WAR ITALY 4.0 usa province reali, confini regionali e migrazione 3.x", () 
   assert.equal((html.match(/class="province neutral" id="province-\d+"/g) || []).length, 110);
   assert.equal((html.match(/class="region-outline"/g) || []).length, 20);
   assert.match(script, /\[12,20,110\]\.includes\(data\.regions\.length\)/);
-  assert.match(script, /const savedByRegion=new Map/);
+  assert.match(script, /savedByRegion=new Map/);
   assert.match(script, /regionProvinceCounts/);
   assert.match(script, /function isCoastalRegion\(name\)/);
   assert.match(script, /110 PROVINCE/);
@@ -263,7 +263,7 @@ test("scenari campagna e sandbox con modificatori", () => {
   assert.match(script, /const scenarioDefinitions=/);
   assert.match(script, /scenario==="sandbox"/);
   assert.match(script, /rules\.startShip/);
-  assert.match(script, /rules\.rivalMultiplier/);
+  assert.match(script, /getScenarioRules\(\)\.rivalMultiplier/);
 });
 
 test("eventi dinamici con due decisioni e scelta persistente", () => {

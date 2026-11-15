@@ -1163,7 +1163,8 @@ function rivalAI(){
  const rivalScore=k=>{const strategy=rivalStrategy[k],own=regions.filter(r=>r.owner==="enemy"&&r.faction===rivalNames[k]);const frontier=regions.filter((r,i)=>r.owner==="player"&&hasAdjacentTerritory(i,"enemy",rivalNames[k])).length;const neutralFront=regions.filter((r,i)=>r.owner==="neutral"&&hasAdjacentTerritory(i,"enemy",rivalNames[k])).length;return own.length*3+frontier*5+neutralFront*2+strategy.strength*12-((rivalSanctions[k]||0)>0?10:0)-((rivalTreaties[k]?.turns||0)>0?8:0);};
  const rival=rivals.slice().sort((a,b)=>rivalScore(b)-rivalScore(a))[0];
  const strategy=rivalStrategy[rival];
- const difficultyFactor=(difficulty==="hard"?1.25:difficulty==="easy"?0.8:1)*getScenarioRules().rivalMultiplier;
+ const difficultyFactor=difficulty==="hard"?1.25:difficulty==="easy"?0.8:1;
+ const scenarioFactor=getScenarioRules().rivalMultiplier;
  const own=regions.filter(r=>r.owner==="enemy"&&r.faction===rivalNames[rival]);
  const scoreRegion=r=>(strategy.areas.includes(r.area)?42:0)+(strategy.priority.includes(r.bonus)?48:0)+(r.income||0)/18+(r.coastal&&strategy.style==="marittima"?35:0)+(r.industry||0)*14+(r.infrastructure||0)*8+(100-(r.stability||70))*.12;
  const preferredFree=free.filter(r=>hasAdjacentTerritory(regions.indexOf(r),"enemy",rivalNames[rival])).sort((a,b)=>scoreRegion(b)-scoreRegion(a));
@@ -1186,14 +1187,14 @@ function rivalAI(){
  campaignStats.aiActions=(campaignStats.aiActions||0)+1;
  if(action==="espansione"){
   const chosen=preferredFree[0];
-  chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor);chosen.fortification=0;chosen.stability=58;
+  chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor*scenarioFactor);chosen.fortification=0;chosen.stability=58;
   log(rivalNames[rival]+" ha ampliato il controllo su "+chosen.name+" con dottrina "+strategy.style+".");
  }else if(action==="offensiva"){
   const target=playerTargets[0];
   const domainBonus=strategy.style==="marittima"&&isCoastalRegion(target.name)?1.18:1;
   const sanctionFactor=(rivalSanctions[rival]||0)>0?0.78:1;
   const electronicFactor=techs.electronicWarfare?0.88:1,airDefenseFactor=techs.airDefense?0.90:1;
-  const attack=Math.floor((78+turn*7+Math.random()*38)*strategy.strength*domainBonus*difficultyFactor*sanctionFactor*electronicFactor*airDefenseFactor);
+  const attack=Math.floor((78+turn*7+Math.random()*38)*strategy.strength*domainBonus*difficultyFactor*scenarioFactor*sanctionFactor*electronicFactor*airDefenseFactor);
   const defense=(target.garrison||90)+(target.fortification||0)*80;
   if(attack>=defense){
    target.owner="enemy";target.faction=rivalNames[rival];target.garrison=Math.max(65,Math.floor(attack-defense+85));target.fortification=0;target.stability=32;campaignStats.regionsLost=(campaignStats.regionsLost||0)+1;
@@ -1212,7 +1213,7 @@ function rivalAI(){
    if(strategy.style==="difensiva")log("DOTTRINA ALPINA: "+rivalNames[rival]+" fortifica "+target.name+" e rafforza il presidio.");
    else log(rivalNames[rival]+" consolida "+target.name+" e rafforza le difese.");
   }else if(canExpand){
-   const chosen=preferredFree[0];chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor);chosen.fortification=0;chosen.stability=58;
+   const chosen=preferredFree[0];chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor*scenarioFactor);chosen.fortification=0;chosen.stability=58;
    log(rivalNames[rival]+" avvia la propria espansione su "+chosen.name+".");
   }
  }else if(action==="industria"){
@@ -1221,7 +1222,7 @@ function rivalAI(){
    target.garrison=Math.min(450,(target.garrison||100)+55);
    log("DOTTRINA INDUSTRIALE: "+rivalNames[rival]+" investe nella sicurezza produttiva di "+target.name+".");
   }else if(canExpand){
-   const chosen=preferredFree[0];chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor);chosen.fortification=0;chosen.stability=58;
+   const chosen=preferredFree[0];chosen.owner="enemy";chosen.faction=rivalNames[rival];chosen.garrison=Math.round((100+turn*9)*difficultyFactor*scenarioFactor);chosen.fortification=0;chosen.stability=58;
    log(rivalNames[rival]+" amplia la propria base industriale in "+chosen.name+".");
   }
  }
