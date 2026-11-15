@@ -29,9 +29,16 @@ test('la campagna include tutte le 20 regioni italiane', () => {
 });
 
 test('sono presenti le azioni principali e il salvataggio locale', () => {
-  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map']) {
+  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map', 'moveDestination', 'moveArmy']) {
     assert.ok(html.includes('id="' + id + '"'), 'controllo mancante: ' + id);
   }
   assert.match(script, /localStorage\.setItem/);
   assert.match(script, /localStorage\.getItem/);
+});
+
+test("il movimento degli eserciti è limitato alle province confinanti controllate", () => {
+  assert.match(script, /function areAdjacent\(a,b\)/);
+  assert.match(script, /function availableDestinations\(from\)/);
+  assert.match(script, /to\.owner!=="player"/);
+  assert.match(script, /Esercito trasferito da/);
 });
