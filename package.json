@@ -1,8 +1,8 @@
 {
-  "name": "war-italy",
-  "version": "5.3.0",
+  "name": "imperium-italiae",
+  "version": "1.0.0",
   "private": true,
-  "description": "WAR ITALY - strategia, diplomazia, guerra e futuro",
+  "description": "Imperium Italiae - gioco strategico per browser e Android",
   "scripts": {
     "android:sync": "cap sync android",
     "test": "node --test"
