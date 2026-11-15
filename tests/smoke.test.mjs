@@ -69,9 +69,9 @@ test("mappa strategica dell'Italia presente e interattiva", () => {
   assert.match(script, /const strategicMapPositions=\[\[/);
 });
 
-test("versione 5.1.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.1\.0/);
-  assert.equal(packageJson.version, "5.1.0");
+test("versione 5.2.0 coerente tra app e pacchetto", () => {
+  assert.match(html, /BUILD 5\.2\.0/);
+  assert.equal(packageJson.version, "5.2.0");
 });
 
 
@@ -254,9 +254,9 @@ test("l'esercito può essere ridislocato dopo la perdita di una provincia", () =
   assert.match(script, /const lostIndex=regions\.indexOf\(target\)/);
 });
 
-test("versione 5.1.0 coerente tra applicazione e pacchetto", () => {
-  assert.match(html, /BUILD 5\.1\.0/);
-  assert.equal(packageJson.version, "5.1.0");
+test("versione 5.2.0 coerente tra applicazione e pacchetto", () => {
+  assert.match(html, /BUILD 5\.2\.0/);
+  assert.equal(packageJson.version, "5.2.0");
 });
 
 test("scenari campagna e sandbox con modificatori", () => {
@@ -315,9 +315,9 @@ test("consigliere IA strategico contestuale e privacy locale 5.1", () => {
   assert.match(script, /updateDiplomacyPanel\(\);updateAiAdvisor\(\)/);
   assert.match(html, /nessuna chiave API o invio di dati esterni/);
 });
-test("versione 5.1.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.1\.0/);
-  assert.equal(packageJson.version, "5.1.0");
+test("versione 5.2.0 coerente tra app e pacchetto", () => {
+  assert.match(html, /BUILD 5\.2\.0/);
+  assert.equal(packageJson.version, "5.2.0");
 });
 
 test("IA 5.2: priorità contestuali, piani eseguibili e validazione risorse", () => {
@@ -334,7 +334,7 @@ test("IA rivale adattiva alla forza e alla superiorità aerea del giocatore", ()
   assert.match(script, /const playerMilitary=\{land:units\*70/);
   assert.match(script, /adaptivePressure=playerMilitary\.total>rivalDefense\*1\.15/);
   assert.match(script, /Math\.random\(\)\+sanctionPressure\+adaptivePressure/);
-  assert.match(script, /playerMilitary\.air>playerMilitary\.land\*\.65\?\.92:1/);
+  assert.match(script, /playerMilitary\.air>playerMilitary\.land\*\.65\?0\.92:1/);
 });
 test("eventi strategici selezionati in base alle condizioni della campagna", () => {
   assert.match(script, /function scoreStrategicEvent\(event\)/);
