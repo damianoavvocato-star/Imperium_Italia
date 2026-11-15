@@ -70,8 +70,8 @@ test("mappa strategica dell'Italia presente e interattiva", () => {
 });
 
 test("versione 5.2.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.2\.0/);
-  assert.equal(packageJson.version, "5.2.0");
+  assert.match(html, /BUILD 5\.3\.0/);
+  assert.equal(packageJson.version, "5.3.0");
 });
 
 
@@ -255,8 +255,8 @@ test("l'esercito può essere ridislocato dopo la perdita di una provincia", () =
 });
 
 test("versione 5.2.0 coerente tra applicazione e pacchetto", () => {
-  assert.match(html, /BUILD 5\.2\.0/);
-  assert.equal(packageJson.version, "5.2.0");
+  assert.match(html, /BUILD 5\.3\.0/);
+  assert.equal(packageJson.version, "5.3.0");
 });
 
 test("scenari campagna e sandbox con modificatori", () => {
@@ -316,8 +316,8 @@ test("consigliere IA strategico contestuale e privacy locale 5.1", () => {
   assert.match(html, /nessuna chiave API o invio di dati esterni/);
 });
 test("versione 5.2.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.2\.0/);
-  assert.equal(packageJson.version, "5.2.0");
+  assert.match(html, /BUILD 5\.3\.0/);
+  assert.equal(packageJson.version, "5.3.0");
 });
 
 test("IA 5.2: priorità contestuali, piani eseguibili e validazione risorse", () => {
@@ -343,6 +343,15 @@ test("eventi strategici selezionati in base alle condizioni della campagna", () 
   assert.match(script, /EVENTO STRATEGICO ADATTIVO/);
 });
 test("versione 5.2.0 coerente tra app e pacchetto", () => {
-  assert.match(html, /BUILD 5\.2\.0/);
-  assert.equal(packageJson.version, "5.2.0");
+  assert.match(html, /BUILD 5\.3\.0/);
+  assert.equal(packageJson.version, "5.3.0");
+});
+
+test("IA 5.3 presenta una direttiva strategica dinamica in tre orizzonti", () => {
+  for (const id of ["aiCampaignPlanPanel", "aiCampaignPlanStatus", "aiCampaignPlanSteps"]) assert.match(html, new RegExp('id="' + id + '"'));
+  assert.match(script, /function updateAiCampaignPlan\(\)/);
+  assert.match(script, /Stabilizzare la base economica|Stabilizzare il bilancio nazionale/);
+  assert.match(script, /Ripristinare la catena logistica/);
+  assert.match(script, /Integrare i territori sotto tensione/);
+  assert.match(script, /updateAiCampaignPlan\(\)/);
 });

@@ -1,5 +1,13 @@
 # WAR ITALY — Cronologia versioni
 
+## 5.3.0 — Direttiva strategica e piano campagna dinamico
+- Aggiunta una tabella di marcia IA in tre orizzonti: bilancio, logistica/difesa e coesione/ricerca.
+- Le priorità si aggiornano con lo stato reale della campagna, delle province controllate, delle scorte e delle tecnologie.
+- Le direttive sono consultive: nessuna azione viene eseguita automaticamente e il giocatore mantiene il controllo.
+- Rendering dei contenuti tramite nodi DOM e textContent per evitare l'inserimento di markup proveniente dai dati di gioco.
+- Aggiornati versione applicazione, pacchetto e test smoke; nessuna modifica al formato dei salvataggi.
+
+
 ## 5.2.0 — IA adattiva, piani operativi ed eventi contestuali
 - Potenziato il consigliere strategico con valutazione prioritaria di bilancio, scorte, stabilità, fronti, consenso e minacce delle fazioni rivali.
 - Aggiunti piani operativi eseguibili su richiesta del giocatore: stabilizzazione provinciale, fortificazione del fronte e sviluppo economico; ogni piano ricontrolla proprietà e risorse prima dell'esecuzione.
