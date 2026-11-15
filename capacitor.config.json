@@ -1,6 +1,6 @@
 {
-  "appId": "com.waritaly.game",
-  "appName": "WAR ITALY",
+  "appId": "com.imperiumitaliae.game",
+  "appName": "Imperium Italiae",
   "webDir": "www",
   "bundledWebRuntime": false
 }
