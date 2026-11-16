@@ -50,3 +50,8 @@ test('sono presenti nomina, statistiche e trasferimento del generale con le trup
   assert.match(script, /to\.general=from\.general/);
   assert.match(script, /Abilità di comando/);
 });
+
+test('il salvataggio usa il nuovo identificativo e migra quello precedente', () => {
+  assert.match(script, /imperium_italia_save/);
+  assert.match(script, /imperiumItaliaeSave/);
+});
