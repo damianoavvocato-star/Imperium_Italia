@@ -20,7 +20,7 @@ Imperium_Italia è un progetto indipendente di strategia ambientato in Italia. Q
 https://damianoavvocato-star.github.io/Imperium_Italia/
 
 ## APK Android
-Apri la scheda Actions del repository e seleziona il workflow **Imperium_Italia Android APK**. Al termine, scarica l'artifact **IMPERIUM-ITALIAE-debug-APK**.
+Apri la scheda Actions del repository e seleziona il workflow **Imperium_Italia Android APK**. Al termine, scarica l'artifact **IMPERIUM_ITALIA-debug-APK**.
 
 ## Avvio locale
 Apri `www/index.html` in un browser moderno. La pagina `www/imperium.html` contiene la stessa esperienza di gioco sorgente.
