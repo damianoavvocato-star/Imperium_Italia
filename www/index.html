@@ -129,23 +129,29 @@ function resolveBattle(from,to){
  if(!attackingCount){note("Non hai soldati disponibili per attaccare.");return}
  const generalBonus=from.general?1+from.general.skill*.12:1;
  const tactic=tacticalModifiers($("battleTactic").value,attackers);
- const attackPower=unitPower(attackers)*generalBonus*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor(from),defensePower=unitPower(defenders)*1.15*terrainDefenseBonus(to)*moraleFactor(to);
- const siege=state.sieges&&state.sieges[to.id];
- const siegeReduction=siege?Math.min(.45,siege.turns*.15):0;
- const effectiveDefensePower=defensePower*(1-siegeReduction);
- const victory=attackPower>=effectiveDefensePower;
+ const terrain=terrainFor(to),terrainBonus=terrainDefenseBonus(to);
+ const attackPower=unitPower(attackers)*generalBonus*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor(from);
+ const defensePower=unitPower(defenders)*1.15*terrainBonus*moraleFactor(to);
+ const siege=state.sieges&&state.sieges[to.id],siegeReduction=siege?Math.min(.45,siege.turns*.15):0;
+ const effectiveDefensePower=defensePower*(1-siegeReduction),victory=attackPower>=effectiveDefensePower;
  const attackerLossRate=victory?Math.min(.55,.12+(effectiveDefensePower/Math.max(1,attackPower))*.22):Math.min(.9,.35+(attackPower/Math.max(1,effectiveDefensePower))*.35);
  const attackerLosses=Math.min(attackingCount,Math.max(1,Math.ceil(attackingCount*attackerLossRate*tactic.loss)));
- applyCasualties(attackers,attackerLosses);from.morale=Math.max(0,attackMorale-attackerLosses*9);
+ applyCasualties(attackers,attackerLosses);
+ from.morale=Math.max(0,Math.min(100,(from.morale??75)+(victory?8:-22)-Math.ceil(attackerLosses*2)));
  const survivors=unitCount(attackers);
- from.morale=Math.max(0,Math.min(100,(from.morale??75)+(victory?8:-22)));to.morale=Math.max(0,Math.min(100,(to.morale??75)+(victory?-18:5)));
  if(victory&&survivors>0){
-  delete state.sieges[to.id];to.owner="player";to.faction="Roma";to.gold+=350;to.units={infantry:0,archers:0,cavalry:0};to.garrison={infantry:0,archers:0,cavalry:0};
-  to.morale=Math.max(55,defenseMorale);note("VITTORIA a "+to.name+" con "+tactic.label+"! Terreno: "+terrain.name+". Morale romano: "+Math.round(moraleOf(from))+"%. Perdite: "+attackerLosses+" unità. Provincia conquistata; "+defendingCount+" difensori eliminati.");
+  delete state.sieges[to.id];to.owner="player";to.faction="Roma";to.gold+=350;to.units={infantry:0,archers:0,cavalry:0};to.garrison={infantry:0,archers:0,cavalry:0};to.morale=65;
+  note("VITTORIA a "+to.name+" con "+tactic.label+"! Terreno: "+terrain+". Perdite: "+attackerLosses+" unità. Provincia conquistata; "+defendingCount+" difensori eliminati.");
  }else{
   const defenderLosses=Math.min(defendingCount,Math.max(1,Math.ceil(defendingCount*.25)));
-  applyCasualties(defenders,defenderLosses);to.garrison=defenders;to.morale=Math.max(0,defenseMorale-defenderLosses*9);
-  note("SCONFITTA davanti a "+to.name+" con "+tactic.label+". Terreno: "+terrain.name+" (vantaggio difensivo "+Math.round((terrain.defense-1)*100)+"%). Morale romano: "+Math.round(moraleOf(from))+"%. Perdite: "+attackerLosses+" unità; difensori eliminati: "+defenderLosses+". La provincia resiste.");
+  applyCasualties(defenders,defenderLosses);if(to.owner==="enemy")to.units=defenders;else to.garrison=defenders;
+  to.morale=Math.max(0,Math.min(100,(to.morale??75)+5-defenderLosses*3));
+  let retreat="";
+  if(survivors>0&&from.morale<=25){
+   const refuge=links.filter(([x,y])=>x===from.id||y===from.id).map(([x,y])=>x===from.id?y:x).map(id=>state.regions[id]).find(r=>r.owner==="player"&&r.id!==from.id);
+   if(refuge){for(const kind of ["infantry","archers","cavalry"]){refuge.units[kind]+=attackers[kind];attackers[kind]=0}if(from.general){if(!refuge.general)refuge.general=from.general;from.general=null}retreat=" L'esercito si ritira verso "+refuge.name+"."}
+  }
+  note("SCONFITTA davanti a "+to.name+" con "+tactic.label+". Terreno: "+terrain+" (bonus difensivo "+Math.round((terrainBonus-1)*100)+"%). Perdite: "+attackerLosses+" unità; difensori eliminati: "+defenderLosses+"."+retreat);
  }
  state.selected=from.id;render();
 }
