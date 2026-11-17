@@ -216,7 +216,30 @@ function runEnemyAI(){
   let remaining=moving;
   ["cavalry","archers","infantry"].forEach(type=>{const count=Math.min(from.units[type],remaining);from.units[type]-=count;to.units[type]=(to.units[type]||0)+count;remaining-=count});
   if(moving>remaining)note(from.faction+" sposta "+(moving-remaining)+" unità da "+from.name+" verso "+to.name+" per avvicinarsi al fronte romano.");
+ })
+ // Rinforzi difensivi: le province di confine ricevono truppe dalle retrovie.
+ const borderThreats=enemyRegions.filter(r=>r.owner==="enemy"&&links.some(([a,b])=>{
+  const id=a===r.id?b:b===r.id?a:null;
+  return id!==null&&state.regions[id].owner==="player"&&!isPeacefulWithFaction(r.faction);
+ })).sort((a,b)=>{
+  const threat=r=>links.reduce((sum,[x,y])=>{const id=x===r.id?y:y===r.id?x:null;const p=id===null?null:state.regions[id];return sum+(p&&p.owner==="player"?unitPower(p.units):0)},0);
+  return threat(b)-threat(a);
  });
+ borderThreats.forEach(front=>{
+  const threat=links.reduce((sum,[a,b])=>{const id=a===front.id?b:b===front.id?a:null;const p=id===null?null:state.regions[id];return sum+(p&&p.owner==="player"&&!isPeacefulWithFaction(front.faction)?unitPower(p.units):0)},0);
+  if(unitPower(front.units)>=threat*1.1)return;
+  const donors=enemyRegions.filter(r=>r.owner==="enemy"&&r.faction===front.faction&&r.id!==front.id&&unitCount(r.units)>3&&!links.some(([a,b])=>{
+   const id=a===r.id?b:b===r.id?a:null;return id!==null&&state.regions[id].owner==="player"&&!isPeacefulWithFaction(r.faction);
+  })).sort((a,b)=>unitCount(b.units)-unitCount(a.units));
+  const donor=donors[0];if(!donor)return;
+  const moving=Math.min(Math.ceil((threat*1.1-unitPower(front.units))/10),Math.floor(unitCount(donor.units)/2),3);
+  if(moving<1)return;
+  let left=moving;
+  ["infantry","archers","cavalry"].forEach(type=>{const n=Math.min(donor.units[type],left);donor.units[type]-=n;front.units[type]+=n;left-=n});
+  const sent=moving-left;
+  if(sent)note(front.faction+" invia "+sent+" rinforzi da "+donor.name+" a "+front.name+" per difendere il confine.");
+ });
+;
 }
 function save(showMessage=true){try{localStorage.setItem("imperium_italia_save",JSON.stringify(state));if(showMessage)note("Campagna salvata su questo dispositivo.");}catch(e){note("Salvataggio non disponibile in questo browser.")}}
 function load(){try{let raw=localStorage.getItem("imperium_italia_save");if(!raw){raw=localStorage.getItem("imperiumItaliaeSave");if(raw)localStorage.setItem("imperium_italia_save",raw)}if(!raw)return false;const parsed=JSON.parse(raw);if(!parsed||!Array.isArray(parsed.regions)||parsed.regions.length!==20)return false;state=parsed;state.diplomacy=state.diplomacy||{};state.alliances=state.alliances||{};state.regions.forEach(r=>{r.units={infantry:0,archers:0,cavalry:0,...(r.units||{})};if(!r.general)r.general=null;if(!r.garrison)r.garrison=r.owner==="player"?{infantry:0,archers:0,cavalry:0}:{infantry:Math.max(1,Math.ceil((r.pop||0)/500)),archers:Math.max(0,Math.ceil((r.pop||0)/700)),cavalry:0};else r.garrison={infantry:0,archers:0,cavalry:0,...r.garrison};if(!Number.isFinite(r.level))r.level=1});if(!state.regions.some(r=>r.owner==="enemy"))seedRivals(state.regions);state.regions.forEach(r=>{if(!r.faction)r.faction=r.owner==="player"?"Roma":r.owner==="enemy"?"Rivali":"Indipendenti"});if(!Number.isInteger(state.selected)||state.selected<0||state.selected>=20)state.selected=11;return true}catch(e){return false}}
