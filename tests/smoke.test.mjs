@@ -107,3 +107,14 @@ test('gli attacchi del giocatore contro fazioni nemiche affrontano il loro eserc
   assert.match(script, /to\.owner==="enemy"\?to\.units/);
   assert.match(script, /to\.faction="Roma"/);
 });
+
+
+test('la diplomazia consente tregue temporanee e blocca attacchi e incursioni AI', () => {
+  assert.ok(html.includes('id="offerTruce"'));
+  assert.ok(html.includes('id="diplomacyStatus"'));
+  assert.match(script, /function isTruceActive\(faction\)/);
+  assert.match(script, /state\.diplomacy\[target\.faction\]=state\.turn\+3/);
+  assert.match(script, /to\.owner==="enemy"&&isTruceActive\(to\.faction\)/);
+  assert.match(script, /r\.owner==="player"&&!isTruceActive\(from\.faction\)/);
+  assert.match(script, /state\.diplomacy=state\.diplomacy\|\|\{\}/);
+});
