@@ -175,3 +175,10 @@ test('le battaglie applicano bonus del terreno e modificatori di morale', () => 
   assert.ok(html.includes('id="terrainLabel"'));
   assert.ok(html.includes('id="moraleLabel"'));
 });
+
+test('le battaglie avanzate gestiscono ritirata e trasferimento dei superstiti', () => {
+  assert.match(script, /if\(survivors>0&&from\.morale<=25\)/);
+  assert.match(script, /const refuge=links\.filter/);
+  assert.match(script, /L'esercito si ritira verso/);
+  assert.match(script, /refuge\.units\[kind\]\+=attackers\[kind\]/);
+});
