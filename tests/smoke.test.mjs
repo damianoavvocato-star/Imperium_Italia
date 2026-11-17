@@ -211,3 +211,18 @@ test('il campo tattico mostra reparti su griglia e consente il movimento control
 test('le battaglie salvate prima della griglia ricevono posizioni tattiche predefinite', () => {
   assert.match(script, /if\(!b\.positions\)b\.positions=\{/);
 });
+
+
+test('il movimento tattico rispetta percorso, ostacoli e velocità differenziata', () => {
+  assert.match(script, /function tacticalCellBlocked\(x,y,b\)/);
+  assert.match(script, /function tacticalReachable\(b,type\)/);
+  assert.match(script, /type===\"cavalry\"\?3:2/);
+  assert.match(script, /reachable\.has\(x\+\x27,\x27\+y\)/);
+});
+
+test('la posizione dei reparti influenza gli ordini di carica, tiro e avanzata', () => {
+  assert.match(script, /function tacticalPositionFactor\(b,order\)/);
+  assert.match(script, /const positionFactor=tacticalPositionFactor\(b,order\)/);
+  assert.match(script, /\*cmd\.attack\*positionFactor/);
+  assert.match(script, /vantaggio di posizione/);
+});
