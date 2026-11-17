@@ -165,3 +165,13 @@ test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', (
   assert.match(script, /Math\.min\(\.45,siege\.turns\*\.15\)/);
   assert.match(script, /state\.sieges=state\.sieges\|\|\{\}/);
 });
+
+test('le battaglie applicano bonus del terreno e modificatori di morale', () => {
+  assert.match(script, /function terrainFor\(region\)/);
+  assert.match(script, /terrainDefenseBonus\(to\)/);
+  assert.match(script, /terrainAttackBonus\(to,attackers\)/);
+  assert.match(script, /moraleFactor\(from\)/);
+  assert.match(script, /r\.morale=Math\.min\(100,\(r\.morale\?\?75\)\+2\)/);
+  assert.ok(html.includes('id="terrainLabel"'));
+  assert.ok(html.includes('id="moraleLabel"'));
+});
