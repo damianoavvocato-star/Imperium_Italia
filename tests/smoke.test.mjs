@@ -66,7 +66,7 @@ test('il sistema di battaglia calcola forza, perdite e conquista', () => {
   assert.match(script, /applyCasualties\(attackers,attackerLosses\)/);
   assert.match(script, /to\.owner="player"/);
   assert.match(script, /SCONFITTA davanti a/);
-  assert.match(script, /terrain\.defense/);
+  assert.match(script, /terrainBonus/);
   assert.match(script, /from\.morale=Math\.max/);
 });
 test('le province confinanti non controllate sono obiettivi di attacco', () => {
@@ -152,10 +152,13 @@ test('le fazioni inviano rinforzi dalle retrovie alle province di confine minacc
 });
 
 test("terreno, morale e ritirata strategica sono integrati e compatibili con i salvataggi", () => {
-  for (const id of ["terrainType", "moraleValue", "retreatArmy"]) assert.ok(html.includes('id="' + id + '"'));
-  assert.match(script, /Ritirata strategica da/);
-  assert.match(script, /to\.morale=Math\.min\(100,moraleOf\(to\)\+5\)/);
-  assert.match(script, /r\.morale=100/);
+  assert.ok(html.includes('id="terrainLabel"'));
+  assert.ok(html.includes('id="moraleLabel"'));
+  assert.match(script, /function terrainFor\(region\)/);
+  assert.match(script, /function moraleFactor\(region\)/);
+  assert.match(script, /if\(survivors>0&&from\.morale<=25\)/);
+  assert.match(script, /r\.morale=Math\.min\(100,\(r\.morale\?\?75\)\+2\)/);
+  assert.match(script, /if\(!Number\.isFinite\(r\.morale\)\)/);
 });
 
 test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', () => {
