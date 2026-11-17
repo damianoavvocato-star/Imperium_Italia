@@ -219,7 +219,7 @@ function issueBattleOrder(order){
  const cmd=orders[order]||orders.advance;
  const attackPower=unitPower(attackers)*general*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor({morale:b.attackMorale})*cmd.attack;
  const defensePower=unitPower(defenders)*1.15*terrainBonus*moraleFactor({morale:b.defenseMorale})*(1-siegeReduction)*cmd.defense;
- const attackerRate=Math.min(.28,Math.max(.05,.07+(defensePower/Math.max(1,attackPower))*.07))*cmd.loss;
+ const attackerRate=Math.min(.28,Math.max(.05,.07+(defensePower/Math.max(1,attackPower))*.07))*cmd.loss*tactic.loss;
  const defenderRate=Math.min(.3,Math.max(.05,.07+(attackPower/Math.max(1,defensePower))*.08));
  const attackerLosses=Math.min(unitCount(attackers),Math.max(1,Math.ceil(unitCount(attackers)*attackerRate)));
  const defenderLosses=Math.min(unitCount(defenders),Math.max(1,Math.ceil(unitCount(defenders)*defenderRate)));
