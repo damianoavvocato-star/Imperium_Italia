@@ -62,7 +62,7 @@ test('il sistema di battaglia calcola forza, perdite e conquista', () => {
   assert.match(script, /function terrainForRegion\(id\)/);
   assert.match(script, /function moraleOf\(region\)/);
   assert.match(script, /function resolveBattle\(from,to\)/);
-  assert.match(script, /general=from\\.general\\?1\\+from\\.general\\.skill\\*\\.12:1/);
+  assert.match(script, /general=from\.general\?1\+from\.general\.skill\*\.12:1/);
   assert.match(script, /applyCasualties\(attackers,attackerLosses\)/);
   assert.match(script, /to\.owner="player"/);
   assert.match(script, /SCONFITTA davanti a/);
@@ -156,7 +156,7 @@ test("terreno, morale e ritirata strategica sono integrati e compatibili con i s
   assert.ok(html.includes('id="moraleLabel"'));
   assert.match(script, /function terrainFor\(region\)/);
   assert.match(script, /function moraleFactor\(region\)/);
-  assert.match(script, /b\\.attackMorale<=8/);
+  assert.match(script, /b\.attackMorale<=8/);
   assert.match(script, /r\.morale=Math\.min\(100,\(r\.morale\?\?75\)\+2\)/);
   assert.match(script, /if\(!Number\.isFinite\(r\.morale\)\)/);
 });
@@ -165,7 +165,7 @@ test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', (
   assert.ok(html.includes('id="startSiege"'));
   assert.match(script, /state\.sieges\[to\.id\]=\{originId:from\.id,turns:0\}/);
   assert.match(script, /siege\.turns\+\+/);
-  assert.match(script, /Math\\.min\\(\\.45,b\\.siegeTurns\\*\\.15\\)/);
+  assert.match(script, /Math\.min\(\.45,b\.siegeTurns\*\.15\)/);
   assert.match(script, /state\.sieges=state\.sieges\|\|\{\}/);
 });
 
@@ -184,15 +184,15 @@ test('le battaglie applicano bonus del terreno e modificatori di morale', () => 
   assert.match(script, /function terrainFor\(region\)/);
   assert.match(script, /terrainDefenseBonus\(to\)/);
   assert.match(script, /terrainAttackBonus\(to,attackers\)/);
-  assert.match(script, /moraleFactor\\(\\{morale:b\\.attackMorale\\}\\)/);
+  assert.match(script, /moraleFactor\(\{morale:b\.attackMorale\}\)/);
   assert.match(script, /r\.morale=Math\.min\(100,\(r\.morale\?\?75\)\+2\)/);
   assert.ok(html.includes('id="terrainLabel"'));
   assert.ok(html.includes('id="moraleLabel"'));
 });
 
-test('le battaglie avanzate gestiscono ritirata e trasferimento dei superstiti', () => {
-  assert.match(script, /if\(survivors>0&&from\.morale<=25\)/);
-  assert.match(script, /order===\\"retreat\\"/);
+test('le battaglie avanzate gestiscono ritirata e conservazione dei superstiti', () => {
+  assert.match(script, /order==="retreat"/);
   assert.match(script, /ripiegano verso/);
-  assert.match(script, /finishBattle\\(false,true\\)/);
+  assert.match(script, /finishBattle\(false,true\)/);
+  assert.match(script, /from\.units=\{\.\.\.b\.attackers\}/);
 });
