@@ -118,3 +118,17 @@ test('la diplomazia consente tregue temporanee e blocca attacchi e incursioni AI
   assert.match(script, /r\.owner==="player"&&!isTruceActive\(from\.faction\)/);
   assert.match(script, /state\.diplomacy=state\.diplomacy\|\|\{\}/);
 });
+
+test('le alleanze diplomatiche sono temporanee e impediscono gli attacchi reciproci', () => {
+  assert.ok(html.includes('id="offerAlliance"'));
+  assert.match(script, /function isAllianceActive\(faction\)/);
+  assert.match(script, /function isPeacefulWithFaction\(faction\)/);
+  assert.match(script, /state\.alliances\[target\.faction\]=state\.turn\+4/);
+  assert.match(script, /filter\(r=>r\.owner==="player"&&!isPeacefulWithFaction\(from\.faction\)\)/);
+  assert.match(script, /state\.alliances=state\.alliances\|\|\{\}/);
+});
+test('le fazioni nemiche possono espandersi conquistando province neutrali', () => {
+  assert.match(script, /filter\(r=>r\.owner==="neutral"\)/);
+  assert.match(script, /unitCount\(from\.units\)<4/);
+  assert.match(script, /espande il proprio dominio conquistando/);
+});
