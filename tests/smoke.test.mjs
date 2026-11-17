@@ -82,7 +82,7 @@ test('le quattro tattiche modificano la forza o le perdite in base alla composiz
   assert.match(script, /tactic\.loss/);
   assert.match(script, /Carica di cavalleria/);
   assert.match(script, /Pioggia di frecce/);
-  assert.match(script, /tactic\.label/);
+  assert.match(script, /tacticalModifiers\(b\.tactic,b\.attackers\)\.label/);
 });
 
 test('i vecchi salvataggi vengono completati con guarnigioni e unità mancanti', () => {
