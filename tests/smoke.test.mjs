@@ -114,8 +114,8 @@ test('la diplomazia consente tregue temporanee e blocca attacchi e incursioni AI
   assert.ok(html.includes('id="diplomacyStatus"'));
   assert.match(script, /function isTruceActive\(faction\)/);
   assert.match(script, /state\.diplomacy\[target\.faction\]=state\.turn\+3/);
-  assert.match(script, /to\.owner==="enemy"&&isTruceActive\(to\.faction\)/);
-  assert.match(script, /r\.owner==="player"&&!isTruceActive\(from\.faction\)/);
+  assert.match(script, /to\.owner==="enemy"&&isPeacefulWithFaction\(to\.faction\)/);
+  assert.match(script, /r\.owner==="player"&&!isPeacefulWithFaction\(from\.faction\)/);
   assert.match(script, /state\.diplomacy=state\.diplomacy\|\|\{\}/);
 });
 
