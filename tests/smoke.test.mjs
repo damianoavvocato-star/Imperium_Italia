@@ -29,7 +29,7 @@ test('la campagna include tutte le 20 regioni italiane', () => {
 });
 
 test('sono presenti le azioni principali e il salvataggio locale', () => {
-  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map', 'moveDestination', 'moveArmy', 'retreatArmy', 'terrainType', 'moraleValue']) {
+  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map', 'moveDestination', 'moveArmy', 'terrainLabel', 'moraleLabel']) {
     assert.ok(html.includes('id="' + id + '"'), 'controllo mancante: ' + id);
   }
   assert.match(script, /localStorage\.setItem/);
