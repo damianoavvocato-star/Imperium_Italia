@@ -206,3 +206,8 @@ test('il campo tattico mostra reparti su griglia e consente il movimento control
   assert.match(script, /Math\.abs\(p\.x-x\)\+Math\.abs\(p\.y-y\)>2/);
   assert.match(script, /b\.selectedUnit=null/);
 });
+
+
+test('le battaglie salvate prima della griglia ricevono posizioni tattiche predefinite', () => {
+  assert.match(script, /if\(!b\.positions\)b\.positions=\{/);
+});
