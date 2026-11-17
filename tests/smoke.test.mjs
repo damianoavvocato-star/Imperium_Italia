@@ -134,7 +134,7 @@ test('le fazioni nemiche possono espandersi conquistando province neutrali', () 
 });
 
 test('le armate rivali si riposizionano tra province alleate verso il fronte romano', () => {
-  assert.match(script, /function distanceToRome=origin/);
+  assert.match(script, /const distanceToRome=origin=>/);
   assert.match(script, /distanceToRome\(r\.id\)<currentDistance/);
   assert.match(script, /sposta .*unità da/);
   assert.match(script, /from\.units\[type\]-=count/);
