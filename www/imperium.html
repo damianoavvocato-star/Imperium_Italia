@@ -30,6 +30,8 @@
 .battle-feed{background:#101d24;border-radius:9px;padding:10px;min-height:58px;color:#d3d9d2;font-size:13px;margin:12px 0}
 @media(max-width:600px){.battle-window{padding:12px}.battle-ground{gap:6px}.battle-force{padding:8px}.battle-divider{font-size:16px}.battle-orders{grid-template-columns:repeat(2,minmax(0,1fr))}.battle-orders button:last-child{grid-column:span 2}}
 
+
+.tactical-board{margin:12px 0;background:#10232a;border:1px solid #60716c;border-radius:12px;overflow:hidden}.tactical-board canvas{display:block;width:100%;height:auto;touch-action:manipulation;cursor:crosshair}.tactical-help{font-size:11px;color:var(--muted);padding:8px 10px}.tactical-selection{color:var(--gold);font-weight:700}
 </style>
 </head>
 <body>
@@ -83,6 +85,8 @@
  <section class="battle-window">
   <div class="battle-head"><div><div class="sub">CAMPO DI BATTAGLIA · SCONTRO A TURNI</div><h2 id="battleTitle">Battaglia</h2></div><span class="tag" id="battleRound">ROUND 1/3</span></div>
   <div class="battle-info"><span class="battle-chip" id="battleTerrain">Terreno</span><span class="battle-chip" id="battleDoctrine">Formazione</span><span class="battle-chip" id="battleGeneral">Comandante</span></div>
+
+  <div class="tactical-board"><canvas id="tacticalMap" width="640" height="480" aria-label="Campo tattico a griglia: seleziona un reparto e tocca una casella libera per muoverlo"></canvas><div class="tactical-help">MOVIMENTO: seleziona un reparto romano, poi tocca una casella libera entro due caselle. Gli ostacoli e il terreno limitano il passaggio. <span class="tactical-selection" id="tacticalSelection">Nessun reparto selezionato</span></div></div>
   <div class="battle-ground">
    <div class="battle-force"><h3>ROMA · ATTACCANTI</h3><div class="battle-units" id="battleAttackers"></div><div class="battle-chip" id="battleAttackMorale">Morale 100%</div></div>
    <div class="battle-divider">VS</div>
@@ -163,10 +167,20 @@ function resolveBattle(from,to){
  if(state.battle){note("Concludi prima lo scontro in corso.");return}
  const defenders=to.owner==="enemy"?to.units:(to.garrison||{infantry:1,archers:0,cavalry:0});
  if(!unitCount(from.units)){note("Non hai soldati disponibili per attaccare.");return}
- state.battle={fromId:from.id,toId:to.id,round:1,attackers:{...from.units},defenders:{...defenders},attackMorale:moraleOf(from),defenseMorale:moraleOf(to),tactic:$("battleTactic").value,terrain:terrainFor(to),feed:["Le armate si sono schierate. Scegli il primo ordine."],siegeTurns:state.sieges?.[to.id]?.turns||0};
+ state.battle={fromId:from.id,toId:to.id,round:1,selectedUnit:null,positions:{attackers:{infantry:{x:2,y:4},archers:{x:4,y:5},cavalry:{x:6,y:4}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}},attackers:{...from.units},defenders:{...defenders},attackMorale:moraleOf(from),defenseMorale:moraleOf(to),tactic:$("battleTactic").value,terrain:terrainFor(to),feed:["Le armate si sono schierate. Scegli il primo ordine."],siegeTurns:state.sieges?.[to.id]?.turns||0};
  note("Le legioni entrano in battaglia presso "+to.name+". Il combattimento tattico è iniziato.");
  renderBattle();save(false);
 }
+
+function drawTacticalMap(){
+ const canvas=$("tacticalMap");if(!canvas||!state.battle)return;const ctx=canvas.getContext("2d"),b=state.battle,w=80,h=80;ctx.clearRect(0,0,640,480);
+ for(let y=0;y<6;y++)for(let x=0;x<8;x++){const rough=(x*7+y*11+b.toId)%13===0;ctx.fillStyle=rough?"#52635b":((x+y)%2?"#315047":"#38584d");ctx.fillRect(x*w,y*h,w,h);ctx.strokeStyle="#8b9a7c";ctx.globalAlpha=.35;ctx.strokeRect(x*w,y*h,w,h);ctx.globalAlpha=1;if(rough){ctx.fillStyle="#1b2824";ctx.beginPath();ctx.moveTo(x*w+20,y*h+58);ctx.lineTo(x*w+39,y*h+17);ctx.lineTo(x*w+62,y*h+58);ctx.fill()}}
+ const names={infantry:"F",archers:"A",cavalry:"C"};for(const side of ["defenders","attackers"]){for(const type of Object.keys(b[side])){const p=b.positions?.[side]?.[type];if(!p||!b[side][type])continue;const selected=side==="attackers"&&b.selectedUnit===type;ctx.beginPath();ctx.arc(p.x*w+40,p.y*h+40,selected?25:21,0,Math.PI*2);ctx.fillStyle=side==="attackers"?"#d4ad52":"#a9554c";ctx.fill();ctx.lineWidth=selected?5:2;ctx.strokeStyle=selected?"#fff3b0":"#f2dfc1";ctx.stroke();ctx.fillStyle="#142027";ctx.font="bold 17px system-ui";ctx.textAlign="center";ctx.fillText(names[type],p.x*w+40,p.y*h+46);ctx.fillStyle="#fff";ctx.font="bold 11px system-ui";ctx.fillText(String(b[side][type]),p.x*w+40,p.y*h+67)}}
+ $("tacticalSelection").textContent=b.selectedUnit?"Reparto selezionato: "+({infantry:"Fanteria",archers:"Arcieri",cavalry:"Cavalleria"}[b.selectedUnit]):"Nessun reparto selezionato";
+}
+function moveTacticalUnit(x,y){const b=state.battle;if(!b)return;const types=["infantry","archers","cavalry"];let clicked=null;for(const type of types){const p=b.positions.attackers[type];if(p&&p.x===x&&p.y===y&&b.attackers[type]>0)clicked=type}if(clicked){b.selectedUnit=clicked;drawTacticalMap();return}if(!b.selectedUnit)return;const p=b.positions.attackers[b.selectedUnit],occupied=Object.values(b.positions).some(side=>Object.values(side).some(q=>q&&q.x===x&&q.y===y));const blocked=(x*7+y*11+b.toId)%13===0;if(occupied||blocked||Math.abs(p.x-x)+Math.abs(p.y-y)>2)return;p.x=x;p.y=y;b.feed.push(({infantry:"La fanteria",archers:"Gli arcieri",cavalry:"La cavalleria"})[b.selectedUnit]+" si riposizionano sul campo.");b.selectedUnit=null;drawTacticalMap();$("battleFeed").textContent=b.feed.slice(-3).join(" · ");save(false)}
+$("tacticalMap").addEventListener("click",event=>{if(!state.battle)return;const rect=$("tacticalMap").getBoundingClientRect(),x=Math.max(0,Math.min(7,Math.floor((event.clientX-rect.left)/rect.width*8))),y=Math.max(0,Math.min(5,Math.floor((event.clientY-rect.top)/rect.height*6)));moveTacticalUnit(x,y)});
+
 function battleUnitMarkup(units){
  const labels=[["infantry","Fanteria"],["archers","Arcieri"],["cavalry","Cavalleria"]];
  return labels.map(([key,label])=>{const value=units[key]||0;return '<div><div class="battle-unit"><span>'+label+'</span><b>'+value+'</b></div><div class="battle-bar"><span style="width:'+Math.min(100,value*10)+'%"></span></div></div>'}).join("");
@@ -185,6 +199,7 @@ function renderBattle(){
  $("battleAttackMorale").textContent="Morale "+Math.round(b.attackMorale)+"%";
  $("battleDefenseMorale").textContent="Morale "+Math.round(b.defenseMorale)+"%";
  $("battleFeed").textContent=b.feed.slice(-3).join(" · ");
+ drawTacticalMap();
  const exhausted=b.round>3||!unitCount(b.attackers)||!unitCount(b.defenders);
  ["orderAdvance","orderVolley","orderCharge","orderHold"].forEach(id=>$(id).disabled=exhausted);
  $("orderRetreat").disabled=false;
