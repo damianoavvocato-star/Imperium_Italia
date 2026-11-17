@@ -169,6 +169,17 @@ test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', (
   assert.match(script, /state\.sieges=state\.sieges\|\|\{\}/);
 });
 
+
+test('le battaglie si svolgono in un campo tattico a tre round con ordini del giocatore', () => {
+  for (const id of ['battleOverlay','battleAttackers','battleDefenders','battleRound','orderAdvance','orderVolley','orderCharge','orderHold','orderRetreat']) assert.ok(html.includes('id="' + id + '"'));
+  assert.match(script, /function issueBattleOrder\(order\)/);
+  assert.match(script, /function renderBattle\(\)/);
+  assert.match(script, /state\.battle=\{/);
+  assert.match(script, /b\.round>3/);
+  assert.match(script, /finishBattle\(false,true\)/);
+  assert.match(script, /state\.battle=state\.battle\|\|null/);
+});
+
 test('le battaglie applicano bonus del terreno e modificatori di morale', () => {
   assert.match(script, /function terrainFor\(region\)/);
   assert.match(script, /terrainDefenseBonus\(to\)/);
