@@ -188,6 +188,7 @@ function battleUnitMarkup(units){
 function renderBattle(){
  const b=state.battle,overlay=$("battleOverlay");overlay.hidden=!b;
  if(!b)return;
+ if(!b.positions)b.positions={attackers:{infantry:{x:2,y:4},archers:{x:4,y:5},cavalry:{x:6,y:4}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}};
  const from=state.regions[b.fromId],to=state.regions[b.toId];
  $("battleTitle").textContent=from.name+" · "+to.name;
  $("battleRound").textContent="ROUND "+b.round+"/3";
