@@ -139,3 +139,10 @@ test('le armate rivali si riposizionano tra province alleate verso il fronte rom
   assert.match(script, /sposta .*unità da/);
   assert.match(script, /from\.units\[type\]-=count/);
 });
+
+test('le fazioni inviano rinforzi dalle retrovie alle province di confine minacciate', () => {
+  assert.match(script, /const borderThreats=enemyRegions\.filter/);
+  assert.match(script, /unitPower\(front\.units\)>=threat\*1\.1/);
+  assert.match(script, /invia .*rinforzi da .* a .* per difendere il confine/);
+  assert.match(script, /Math\.floor\(unitCount\(donor\.units\)\/2\)/);
+});
