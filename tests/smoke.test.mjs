@@ -69,3 +69,20 @@ test('le province confinanti non controllate sono obiettivi di attacco', () => {
   assert.match(script, /function availableAttackTargets\(from\)/);
   assert.match(script, /filter\(id=>state\.regions\[id\]\.owner!=="player"\)/);
 });
+
+
+test('le quattro tattiche modificano la forza o le perdite in base alla composizione', () => {
+  assert.ok(html.includes('id="battleTactic"'));
+  assert.match(script, /function tacticalModifiers\(tactic,units\)/);
+  assert.match(script, /tactic\.power/);
+  assert.match(script, /tactic\.loss/);
+  assert.match(script, /Carica di cavalleria/);
+  assert.match(script, /Pioggia di frecce/);
+  assert.match(script, /con \+tactic\.label/);
+});
+
+test('i vecchi salvataggi vengono completati con guarnigioni e unità mancanti', () => {
+  assert.match(script, /if\(!r\.garrison\)r\.garrison=/);
+  assert.match(script, /r\.units=\{infantry:0,archers:0,cavalry:0/);
+  assert.match(script, /state\.selected=11/);
+});
