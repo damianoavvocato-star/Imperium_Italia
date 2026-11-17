@@ -67,7 +67,7 @@ test('il sistema di battaglia calcola forza, perdite e conquista', () => {
 });
 test('le province confinanti non controllate sono obiettivi di attacco', () => {
   assert.match(script, /function availableAttackTargets\(from\)/);
-  assert.match(script, /filter\(id=>state\.regions\[id\]\.owner!=="player"\)/);
+  assert.match(script, /filter\(id=>state\.regions\[id\]\.owner!=="player"&&/);
 });
 
 
