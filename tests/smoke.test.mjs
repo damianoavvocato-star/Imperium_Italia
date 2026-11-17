@@ -196,3 +196,13 @@ test('le battaglie avanzate gestiscono ritirata e conservazione dei superstiti',
   assert.match(script, /finishBattle\(false,true\)/);
   assert.match(script, /from\.units=\{\.\.\.b\.attackers\}/);
 });
+
+
+test('il campo tattico mostra reparti su griglia e consente il movimento controllato', () => {
+  assert.ok(html.includes('id="tacticalMap"'));
+  assert.match(script, /function drawTacticalMap\(\)/);
+  assert.match(script, /function moveTacticalUnit\(x,y\)/);
+  assert.match(script, /b\.positions=\{/);
+  assert.match(script, /Math\.abs\(p\.x-x\)\+Math\.abs\(p\.y-y\)>2/);
+  assert.match(script, /b\.selectedUnit=null/);
+});
