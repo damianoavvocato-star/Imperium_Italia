@@ -55,3 +55,17 @@ test('il salvataggio usa il nuovo identificativo e migra quello precedente', () 
   assert.match(script, /imperium_italia_save/);
   assert.match(script, /imperiumItaliaeSave/);
 });
+
+test('il sistema di battaglia calcola forza, perdite e conquista', () => {
+  for (const id of ['garrisonCount', 'attackDestination', 'attackProvince']) assert.ok(html.includes('id="' + id + '"'));
+  assert.match(script, /function unitPower\(units\)/);
+  assert.match(script, /function resolveBattle\(from,to\)/);
+  assert.match(script, /const generalBonus=from\.general\?1\+from\.general\.skill\*\.12:1/);
+  assert.match(script, /applyCasualties\(attackers,attackerLosses\)/);
+  assert.match(script, /to\.owner="player"/);
+  assert.match(script, /SCONFITTA davanti a/);
+});
+test('le province confinanti non controllate sono obiettivi di attacco', () => {
+  assert.match(script, /function availableAttackTargets\(from\)/);
+  assert.match(script, /filter\(id=>state\.regions\[id\]\.owner!=="player"\)/);
+});
