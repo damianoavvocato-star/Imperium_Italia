@@ -86,3 +86,24 @@ test('i vecchi salvataggi vengono completati con guarnigioni e unità mancanti',
   assert.match(script, /r\.units=\{infantry:0,archers:0,cavalry:0/);
   assert.match(script, /state\.selected=11/);
 });
+
+
+test('le fazioni rivali hanno territori, identità e forze iniziali', () => {
+  assert.ok(html.includes('id="regionFaction"'));
+  assert.match(script, /function seedRivals\(list\)/);
+  assert.match(script, /faction:"Etruschi"/);
+  assert.match(script, /r\.owner==="enemy"/);
+});
+
+test('l’intelligenza artificiale recluta, valuta gli attacchi e può conquistare', () => {
+  assert.match(script, /function runEnemyAI\(\)/);
+  assert.match(script, /r\.gold>=250/);
+  assert.match(script, /attackPower<defensePower\*1\.35/);
+  assert.match(script, /to\.owner="enemy"/);
+  assert.match(script, /runEnemyAI\(\);render\(\);save\(false\)/);
+});
+
+test('gli attacchi del giocatore contro fazioni nemiche affrontano il loro esercito', () => {
+  assert.match(script, /to\.owner==="enemy"\?to\.units/);
+  assert.match(script, /to\.faction="Roma"/);
+});
