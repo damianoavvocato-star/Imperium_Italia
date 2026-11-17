@@ -203,7 +203,7 @@ test('il campo tattico mostra reparti su griglia e consente il movimento control
   assert.match(script, /function drawTacticalMap\(\)/);
   assert.match(script, /function moveTacticalUnit\(x,y\)/);
   assert.match(script, /b\.positions=\{/);
-  assert.match(script, /Math\.abs\(p\.x-x\)\+Math\.abs\(p\.y-y\)>2/);
+  assert.match(script, /reachable\.has\(x\+","\+y\)/);
   assert.match(script, /b\.selectedUnit=null/);
 });
 
