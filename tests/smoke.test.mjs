@@ -217,7 +217,7 @@ test('il movimento tattico rispetta percorso, ostacoli e velocità differenziata
   assert.match(script, /function tacticalCellBlocked\(x,y,b\)/);
   assert.match(script, /function tacticalReachable\(b,type\)/);
   assert.match(script, /type===\"cavalry\"\?3:2/);
-  assert.match(script, /reachable\.has\(x\+\x27,\x27\+y\)/);
+  assert.match(script, /reachable\.has\(x\+","\+y\)/);
 });
 
 test('la posizione dei reparti influenza gli ordini di carica, tiro e avanzata', () => {
