@@ -146,3 +146,11 @@ test('le fazioni inviano rinforzi dalle retrovie alle province di confine minacc
   assert.match(script, /invia .*rinforzi da .* a .* per difendere il confine/);
   assert.match(script, /Math\.floor\(unitCount\(donor\.units\)\/2\)/);
 });
+
+test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', () => {
+  assert.ok(html.includes('id="startSiege"'));
+  assert.match(script, /state\.sieges\[to\.id\]=\{originId:from\.id,turns:0\}/);
+  assert.match(script, /siege\.turns\+\+/);
+  assert.match(script, /Math\.min\(\.45,siege\.turns\*\.15\)/);
+  assert.match(script, /state\.sieges=state\.sieges\|\|\{\}/);
+});
