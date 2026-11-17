@@ -29,7 +29,7 @@ test('la campagna include tutte le 20 regioni italiane', () => {
 });
 
 test('sono presenti le azioni principali e il salvataggio locale', () => {
-  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map', 'moveDestination', 'moveArmy']) {
+  for (const id of ['recruitInfantry', 'recruitArchers', 'recruitCavalry', 'develop', 'claim', 'endTurn', 'save', 'reset', 'map', 'moveDestination', 'moveArmy', 'retreatArmy', 'terrainType', 'moraleValue']) {
     assert.ok(html.includes('id="' + id + '"'), 'controllo mancante: ' + id);
   }
   assert.match(script, /localStorage\.setItem/);
@@ -59,11 +59,15 @@ test('il salvataggio usa il nuovo identificativo e migra quello precedente', () 
 test('il sistema di battaglia calcola forza, perdite e conquista', () => {
   for (const id of ['garrisonCount', 'attackDestination', 'attackProvince']) assert.ok(html.includes('id="' + id + '"'));
   assert.match(script, /function unitPower\(units\)/);
+  assert.match(script, /function terrainForRegion\(id\)/);
+  assert.match(script, /function moraleOf\(region\)/);
   assert.match(script, /function resolveBattle\(from,to\)/);
   assert.match(script, /const generalBonus=from\.general\?1\+from\.general\.skill\*\.12:1/);
   assert.match(script, /applyCasualties\(attackers,attackerLosses\)/);
   assert.match(script, /to\.owner="player"/);
   assert.match(script, /SCONFITTA davanti a/);
+  assert.match(script, /terrain\.defense/);
+  assert.match(script, /from\.morale=Math\.max/);
 });
 test('le province confinanti non controllate sono obiettivi di attacco', () => {
   assert.match(script, /function availableAttackTargets\(from\)/);
@@ -145,6 +149,13 @@ test('le fazioni inviano rinforzi dalle retrovie alle province di confine minacc
   assert.match(script, /unitPower\(front\.units\)>=threat\*1\.1/);
   assert.match(script, /invia .*rinforzi da .* a .* per difendere il confine/);
   assert.match(script, /Math\.floor\(unitCount\(donor\.units\)\/2\)/);
+});
+
+test("terreno, morale e ritirata strategica sono integrati e compatibili con i salvataggi", () => {
+  for (const id of ["terrainType", "moraleValue", "retreatArmy"]) assert.ok(html.includes('id="' + id + '"'));
+  assert.match(script, /Ritirata strategica da/);
+  assert.match(script, /to\.morale=Math\.min\(100,moraleOf\(to\)\+5\)/);
+  assert.match(script, /r\.morale=100/);
 });
 
 test('gli assedi si salvano, avanzano a ogni turno e indeboliscono le difese', () => {
