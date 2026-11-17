@@ -178,7 +178,10 @@ function drawTacticalMap(){
  const names={infantry:"F",archers:"A",cavalry:"C"};for(const side of ["defenders","attackers"]){for(const type of Object.keys(b[side])){const p=b.positions?.[side]?.[type];if(!p||!b[side][type])continue;const selected=side==="attackers"&&b.selectedUnit===type;ctx.beginPath();ctx.arc(p.x*w+40,p.y*h+40,selected?25:21,0,Math.PI*2);ctx.fillStyle=side==="attackers"?"#d4ad52":"#a9554c";ctx.fill();ctx.lineWidth=selected?5:2;ctx.strokeStyle=selected?"#fff3b0":"#f2dfc1";ctx.stroke();ctx.fillStyle="#142027";ctx.font="bold 17px system-ui";ctx.textAlign="center";ctx.fillText(names[type],p.x*w+40,p.y*h+46);ctx.fillStyle="#fff";ctx.font="bold 11px system-ui";ctx.fillText(String(b[side][type]),p.x*w+40,p.y*h+67)}}
  $("tacticalSelection").textContent=b.selectedUnit?"Reparto selezionato: "+({infantry:"Fanteria",archers:"Arcieri",cavalry:"Cavalleria"}[b.selectedUnit]):"Nessun reparto selezionato";
 }
-function moveTacticalUnit(x,y){const b=state.battle;if(!b)return;const types=["infantry","archers","cavalry"];let clicked=null;for(const type of types){const p=b.positions.attackers[type];if(p&&p.x===x&&p.y===y&&b.attackers[type]>0)clicked=type}if(clicked){b.selectedUnit=clicked;drawTacticalMap();return}if(!b.selectedUnit)return;const p=b.positions.attackers[b.selectedUnit],occupied=Object.values(b.positions).some(side=>Object.values(side).some(q=>q&&q.x===x&&q.y===y));const blocked=(x*7+y*11+b.toId)%13===0;if(occupied||blocked||Math.abs(p.x-x)+Math.abs(p.y-y)>2)return;p.x=x;p.y=y;b.feed.push(({infantry:"La fanteria",archers:"Gli arcieri",cavalry:"La cavalleria"})[b.selectedUnit]+" si riposizionano sul campo.");b.selectedUnit=null;drawTacticalMap();$("battleFeed").textContent=b.feed.slice(-3).join(" · ");save(false)}
+function tacticalCellBlocked(x,y,b){return (x*7+y*11+b.toId)%13===0}
+function tacticalReachable(b,type){const start=b.positions.attackers[type],limit=type==="cavalry"?3:2,queue=[{x:start.x,y:start.y,d:0}],seen=new Set([start.x+","+start.y]);while(queue.length){const cell=queue.shift();if(cell.d>=limit)continue;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=cell.x+dx,y=cell.y+dy,key=x+","+y;if(x<0||x>7||y<0||y>5||seen.has(key)||tacticalCellBlocked(x,y,b))continue;const occupied=Object.values(b.positions).some(side=>Object.values(side).some(p=>p&&p.x===x&&p.y===y));if(occupied)continue;seen.add(key);queue.push({x,y,d:cell.d+1})}}return seen}
+function tacticalPositionFactor(b,order){const p=b.positions?.attackers||{},cavalryForward=!!(b.attackers.cavalry&&p.cavalry&&p.cavalry.y<=2),archersBack=!!(b.attackers.archers&&p.archers&&p.archers.y>=3),infantryForward=!!(b.attackers.infantry&&p.infantry&&p.infantry.y<=2);if(order==="charge"&&b.attackers.cavalry)return cavalryForward?1.16:.92;if(order==="volley"&&b.attackers.archers)return archersBack?1.08:.9;if(order==="advance"&&b.attackers.infantry)return infantryForward?1.08:1;return 1}
+function moveTacticalUnit(x,y){const b=state.battle;if(!b)return;const types=["infantry","archers","cavalry"];let clicked=null;for(const type of types){const p=b.positions.attackers[type];if(p&&p.x===x&&p.y===y&&b.attackers[type]>0)clicked=type}if(clicked){b.selectedUnit=clicked;drawTacticalMap();return}if(!b.selectedUnit)return;const type=b.selectedUnit,p=b.positions.attackers[type],reachable=tacticalReachable(b,type);if(!reachable.has(x+","+y))return;p.x=x;p.y=y;b.feed.push(({infantry:"La fanteria",archers:"Gli arcieri",cavalry:"La cavalleria"})[type]+" si riposizionano sul campo.");b.selectedUnit=null;drawTacticalMap();$("battleFeed").textContent=b.feed.slice(-3).join(" · ");save(false)}
 $("tacticalMap").addEventListener("click",event=>{if(!state.battle)return;const rect=$("tacticalMap").getBoundingClientRect(),x=Math.max(0,Math.min(7,Math.floor((event.clientX-rect.left)/rect.width*8))),y=Math.max(0,Math.min(5,Math.floor((event.clientY-rect.top)/rect.height*6)));moveTacticalUnit(x,y)});
 
 function battleUnitMarkup(units){
@@ -233,7 +236,7 @@ function issueBattleOrder(order){
   hold:{attack:.88,defense:.78,loss:.72,morale:5,label:"Tenere la posizione"}
  };
  const cmd=orders[order]||orders.advance;
- const attackPower=unitPower(attackers)*general*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor({morale:b.attackMorale})*cmd.attack;
+ const positionFactor=tacticalPositionFactor(b,order);const attackPower=unitPower(attackers)*general*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor({morale:b.attackMorale})*cmd.attack*positionFactor;
  const defensePower=unitPower(defenders)*1.15*terrainBonus*moraleFactor({morale:b.defenseMorale})*(1-siegeReduction)*cmd.defense;
  const attackerRate=Math.min(.28,Math.max(.05,.07+(defensePower/Math.max(1,attackPower))*.07))*cmd.loss*tactic.loss;
  const defenderRate=Math.min(.3,Math.max(.05,.07+(attackPower/Math.max(1,defensePower))*.08));
@@ -242,7 +245,7 @@ function issueBattleOrder(order){
  applyCasualties(attackers,attackerLosses);applyCasualties(defenders,defenderLosses);
  b.attackMorale=Math.max(0,Math.min(100,b.attackMorale+cmd.morale-attackerLosses*3));
  b.defenseMorale=Math.max(0,Math.min(100,b.defenseMorale+2-defenderLosses*3));
- b.feed.push("Round "+b.round+" · "+cmd.label+": Roma perde "+attackerLosses+" unità, i difensori "+defenderLosses+".");
+ b.feed.push("Round "+b.round+" · "+cmd.label+(positionFactor>1?" · vantaggio di posizione":positionFactor<1?" · posizione sfavorevole":"")+": Roma perde "+attackerLosses+" unità, i difensori "+defenderLosses+".");
  b.round++;
  if(!unitCount(defenders)){finishBattle(true);return}
  if(!unitCount(attackers)||b.attackMorale<=8){finishBattle(false);return}
