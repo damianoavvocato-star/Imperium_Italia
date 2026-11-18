@@ -69,7 +69,7 @@
    <button class="wide secondary" id="moveArmy">SPOSTA TUTTO L'ESERCITO</button>
    <button class="wide secondary" id="retreatArmy">RITIRATA STRATEGICA</button>
    <div class="resource"><span>Obiettivo militare</span><select id="attackDestination" aria-label="Provincia da attaccare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
-   <div class="resource"><span>Formazione d’attacco</span><select id="battleTactic" aria-label="Formazione militare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea equilibrata</option><option value="phalanx">Falange</option><option value="cavalry">Carica di cavalleria</option><option value="archers">Pioggia di frecce</option></select></div>
+   <div class="resource"><span>Dottrina di combattimento</span><select id="battleTactic" aria-label="Dottrina militare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea equilibrata</option><option value="phalanx">Falange</option><option value="cavalry">Carica di cavalleria</option><option value="archers">Pioggia di frecce</option></select></div><div class="resource"><span>Schieramento iniziale</span><select id="battleFormation" aria-label="Schieramento iniziale" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea romana</option><option value="wedge">Cuneo offensivo</option><option value="defensive">Schieramento difensivo</option></select></div>
    <button class="wide" id="attackProvince">ATTACCA LA PROVINCIA</button>
    <button class="wide secondary" id="startSiege">INIZIA ASSEDIO</button>
    <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
@@ -151,6 +151,8 @@ function unitPower(units){return units.infantry*10+units.archers*12+units.cavalr
 function terrainForRegion(id){if([0,1,4,9,12,16,17,19].includes(id))return {name:"Montuoso",defense:1.18};if([2,7,8,10,13].includes(id))return {name:"Colline",defense:1.10};return {name:"Pianura / costa",defense:1};}
 function moraleOf(region){return Number.isFinite(region.morale)?Math.max(0,Math.min(100,region.morale)):100;}
 function unitCount(units){return units.infantry+units.archers+units.cavalry}
+function formationModifiers(formation,units){if(formation==="wedge")return {attack:units.cavalry>0?1.12:.96,loss:units.cavalry>0?1.08:1,label:"Cuneo offensivo"};if(formation==="defensive")return {attack:.94,loss:.82,label:"Schieramento difensivo"};return {attack:1,loss:1,label:"Linea romana"}}
+function initialBattlePositions(formation){if(formation==="wedge")return {attackers:{infantry:{x:3,y:4},archers:{x:4,y:5},cavalry:{x:4,y:2}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}};if(formation==="defensive")return {attackers:{infantry:{x:2,y:3},archers:{x:4,y:5},cavalry:{x:6,y:3}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}};return {attackers:{infantry:{x:2,y:4},archers:{x:4,y:5},cavalry:{x:6,y:4}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}}}
 function tacticalModifiers(tactic,units){
  const hasCavalry=units.cavalry>0,hasArchers=units.archers>0;
  if(tactic==="phalanx")return {power:units.infantry>=units.archers+units.cavalry?1.08:.94,loss:.82,label:"Falange"};
@@ -167,7 +169,7 @@ function resolveBattle(from,to){
  if(state.battle){note("Concludi prima lo scontro in corso.");return}
  const defenders=to.owner==="enemy"?to.units:(to.garrison||{infantry:1,archers:0,cavalry:0});
  if(!unitCount(from.units)){note("Non hai soldati disponibili per attaccare.");return}
- state.battle={fromId:from.id,toId:to.id,round:1,selectedUnit:null,positions:{attackers:{infantry:{x:2,y:4},archers:{x:4,y:5},cavalry:{x:6,y:4}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}},attackers:{...from.units},defenders:{...defenders},attackMorale:moraleOf(from),defenseMorale:moraleOf(to),tactic:$("battleTactic").value,terrain:terrainFor(to),feed:["Le armate si sono schierate. Scegli il primo ordine."],siegeTurns:state.sieges?.[to.id]?.turns||0};
+ const formation=$("battleFormation").value;state.battle={fromId:from.id,toId:to.id,round:1,selectedUnit:null,formation,positions:initialBattlePositions(formation),attackers:{...from.units},defenders:{...defenders},attackMorale:moraleOf(from),defenseMorale:moraleOf(to),tactic:$("battleTactic").value,terrain:terrainFor(to),feed:["Le armate si sono schierate in "+formationModifiers(formation,from.units).label+". Scegli il primo ordine."],siegeTurns:state.sieges?.[to.id]?.turns||0};
  note("Le legioni entrano in battaglia presso "+to.name+". Il combattimento tattico è iniziato.");
  renderBattle();save(false);
 }
@@ -191,7 +193,7 @@ function battleUnitMarkup(units){
 function renderBattle(){
  const b=state.battle,overlay=$("battleOverlay");overlay.hidden=!b;
  if(!b)return;
- if(!b.positions)b.positions={attackers:{infantry:{x:2,y:4},archers:{x:4,y:5},cavalry:{x:6,y:4}},defenders:{infantry:{x:2,y:1},archers:{x:4,y:0},cavalry:{x:6,y:1}}};
+ if(!b.formation)b.formation="line";if(!b.positions)b.positions=initialBattlePositions(b.formation);
  const from=state.regions[b.fromId],to=state.regions[b.toId];
  $("battleTitle").textContent=from.name+" · "+to.name;
  $("battleRound").textContent="ROUND "+b.round+"/3";
@@ -227,7 +229,7 @@ function issueBattleOrder(order){
  const from=state.regions[b.fromId],to=state.regions[b.toId],attackers=b.attackers,defenders=b.defenders;
  if(order==="retreat"){b.feed.push("Il comandante ordina la ritirata: le unità superstiti ripiegano verso "+from.name+".");finishBattle(false,true);return}
  if(!unitCount(attackers)||!unitCount(defenders))return;
- const tactic=tacticalModifiers(b.tactic,attackers),general=from.general?1+from.general.skill*.12:1;
+ const tactic=tacticalModifiers(b.tactic,attackers),formation=formationModifiers(b.formation,attackers),general=from.general?1+from.general.skill*.12:1;
  const terrainBonus=terrainDefenseBonus(to),siegeReduction=Math.min(.45,b.siegeTurns*.15);
  const orders={
   advance:{attack:1.10,defense:1,loss:1,morale:2,label:"Avanzata"},
@@ -236,9 +238,9 @@ function issueBattleOrder(order){
   hold:{attack:.88,defense:.78,loss:.72,morale:5,label:"Tenere la posizione"}
  };
  const cmd=orders[order]||orders.advance;
- const positionFactor=tacticalPositionFactor(b,order);const attackPower=unitPower(attackers)*general*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor({morale:b.attackMorale})*cmd.attack*positionFactor;
+ const positionFactor=tacticalPositionFactor(b,order);const attackPower=unitPower(attackers)*general*tactic.power*terrainAttackBonus(to,attackers)*moraleFactor({morale:b.attackMorale})*cmd.attack*positionFactor*formation.attack;
  const defensePower=unitPower(defenders)*1.15*terrainBonus*moraleFactor({morale:b.defenseMorale})*(1-siegeReduction)*cmd.defense;
- const attackerRate=Math.min(.28,Math.max(.05,.07+(defensePower/Math.max(1,attackPower))*.07))*cmd.loss*tactic.loss;
+ const attackerRate=Math.min(.28,Math.max(.05,.07+(defensePower/Math.max(1,attackPower))*.07))*cmd.loss*tactic.loss*formation.loss;
  const defenderRate=Math.min(.3,Math.max(.05,.07+(attackPower/Math.max(1,defensePower))*.08));
  const attackerLosses=Math.min(unitCount(attackers),Math.max(1,Math.ceil(unitCount(attackers)*attackerRate)));
  const defenderLosses=Math.min(unitCount(defenders),Math.max(1,Math.ceil(unitCount(defenders)*defenderRate)));
