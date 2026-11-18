@@ -202,14 +202,14 @@ test('il campo tattico mostra reparti su griglia e consente il movimento control
   assert.ok(html.includes('id="tacticalMap"'));
   assert.match(script, /function drawTacticalMap\(\)/);
   assert.match(script, /function moveTacticalUnit\(x,y\)/);
-  assert.match(script, /b\.positions=\{/);
+  assert.match(script, /positions:initialBattlePositions\(formation\)/);
   assert.match(script, /reachable\.has\(x\+","\+y\)/);
   assert.match(script, /b\.selectedUnit=null/);
 });
 
 
 test('le battaglie salvate prima della griglia ricevono posizioni tattiche predefinite', () => {
-  assert.match(script, /if\(!b\.positions\)b\.positions=\{/);
+  assert.match(script, /if\(!b\.positions\)b\.positions=initialBattlePositions\(b\.formation\)/);
 });
 
 
