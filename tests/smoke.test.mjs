@@ -226,3 +226,14 @@ test('la posizione dei reparti influenza gli ordini di carica, tiro e avanzata',
   assert.match(script, /\*cmd\.attack\*positionFactor/);
   assert.match(script, /vantaggio di posizione/);
 });
+
+test('gli schieramenti tattici modificano dispiegamento, forza e perdite', () => {
+  assert.ok(html.includes('id="battleFormation"'));
+  assert.match(script, /function formationModifiers\(formation,units\)/);
+  assert.match(script, /function initialBattlePositions\(formation\)/);
+  assert.match(script, /formation==="wedge"/);
+  assert.match(script, /formation==="defensive"/);
+  assert.match(script, /\*positionFactor\*formation\.attack/);
+  assert.match(script, /tactic\.loss\*formation\.loss/);
+  assert.match(script, /if\(!b\.formation\)b\.formation="line"/);
+});
