@@ -291,6 +291,21 @@ test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () =>
   assert.match(script, /mapPhysical=!mapPhysical/);
   assert.match(script, /Catanzaro/);
 });
+test('i confini comunali ISTAT 2026 sono ricercabili e caricati solo su richiesta', () => {
+  for (const id of ['municipalitySearch', 'municipalityFind', 'municipalityResults', 'municipalityShow', 'municipalityStatus', 'mapMunicipalityToggle']) {
+    assert.ok(html.includes('id="' + id + '"'), 'controllo comuni mancante: ' + id);
+  }
+  assert.match(script, /const municipalityBaseURL="https:\\/\\/l1n00\\.github\\.io\\/confini-comuni-istat\\/2026"/);
+  assert.match(script, /async function getMunicipalityIndex\(\)/);
+  assert.match(script, /normalizeMunicipalityName\(item\.name\)===query/);
+  assert.match(script, /comuni\/"\+code\+"\.geojson/);
+  assert.match(script, /function drawMunicipalityBoundary\(ctx,c\)/);
+  assert.match(script, /geometry\.type==="MultiPolygon"/);
+  assert.match(script, /drawMunicipalityBoundary\(ctx,c\)/);
+  assert.match(script, /mapMunicipalityVisible=!mapMunicipalityVisible/);
+  assert.match(html, /Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4\.0/);
+});
+
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
   for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
     assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
