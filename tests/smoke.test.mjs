@@ -370,8 +370,10 @@ test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina s
 
 
 test('il menu gestisce davvero nuova campagna, ripresa e assenza di salvataggi', () => {
-  const menuScriptMatch = menuHtml.match(/<script>([\\s\\S]*?)<\\/script>/);
-  assert.ok(menuScriptMatch, 'script del menu non trovato');
+  const menuScriptStart = menuHtml.indexOf('<script>');
+  const menuScriptEnd = menuHtml.indexOf('</script>', menuScriptStart);
+  assert.ok(menuScriptStart >= 0 && menuScriptEnd > menuScriptStart, 'script del menu non trovato');
+  const menuScript = menuHtml.slice(menuScriptStart + 8, menuScriptEnd);
   const runMenu = ({saved = null, confirmResult = true} = {}) => {
     const values = new Map(saved ? [['imperium_italia_save', saved]] : []);
     const elements = new Map();
@@ -385,7 +387,7 @@ test('il menu gestisce davvero nuova campagna, ripresa e assenza di salvataggi',
       location,
       confirm() { return confirmResult; },
     };
-    vm.runInNewContext(menuScriptMatch[1], sandbox);
+    vm.runInNewContext(menuScript, sandbox);
     return {values, elements, location};
   };
 
