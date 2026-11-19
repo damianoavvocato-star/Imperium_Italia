@@ -273,6 +273,10 @@ test('la mappa usa i confini regionali ISTAT aggiornati al 1 gennaio 2026', () =
 });
 test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () => {
   assert.ok(html.includes('id="mapPhysicalToggle"'));
+  assert.ok(html.includes('id="mapCitiesToggle"'));
+  assert.match(script, /let mapCities=true/);
+  assert.match(script, /if\(mapCities\)\{ctx\.save\(\);cities\.forEach/);
+  assert.match(script, /100 km/);
   assert.match(script, /function drawPhysicalGeography\(ctx,c\)/);
   assert.match(script, /const cities=\[/);
   assert.match(script, /ctx\.ellipse\(/);
