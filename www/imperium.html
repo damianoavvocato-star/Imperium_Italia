@@ -69,9 +69,9 @@
 </section>
 <div class="layout">
  <section class="panel"><div class="topline"><h2>TEATRO OPERATIVO · ITALIA</h2><span class="tag">20 REGIONI</span></div>
- <div class="map-wrap"><canvas id="map" width="760" height="900" aria-label="Mappa geografica strategica dell'Italia, trascina per spostare e usa i controlli per ingrandire"></canvas></div><div class="map-tools"><div class="map-zoom"><button class="secondary" id="mapZoomOut" type="button" aria-label="Riduci zoom">−</button><button class="secondary" id="mapZoomIn" type="button" aria-label="Aumenta zoom">+</button><button class="secondary" id="mapResetView" type="button">CENTRA MAPPA</button><button class="secondary" id="mapPhysicalToggle" type="button">TERRENO: ON</button><button class="secondary" id="mapCitiesToggle" type="button">CITTÀ: ON</button><button class="secondary" id="mapProvincesToggle" type="button">PROVINCE: OFF</button><button class="secondary" id="mapMunicipalityToggle" type="button">COMUNE: OFF</button></div><div class="map-hint">Trascina per spostare · rotella o +/− per zoom</div><div class="map-tools" style="margin-top:8px;gap:6px;flex-wrap:wrap"><input id="municipalitySearch" type="search" placeholder="Cerca un comune italiano" aria-label="Cerca un comune italiano" style="min-width:150px;flex:1;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><button class="secondary" id="municipalityFind" type="button">CERCA COMUNE</button><select id="municipalityResults" aria-label="Risultati comuni" disabled style="min-width:140px;max-width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><option value="">Seleziona un comune</option></select><button class="secondary" id="municipalityShow" type="button" disabled>MOSTRA</button><span id="municipalityStatus" class="map-hint" role="status">Confini comunali caricati solo su richiesta</span></div></div>
+ <div class="map-wrap"><canvas id="map" width="760" height="900" aria-label="Mappa geografica strategica dell'Italia, trascina per spostare e usa i controlli per ingrandire"></canvas></div><div class="map-tools"><div class="map-zoom"><button class="secondary" id="mapZoomOut" type="button" aria-label="Riduci zoom">−</button><button class="secondary" id="mapZoomIn" type="button" aria-label="Aumenta zoom">+</button><button class="secondary" id="mapResetView" type="button">CENTRA MAPPA</button><button class="secondary" id="mapPhysicalToggle" type="button">TERRENO: ON</button><button class="secondary" id="mapCitiesToggle" type="button">CAPOLUOGHI: ON</button><button class="secondary" id="mapRoadsToggle" type="button">STRADE: ON</button><button class="secondary" id="mapPortsToggle" type="button">PORTI: ON</button><button class="secondary" id="mapProvincesToggle" type="button">PROVINCE: OFF</button><button class="secondary" id="mapMunicipalityToggle" type="button">COMUNE: OFF</button></div><div class="map-hint">Trascina per spostare · rotella o +/− per zoom</div><div class="map-tools" style="margin-top:8px;gap:6px;flex-wrap:wrap"><input id="municipalitySearch" type="search" placeholder="Cerca un comune italiano" aria-label="Cerca un comune italiano" style="min-width:150px;flex:1;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><button class="secondary" id="municipalityFind" type="button">CERCA COMUNE</button><select id="municipalityResults" aria-label="Risultati comuni" disabled style="min-width:140px;max-width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><option value="">Seleziona un comune</option></select><button class="secondary" id="municipalityShow" type="button" disabled>MOSTRA</button><span id="municipalityStatus" class="map-hint" role="status">Confini comunali caricati solo su richiesta</span></div></div>
  <div class="legend"><span><i class="dot" style="background:#b58a3b"></i>Tuoi territori</span><span><i class="dot" style="background:#8d4d45"></i>Altre fazioni</span><span><i class="dot" style="background:#536d78"></i>Neutrali</span></div>
- <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi, idrografia e città: livelli geografici illustrativi per il gioco.</p></section>
+ <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi e idrografia: livelli illustrativi. Capoluoghi e porti: localizzazione indicativa per il gioco. Autostrade principali: tracciati schematici, non navigabili.</p></section>
  <aside>
   <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div>
    <div class="resource"><span>Terreno</span><b id="terrainLabel">Pianura</b></div><div class="resource"><span>Morale esercito</span><b id="moraleLabel">100/100</b></div>
@@ -297,6 +297,8 @@ const mapView={scale:1,offsetX:0,offsetY:0};
 let mapPhysical=true;
 let mapCities=true;
 let mapProvinces=false;
+let mapRoads=true;
+let mapPorts=true;
 let municipalityGeoJSON=null;
 let municipalityIndex=null;
 let municipalityMatches=[];
@@ -327,9 +329,41 @@ function drawPhysicalGeography(ctx,c){
  ctx.save();ctx.fillStyle="#76b9c9";ctx.strokeStyle="rgba(202,235,239,.8)";ctx.lineWidth=1;
  [[8.65,45.95,3.2,8],[9.25,45.95,3,7],[10.65,45.65,4,8],[12.1,43.1,4.5,3],[11.9,42.6,3,4]].forEach(([lon,lat,rx,ry])=>{const p={x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640};ctx.beginPath();ctx.ellipse(p.x,p.y,rx,ry,0,0,Math.PI*2);ctx.fill();ctx.stroke()});
  ctx.restore();
- // Città principali: coordinate indicative per la visualizzazione strategica.
- const cities=[["Aosta",7.32,45.74],["Torino",7.68,45.07],["Milano",9.19,45.46],["Trento",11.12,46.07],["Venezia",12.32,45.44],["Trieste",13.77,45.65],["Genova",8.93,44.41],["Bologna",11.34,44.49],["Firenze",11.25,43.77],["Perugia",12.39,43.11],["Ancona",13.52,43.62],["Roma",12.5,41.9],["L'Aquila",13.4,42.35],["Napoli",14.27,40.85],["Bari",16.87,41.12],["Potenza",15.8,40.64],["Catanzaro",16.59,38.91],["Palermo",13.36,38.12],["Cagliari",9.12,39.22]];
+ // Capoluoghi regionali: coordinate indicative per la visualizzazione strategica.
+ const cities=[["Aosta",7.32,45.74],["Torino",7.68,45.07],["Milano",9.19,45.46],["Trento",11.12,46.07],["Venezia",12.32,45.44],["Trieste",13.77,45.65],["Genova",8.93,44.41],["Bologna",11.34,44.49],["Firenze",11.25,43.77],["Perugia",12.39,43.11],["Ancona",13.52,43.62],["Roma",12.50,41.90],["L'Aquila",13.40,42.35],["Campobasso",14.66,41.56],["Napoli",14.27,40.85],["Bari",16.87,41.12],["Potenza",15.80,40.64],["Catanzaro",16.59,38.91],["Palermo",13.36,38.12],["Cagliari",9.12,39.22]];
  if(mapCities){ctx.save();cities.forEach(([name,lon,lat])=>{const p={x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640};ctx.beginPath();ctx.arc(p.x,p.y,2.7,0,Math.PI*2);ctx.fillStyle="#f7e5b4";ctx.fill();ctx.lineWidth=1;ctx.strokeStyle="#24343a";ctx.stroke();if(mapView.scale>=1.18){ctx.font="bold 8px system-ui";ctx.textAlign="left";ctx.lineWidth=2.5;ctx.strokeStyle="rgba(9,24,31,.9)";ctx.fillStyle="#fff4d6";ctx.strokeText(name,p.x+4,p.y-4);ctx.fillText(name,p.x+4,p.y-4)}});ctx.restore();}
+ ctx.restore();
+}
+const italyMajorPorts=[
+ ["Trieste",13.77,45.65],["Venezia",12.32,45.44],["Ravenna",12.20,44.42],["Ancona",13.52,43.62],["Bari",16.87,41.12],["Brindisi",17.94,40.64],["Taranto",17.23,40.47],["Crotone",17.13,39.08],["Gioia Tauro",15.90,38.43],["Reggio Calabria",15.65,38.11],["Messina",15.55,38.19],["Catania",15.09,37.50],["Augusta",15.22,37.23],["Siracusa",15.29,37.07],["Palermo",13.36,38.12],["Trapani",12.54,38.02],["Porto Empedocle",13.53,37.29],["Cagliari",9.12,39.22],["Olbia",9.50,40.92],["Porto Torres",8.40,40.84],["Genova",8.93,44.41],["La Spezia",9.82,44.10],["Livorno",10.31,43.55],["Piombino",10.54,42.93],["Civitavecchia",11.80,42.09],["Napoli",14.27,40.85],["Salerno",14.77,40.68]
+];
+const italyMotorwayRoutes=[
+ ["A5",[[7.68,45.07],[7.55,45.35],[7.35,45.55],[7.32,45.74]]],
+ ["A4",[[7.68,45.07],[9.19,45.46],[10.22,45.54],[11.34,45.44],[12.32,45.44],[13.77,45.65]]],
+ ["A1",[[9.19,45.46],[10.99,44.80],[11.34,44.49],[11.25,43.77],[12.50,41.90],[14.27,40.85]]],
+ ["A14",[[11.34,44.49],[12.90,43.90],[13.52,43.62],[14.22,42.46],[14.66,42.35],[16.87,41.12]]],
+ ["A2",[[14.27,40.85],[15.80,40.64],[16.25,39.30],[15.65,38.11]]],
+ ["A10",[[8.93,44.41],[8.48,44.31],[8.40,44.10]]],
+ ["A12",[[8.93,44.41],[9.82,44.10],[10.31,43.55]]],
+ ["A19",[[13.36,38.12],[14.02,37.57],[15.09,37.50]]],
+ ["A20",[[13.36,38.12],[14.15,38.17],[15.55,38.19]]],
+ ["A29",[[13.36,38.12],[12.54,38.02],[12.70,37.80]]]
+];
+function drawTransportLayers(ctx,c){
+ ctx.save();ctx.scale(c.width/560,c.height/640);
+ const xy=(lon,lat)=>({x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640});
+ if(mapRoads){
+  italyMotorwayRoutes.forEach(([name,points])=>{
+   ctx.beginPath();points.forEach(([lon,lat],i)=>{const p=xy(lon,lat);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)});
+   ctx.strokeStyle="rgba(255,195,105,.82)";ctx.lineWidth=1.7;ctx.setLineDash([5,2.5]);ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();ctx.setLineDash([]);
+   if(mapView.scale>=1.35){const mid=points[Math.floor(points.length/2)],p=xy(mid[0],mid[1]);ctx.font="bold 7px system-ui";ctx.textAlign="center";ctx.lineWidth=2.2;ctx.strokeStyle="#152832";ctx.fillStyle="#ffe0a6";ctx.strokeText(name,p.x,p.y-3);ctx.fillText(name,p.x,p.y-3)}
+  });
+ }
+ if(mapPorts){
+  italyMajorPorts.forEach(([name,lon,lat])=>{const p=xy(lon,lat);ctx.beginPath();ctx.arc(p.x,p.y,3.1,0,Math.PI*2);ctx.fillStyle="#7fe0e8";ctx.fill();ctx.lineWidth=1.1;ctx.strokeStyle="#102d38";ctx.stroke();
+   if(mapView.scale>=1.35){ctx.font="bold 7px system-ui";ctx.textAlign="left";ctx.lineWidth=2.2;ctx.strokeStyle="rgba(8,23,31,.95)";ctx.fillStyle="#c9f7f5";ctx.strokeText(name,p.x+4,p.y+2);ctx.fillText(name,p.x+4,p.y+2)}
+  });
+ }
  ctx.restore();
 }
 function drawProvinceBoundaries(ctx){
@@ -381,6 +415,7 @@ function drawMap(){
  ctx.restore();
  // Rilievi, fiumi, laghi e centri urbani come livelli geografici indipendenti.
  drawPhysicalGeography(ctx,c);
+ drawTransportLayers(ctx,c);
  drawProvinceBoundaries(ctx);
  drawMunicipalityBoundary(ctx,c);
  // Rotte terrestri strategiche tra regioni confinanti.
@@ -551,7 +586,9 @@ $("mapZoomIn").onclick=()=>setMapZoom(mapView.scale*1.25);
 $("mapZoomOut").onclick=()=>setMapZoom(mapView.scale/1.25);
 $("mapResetView").onclick=()=>{mapView.scale=1;mapView.offsetX=0;mapView.offsetY=0;drawMap()};
 $("mapPhysicalToggle").onclick=()=>{mapPhysical=!mapPhysical;$("mapPhysicalToggle").textContent="TERRENO: "+(mapPhysical?"ON":"OFF");drawMap()};
-$("mapCitiesToggle").onclick=()=>{mapCities=!mapCities;$("mapCitiesToggle").textContent="CITTÀ: "+(mapCities?"ON":"OFF");drawMap()};
+$("mapCitiesToggle").onclick=()=>{mapCities=!mapCities;$("mapCitiesToggle").textContent="CAPOLUOGHI: "+(mapCities?"ON":"OFF");drawMap()};
+$("mapRoadsToggle").onclick=()=>{mapRoads=!mapRoads;$("mapRoadsToggle").textContent="STRADE: "+(mapRoads?"ON":"OFF");drawMap()};
+$("mapPortsToggle").onclick=()=>{mapPorts=!mapPorts;$("mapPortsToggle").textContent="PORTI: "+(mapPorts?"ON":"OFF");drawMap()};
 $("mapProvincesToggle").onclick=()=>{mapProvinces=!mapProvinces;$("mapProvincesToggle").textContent="PROVINCE: "+(mapProvinces?"ON":"OFF");drawMap()};
 mapCanvas.addEventListener("wheel",event=>{event.preventDefault();setMapZoom(mapView.scale*(event.deltaY<0?1.12:1/1.12))},{passive:false});
 mapCanvas.addEventListener("pointerdown",event=>{mapPointer={id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,moved:false};mapCanvas.setPointerCapture(event.pointerId)});
