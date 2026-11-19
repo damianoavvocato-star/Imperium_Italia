@@ -245,6 +245,17 @@ test('la griglia evidenzia le caselle libere raggiungibili dal reparto seleziona
   assert.match(script, /if\(!occupied\)\{ctx\.fillStyle=/);
 });
 
+test('la mappa geografica supporta zoom, panoramica touch e centratura senza perdere la selezione', () => {
+  for (const id of ['mapZoomIn', 'mapZoomOut', 'mapResetView']) assert.ok(html.includes('id="' + id + '"'), 'controllo mappa mancante: ' + id);
+  assert.match(script, /const mapView=\{scale:1,offsetX:0,offsetY:0\}/);
+  assert.match(script, /function setMapZoom\(next\)/);
+  assert.match(script, /addEventListener\("pointerdown"/);
+  assert.match(script, /addEventListener\("pointermove"/);
+  assert.match(script, /addEventListener\("wheel"/);
+  assert.match(script, /mapCanvas\.width\/2-mapView\.offsetX/);
+  assert.match(html, /touch-action:none/);
+});
+
 test('la mappa strategica usa i confini geografici delle 20 regioni italiane', () => {
   assert.match(script, /const italyRegionMapData=/);
   assert.match(script, /function projectItalyMap\(lon,lat\)/);
