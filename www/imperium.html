@@ -184,6 +184,27 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  .command-hud>.panel:nth-child(3){max-height:76px}
  .command-hud #log{max-height:48px}
 }
+
+/* HUD continuo: tutte le funzioni di campagna in un unico pannello, senza colonne separate */
+.command-hud{display:block;max-height:min(46svh,480px);overflow:auto;overscroll-behavior:contain}
+.command-hud>.panel{border:0;border-radius:0;background:transparent;overflow:visible;padding:10px 13px}
+.command-hud #regionPanel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:0 12px}
+.command-hud #regionPanel>.sub,.command-hud #regionPanel>.region-name,.command-hud #regionPanel>#regionInfo{grid-column:1/-1}
+.command-hud #regionPanel>.command-group{grid-column:span 1;min-width:0}
+.command-hud #regionPanel>.command-national,.command-hud #regionPanel>.command-chronicle{grid-column:1/-1}
+.command-hud #regionPanel>.command-chronicle #log{max-height:78px;overflow:auto}
+.map-tools .map-zoom button:nth-child(n+4){display:none!important}
+.map-wrap>.map-tools:nth-of-type(2){display:none!important}
+@media(max-width:760px){
+ .command-hud{left:4px;right:4px;bottom:4px;max-height:44svh;overflow-y:auto;overflow-x:hidden}
+ .command-hud>.panel{padding:7px 8px}
+ .command-hud #regionPanel{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 7px}
+ .command-hud #regionPanel>.command-group{margin-top:5px;padding-top:5px}
+ .command-hud #regionPanel>.command-national,.command-hud #regionPanel>.command-chronicle{grid-column:1/-1}
+ .command-hud #regionPanel>.command-chronicle #log{max-height:54px}
+ .command-hud #regionPanel .command-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:420px){.command-hud{max-height:42svh}.command-hud #regionPanel{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -241,9 +262,19 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
     <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
     <button class="wide secondary" id="claim">PRENDI IL CONTROLLO · 1.200</button>
    </div>
+   <div class="command-group command-national">
+    <h3 class="command-heading">TESORERIA NAZIONALE</h3>
+    <div class="command-grid">
+     <div class="resource"><span>Entrate previste</span><b id="income">0</b></div>
+     <div class="resource"><span>Regioni produttive</span><b id="incomeRegions">0</b></div>
+    </div>
+    <div class="command-actions"><button id="endTurn">CONCLUDI TURNO</button><button class="secondary" id="save">SALVA CAMPAGNA</button><button class="secondary" id="reset">NUOVA CAMPAGNA</button></div>
+   </div>
+   <div class="command-group command-chronicle">
+    <h3 class="command-heading">CRONACA DEL REGNO</h3>
+    <div id="log" class="log" aria-live="polite"></div>
+   </div>
   </section>
-  <section class="panel"><div class="topline"><h2>TESORERIA NAZIONALE</h2><span class="tag">BILANCIO</span></div><div class="resource"><span>Entrate previste</span><b id="income">0</b></div><div class="resource"><span>Regioni produttive</span><b id="incomeRegions">0</b></div><button class="wide" id="endTurn">CONCLUDI TURNO</button><button class="wide secondary" id="save">SALVA CAMPAGNA</button><button class="wide secondary" id="reset">NUOVA CAMPAGNA</button></section>
-  <section class="panel"><h2>CRONACA DEL REGNO</h2><div id="log" class="log" aria-live="polite"></div></section>
  </div>
 </div>
 <div class="footer">Partita salvata localmente su questo dispositivo · Imperium_Italia</div>
