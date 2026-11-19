@@ -245,12 +245,18 @@ test('la griglia evidenzia le caselle libere raggiungibili dal reparto seleziona
   assert.match(script, /if\(!occupied\)\{ctx\.fillStyle=/);
 });
 
-test('la mappa strategica usa una sagoma geografica dell Italia con isole e mari', () => {
-  assert.match(script, /Carta geografica stilizzata dell.?Italia/);
-  assert.match(script, /const land=new Path2D\(\)/);
-  assert.match(script, /Sardegna e Corsica/);
+test('la mappa strategica usa i confini geografici delle 20 regioni italiane', () => {
+  assert.match(script, /const italyRegionMapData=/);
+  assert.match(script, /function projectItalyMap\(lon,lat\)/);
+  assert.match(script, /function drawMap\(\)/);
+  assert.match(script, /ctx\.fill\(path,"evenodd"\)/);
+  assert.match(script, /state\.regions\.find\(r=>r\.name===feature\.name\)/);
+  for (const region of ['Piemonte', 'Valle d\'Aosta', 'Lombardia', 'Trentino-Alto Adige', 'Veneto', 'Friuli-Venezia Giulia', 'Liguria', 'Emilia-Romagna', 'Toscana', 'Umbria', 'Marche', 'Lazio', 'Abruzzo', 'Molise', 'Campania', 'Puglia', 'Basilicata', 'Calabria', 'Sicilia', 'Sardegna']) {
+    assert.ok(script.includes('"name":"' + region + '"'), 'confine geografico mancante: ' + region);
+  }
+  assert.match(html, /Cartografia regionale: amCharts Italy Low · CC BY 4\.0/);
   assert.match(script, /MAR TIRRENO/);
-  assert.match(script, /Confini regionali schematici/);
+  assert.match(script, /MAR ADRIATICO/);
 });
 
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
