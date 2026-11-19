@@ -272,8 +272,21 @@ function drawMap(){
  for(let y=40;y<c.height;y+=55){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke()}
  // Collegamenti definiti una sola volta e condivisi con il movimento.
  ctx.strokeStyle="#9aa18a";ctx.globalAlpha=.45;ctx.lineWidth=3;links.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(state.regions[a].x,state.regions[a].y);ctx.lineTo(state.regions[b].x,state.regions[b].y);ctx.stroke()});ctx.globalAlpha=1;
- // sagoma decorativa della penisola
- ctx.strokeStyle="rgba(219,199,143,.35)";ctx.lineWidth=8;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(215,75);ctx.lineTo(310,105);ctx.lineTo(410,150);ctx.lineTo(520,180);ctx.lineTo(565,245);ctx.lineTo(470,330);ctx.lineTo(415,420);ctx.lineTo(455,535);ctx.lineTo(520,640);ctx.lineTo(560,770);ctx.stroke();
+ // Carta geografica stilizzata dell'Italia: coste, penisola, isole e dorsali.
+ ctx.save();
+ const land=new Path2D();
+ land.moveTo(145,88);land.lineTo(205,62);land.lineTo(267,76);land.lineTo(318,102);land.lineTo(370,115);land.lineTo(422,128);land.lineTo(475,150);land.lineTo(535,172);land.lineTo(594,181);land.lineTo(650,205);land.lineTo(674,232);land.lineTo(653,253);land.lineTo(622,260);land.lineTo(603,284);land.lineTo(578,305);land.lineTo(552,324);land.lineTo(527,351);land.lineTo(501,379);land.lineTo(481,412);land.lineTo(467,447);land.lineTo(470,483);land.lineTo(491,519);land.lineTo(517,553);land.lineTo(535,590);land.lineTo(559,626);land.lineTo(583,656);land.lineTo(610,674);land.lineTo(648,680);land.lineTo(680,693);land.lineTo(686,710);land.lineTo(663,725);land.lineTo(629,727);land.lineTo(603,715);land.lineTo(580,694);land.lineTo(561,669);land.lineTo(543,642);land.lineTo(526,620);land.lineTo(507,601);land.lineTo(489,624);land.lineTo(474,658);land.lineTo(460,700);land.lineTo(448,745);land.lineTo(430,790);land.lineTo(407,824);land.lineTo(384,840);land.lineTo(359,825);land.lineTo(340,794);land.lineTo(326,758);land.lineTo(309,719);land.lineTo(291,679);land.lineTo(276,638);land.lineTo(260,598);land.lineTo(249,555);land.lineTo(238,510);land.lineTo(228,468);land.lineTo(218,424);land.lineTo(207,382);land.lineTo(193,340);land.lineTo(179,300);land.lineTo(164,260);land.lineTo(151,220);land.lineTo(137,181);land.lineTo(128,143);land.closePath();
+ ctx.fillStyle="#c5b58a";ctx.strokeStyle="#e6d8b2";ctx.lineWidth=5;ctx.shadowColor="rgba(0,0,0,.45)";ctx.shadowBlur=18;ctx.fill(land);ctx.shadowBlur=0;ctx.stroke(land);
+ // Sardegna e Corsica
+ ctx.beginPath();ctx.ellipse(105,560,30,66,-.18,0,Math.PI*2);ctx.fillStyle="#c5b58a";ctx.fill();ctx.stroke();
+ ctx.beginPath();ctx.ellipse(82,438,15,35,-.2,0,Math.PI*2);ctx.fillStyle="#b9aa82";ctx.fill();ctx.stroke();
+ // Sicilia
+ ctx.beginPath();ctx.moveTo(276,835);ctx.lineTo(316,821);ctx.lineTo(362,831);ctx.lineTo(391,850);ctx.lineTo(371,868);ctx.lineTo(326,875);ctx.lineTo(288,858);ctx.closePath();ctx.fillStyle="#c5b58a";ctx.fill();ctx.stroke();
+ // Confini regionali schematici ma coerenti con la geografia.
+ ctx.save();ctx.strokeStyle="rgba(79,83,68,.55)";ctx.lineWidth=1.8;ctx.setLineDash([5,4]);
+ [[165,165,285,125],[245,220,350,205],[350,205,475,218],[475,218,590,240],[205,340,345,310],[345,310,485,330],[485,330,590,305],[260,450,430,430],[430,430,540,450],[275,570,455,555],[455,555,575,555],[290,680,470,650],[470,650,600,650],[325,760,500,735]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
+ ctx.setLineDash([]);ctx.strokeStyle="rgba(103,91,64,.7)";ctx.lineWidth=5;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(250,150);ctx.lineTo(320,175);ctx.lineTo(385,190);ctx.lineTo(455,215);ctx.lineTo(490,260);ctx.lineTo(460,315);ctx.lineTo(430,370);ctx.lineTo(420,430);ctx.lineTo(445,495);ctx.lineTo(465,560);ctx.lineTo(490,630);ctx.lineTo(525,700);ctx.lineTo(550,770);ctx.stroke();ctx.restore();
+ ctx.fillStyle="rgba(47,63,54,.85)";ctx.font="italic 15px Georgia";ctx.textAlign="center";ctx.fillText("MAR TIRRENO",115,735);ctx.fillText("MAR ADRIATICO",660,470);ctx.fillText("MAR IONIO",475,895);ctx.restore();
  state.regions.forEach(r=>{
   const color=r.owner==="player"?"#b58a3b":r.owner==="enemy"?"#8d4d45":"#536d78";
   ctx.beginPath();ctx.arc(r.x,r.y,r.id===state.selected?25:19,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=r.id===state.selected?4:2;ctx.strokeStyle=r.id===state.selected?"#fff0b4":"#d8d0b8";ctx.stroke();
