@@ -297,6 +297,14 @@ test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () =
   assert.ok(html.includes('.command-hud>.panel{min-width:0'));
   assert.ok(html.includes('.map-wrap{position:absolute;inset:0'));
   assert.ok(html.includes('grid-template-columns:minmax(0,2.1fr)'));
+  const hudStart=html.indexOf('<div class="command-hud">');
+  const hudEnd=html.indexOf('</div>\\n</div>\\n<div class="footer"',hudStart);
+  assert.ok(hudStart>=0 && hudEnd>hudStart,'HUD unico non trovato');
+  const hudMarkup=html.slice(hudStart,hudEnd);
+  assert.equal((hudMarkup.match(/class="panel"/g)||[]).length,1,'i comandi devono stare in un solo pannello');
+  for(const heading of ['TESORERIA NAZIONALE','CRONACA DEL REGNO']) assert.ok(hudMarkup.includes(heading));
+  assert.ok(html.includes('.map-tools .map-zoom button:nth-child(n+4){display:none!important}'));
+  assert.ok(html.includes('.map-wrap>.map-tools:nth-of-type(2){display:none!important}'));
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
   for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) assert.ok(html.includes('id="' + id + '"'));
 });
