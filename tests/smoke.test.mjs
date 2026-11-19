@@ -295,7 +295,7 @@ test('i confini comunali ISTAT 2026 sono ricercabili e caricati solo su richiest
   for (const id of ['municipalitySearch', 'municipalityFind', 'municipalityResults', 'municipalityShow', 'municipalityStatus', 'mapMunicipalityToggle']) {
     assert.ok(html.includes('id="' + id + '"'), 'controllo comuni mancante: ' + id);
   }
-  assert.match(script, /const municipalityBaseURL="https:\\/\\/l1n00\\.github\\.io\\/confini-comuni-istat\\/2026"/);
+  assert.ok(script.includes('const municipalityBaseURL="https://l1n00.github.io/confini-comuni-istat/2026"'));
   assert.match(script, /async function getMunicipalityIndex\(\)/);
   assert.match(script, /normalizeMunicipalityName\(item\.name\)===query/);
   assert.match(script, /comuni\/"\+code\+"\.geojson/);
