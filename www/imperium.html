@@ -116,6 +116,74 @@
  #regionPanel .actions button{min-height:43px;padding:8px 5px;font-size:9px}
 }
 @media(min-width:721px){#regionPanel .command-group{margin-top:11px;padding-top:8px}}
+
+/* HUD unico in stile strategico: mappa libera e comandi sempre visibili */
+html,body{height:100%;overflow:hidden}
+.app{width:100%;max-width:none;height:100svh;min-height:0;margin:0;padding:env(safe-area-inset-top) 10px 8px;display:flex;flex-direction:column;overflow:hidden}
+header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
+.stats{flex:0 0 auto;display:flex;gap:8px;margin:6px 0;padding:0;background:transparent}
+.stats .stat{flex:1;padding:5px 12px;border-radius:8px;background:#142630d9}
+.stats .stat b{font-size:17px}
+.layout{position:relative;display:block;flex:1;min-height:0;overflow:hidden}
+.layout>.panel:first-child{position:absolute;inset:0;padding:0;border:0;border-radius:0;background:transparent;overflow:hidden}
+.layout>.panel:first-child>.topline{position:absolute;z-index:3;top:10px;left:12px;padding:7px 11px;background:#10212bd9;border:1px solid #b99a4c77;border-radius:8px}
+.map-wrap{position:absolute;inset:0;border:0;border-radius:0;background:radial-gradient(ellipse at 50% 48%,#315968,#102a35 72%);display:grid;place-items:center}
+.map-wrap canvas{width:100%;height:100%;max-height:none;object-fit:contain}
+.map-tools{position:absolute;z-index:4;top:9px;right:10px;margin:0;display:flex;gap:5px}
+.map-tools .map-zoom{display:flex;gap:5px}
+.map-tools .map-zoom button{min-height:34px;padding:6px 11px}
+.map-tools .map-zoom button:nth-child(4),.map-tools .map-zoom button:nth-child(n+6),.map-tools>.map-tools{display:none!important}
+.map-tools .map-hint,.legend,.layout>.panel:first-child>p{display:none!important}
+.command-hud{position:absolute;z-index:8;left:10px;right:10px;bottom:8px;display:grid;grid-template-columns:minmax(0,2.1fr) minmax(150px,.65fr) minmax(190px,.8fr);gap:0;max-height:min(43svh,440px);overflow:hidden;background:linear-gradient(145deg,rgba(31,49,57,.97),rgba(11,23,30,.97));border:1px solid #b99a4c;border-radius:13px;box-shadow:0 12px 34px #000b;backdrop-filter:blur(12px)}
+.command-hud>.panel{min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;border:0;border-radius:0;background:transparent;padding:10px 12px;box-shadow:none}
+.command-hud>.panel+ .panel{border-left:1px solid #8c784b55}
+.command-hud #regionPanel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:0 14px}
+.command-hud #regionPanel>.sub,.command-hud #regionPanel>.region-name,.command-hud #regionPanel>#regionInfo{grid-column:1/-1}
+.command-hud #regionPanel>.command-group{margin:6px 0 0;padding-top:6px;border-top:1px solid #9c864b55;min-width:0}
+.command-hud #regionPanel>.command-group:nth-of-type(1){grid-column:1/-1}
+.command-hud #regionPanel .command-heading{font-size:9px;margin-bottom:5px}
+.command-hud #regionPanel .command-grid{gap:3px 5px}
+.command-hud #regionPanel .command-grid .resource,.command-hud #regionPanel .resource{padding:4px 6px}
+.command-hud #regionPanel .command-grid .resource span,.command-hud #regionPanel .resource span{font-size:9px}
+.command-hud #regionPanel .command-grid .resource b,.command-hud #regionPanel .resource b{font-size:10px}
+.command-hud #regionPanel button{min-height:34px;padding:6px 5px;font-size:9px}
+.command-hud #regionPanel .command-actions{gap:4px;margin-top:4px}
+.command-hud #regionPanel .actions{gap:4px;margin-top:5px}
+.command-hud #regionPanel select{font-size:9px!important;padding:4px!important}
+.command-hud>.panel:nth-child(2) h2,.command-hud>.panel:nth-child(3) h2{font-size:10px}
+.command-hud #log{max-height:none;font-size:10px}
+.command-hud #log p{margin:3px 0;padding-bottom:3px}
+.footer{display:none}
+@media(max-width:760px){
+ .app{padding-left:5px;padding-right:5px;padding-bottom:5px}
+ header{padding:6px 3px}
+ .brand{font-size:13px;letter-spacing:1px}
+ .sub{font-size:8px}
+ header button{min-height:32px;padding:6px 8px;font-size:8px}
+ .stats{gap:4px;margin:4px 0}
+ .stats .stat{padding:4px 3px;text-align:center}
+ .stats .stat b{font-size:14px}
+ .stats .stat span{font-size:7px;letter-spacing:0}
+ .layout>.panel:first-child>.topline{top:5px;left:5px;padding:5px 7px}
+ .layout>.panel:first-child>.topline h2{font-size:9px;margin:0}
+ .layout>.panel:first-child>.topline .tag{font-size:8px}
+ .map-tools{top:5px;right:5px}
+ .map-tools .map-zoom button{min-height:29px;padding:4px 8px;font-size:10px}
+ .command-hud{left:4px;right:4px;bottom:4px;grid-template-columns:minmax(0,1fr);max-height:48svh;border-radius:10px}
+ .command-hud>.panel{padding:7px 8px}
+ .command-hud>.panel+ .panel{border-left:0;border-top:1px solid #8c784b55}
+ .command-hud #regionPanel{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px}
+ .command-hud #regionPanel>.command-group:nth-of-type(1){grid-column:1/-1}
+ .command-hud #regionPanel .command-heading{font-size:8px}
+ .command-hud #regionPanel .command-grid .resource span,.command-hud #regionPanel .resource span{font-size:8px}
+ .command-hud #regionPanel .command-grid .resource b,.command-hud #regionPanel .resource b{font-size:9px}
+ .command-hud #regionPanel button{min-height:31px;font-size:8px}
+ .command-hud>.panel:nth-child(2){display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4px}
+ .command-hud>.panel:nth-child(2)>.topline{grid-column:1/-1}
+ .command-hud>.panel:nth-child(2) button{margin:0;min-height:34px}
+ .command-hud>.panel:nth-child(3){max-height:76px}
+ .command-hud #log{max-height:48px}
+}
 </style>
 </head>
 <body>
@@ -132,7 +200,7 @@
  <div class="map-wrap"><canvas id="map" width="760" height="900" aria-label="Mappa geografica strategica dell'Italia, trascina per spostare e usa i controlli per ingrandire"></canvas></div><div class="map-tools"><div class="map-zoom"><button class="secondary" id="mapZoomOut" type="button" aria-label="Riduci zoom">−</button><button class="secondary" id="mapZoomIn" type="button" aria-label="Aumenta zoom">+</button><button class="secondary" id="mapResetView" type="button">CENTRA MAPPA</button><button class="secondary" id="mapPhysicalToggle" type="button">TERRENO: ON</button><button class="secondary" id="mapCitiesToggle" type="button">CAPOLUOGHI: ON</button><button class="secondary" id="mapRoadsToggle" type="button">STRADE: ON</button><button class="secondary" id="mapPortsToggle" type="button">PORTI: ON</button><button class="secondary" id="mapProvincesToggle" type="button">PROVINCE: OFF</button><button class="secondary" id="mapMunicipalityToggle" type="button">COMUNE: OFF</button></div><div class="map-hint">Trascina per spostare · rotella o +/− per zoom</div><div class="map-tools" style="margin-top:8px;gap:6px;flex-wrap:wrap"><input id="municipalitySearch" type="search" placeholder="Cerca un comune italiano" aria-label="Cerca un comune italiano" style="min-width:150px;flex:1;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><button class="secondary" id="municipalityFind" type="button">CERCA COMUNE</button><select id="municipalityResults" aria-label="Risultati comuni" disabled style="min-width:140px;max-width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:#13232c;color:#fff"><option value="">Seleziona un comune</option></select><button class="secondary" id="municipalityShow" type="button" disabled>MOSTRA</button><span id="municipalityStatus" class="map-hint" role="status">Confini comunali caricati solo su richiesta</span></div></div>
  <div class="legend"><span><i class="dot" style="background:#b58a3b"></i>Tuoi territori</span><span><i class="dot" style="background:#8d4d45"></i>Altre fazioni</span><span><i class="dot" style="background:#536d78"></i>Neutrali</span></div>
  <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi e idrografia: livelli illustrativi. Capoluoghi e porti: localizzazione indicativa per il gioco. Autostrade principali: tracciati schematici, non navigabili.</p></section>
- <aside>
+ <div class="command-hud">
   <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div>
    <div class="command-group">
     <h3 class="command-heading">PROVINCIA E RISORSE</h3>
@@ -176,7 +244,7 @@
   </section>
   <section class="panel"><div class="topline"><h2>TESORERIA NAZIONALE</h2><span class="tag">BILANCIO</span></div><div class="resource"><span>Entrate previste</span><b id="income">0</b></div><div class="resource"><span>Regioni produttive</span><b id="incomeRegions">0</b></div><button class="wide" id="endTurn">CONCLUDI TURNO</button><button class="wide secondary" id="save">SALVA CAMPAGNA</button><button class="wide secondary" id="reset">NUOVA CAMPAGNA</button></section>
   <section class="panel"><h2>CRONACA DEL REGNO</h2><div id="log" class="log" aria-live="polite"></div></section>
- </aside>
+ </div>
 </div>
 <div class="footer">Partita salvata localmente su questo dispositivo · Imperium_Italia</div>
 </div>
@@ -403,11 +471,6 @@ function drawPhysicalGeography(ctx,c){
  ctx.save();ctx.fillStyle="#76b9c9";ctx.strokeStyle="rgba(202,235,239,.8)";ctx.lineWidth=1;
  [[8.65,45.95,3.2,8],[9.25,45.95,3,7],[10.65,45.65,4,8],[12.1,43.1,4.5,3],[11.9,42.6,3,4]].forEach(([lon,lat,rx,ry])=>{const p={x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640};ctx.beginPath();ctx.ellipse(p.x,p.y,rx,ry,0,0,Math.PI*2);ctx.fill();ctx.stroke()});
  ctx.restore();
- // Capoluoghi regionali: coordinate indicative per la visualizzazione strategica.
- const cities=[["Aosta",7.32,45.74],["Torino",7.68,45.07],["Milano",9.19,45.46],["Trento",11.12,46.07],["Venezia",12.32,45.44],["Trieste",13.77,45.65],["Genova",8.93,44.41],["Bologna",11.34,44.49],["Firenze",11.25,43.77],["Perugia",12.39,43.11],["Ancona",13.52,43.62],["Roma",12.50,41.90],["L'Aquila",13.40,42.35],["Campobasso",14.66,41.56],["Napoli",14.27,40.85],["Bari",16.87,41.12],["Potenza",15.80,40.64],["Catanzaro",16.59,38.91],["Palermo",13.36,38.12],["Cagliari",9.12,39.22]];
- if(mapCities){ctx.save();cities.forEach(([name,lon,lat])=>{const p={x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640};ctx.beginPath();ctx.arc(p.x,p.y,2.7,0,Math.PI*2);ctx.fillStyle="#f7e5b4";ctx.fill();ctx.lineWidth=1;ctx.strokeStyle="#24343a";ctx.stroke();if(mapView.scale>=1.18){ctx.font="bold 8px system-ui";ctx.textAlign="left";ctx.lineWidth=2.5;ctx.strokeStyle="rgba(9,24,31,.9)";ctx.fillStyle="#fff4d6";ctx.strokeText(name,p.x+4,p.y-4);ctx.fillText(name,p.x+4,p.y-4)}});ctx.restore();}
- ctx.restore();
-}
 const italyMajorPorts=[
  ["Trieste",13.77,45.65],["Venezia",12.32,45.44],["Ravenna",12.20,44.42],["Ancona",13.52,43.62],["Bari",16.87,41.12],["Brindisi",17.94,40.64],["Taranto",17.23,40.47],["Crotone",17.13,39.08],["Gioia Tauro",15.90,38.43],["Reggio Calabria",15.65,38.11],["Messina",15.55,38.19],["Catania",15.09,37.50],["Augusta",15.22,37.23],["Siracusa",15.29,37.07],["Palermo",13.36,38.12],["Trapani",12.54,38.02],["Porto Empedocle",13.53,37.29],["Cagliari",9.12,39.22],["Olbia",9.50,40.92],["Porto Torres",8.40,40.84],["Genova",8.93,44.41],["La Spezia",9.82,44.10],["Livorno",10.31,43.55],["Piombino",10.54,42.93],["Civitavecchia",11.80,42.09],["Napoli",14.27,40.85],["Salerno",14.77,40.68]
 ];
@@ -468,13 +531,15 @@ function drawMunicipalityBoundary(ctx,c){
  polygons.forEach(polygon=>polygon.forEach(ring=>{if(!ring.length)return;ring.forEach(([lon,lat],i)=>{const x=(lon-6.6)/12*560,y=(47.1-lat)/11.6*640;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.closePath()}));
  ctx.strokeStyle="#ffe08a";ctx.lineWidth=2.1;ctx.setLineDash([3,1.5]);ctx.lineJoin="round";ctx.stroke();ctx.setLineDash([]);ctx.restore();
 }
+function drawRegionalCapitals(ctx,c){
+ ctx.save();ctx.scale(c.width/560,c.height/640);
+ const cities=[["Aosta",7.32,45.74],["Torino",7.68,45.07],["Milano",9.19,45.46],["Trento",11.12,46.07],["Venezia",12.32,45.44],["Trieste",13.77,45.65],["Genova",8.93,44.41],["Bologna",11.34,44.49],["Firenze",11.25,43.77],["Perugia",12.39,43.11],["Ancona",13.52,43.62],["Roma",12.50,41.90],["L'Aquila",13.40,42.35],["Campobasso",14.66,41.56],["Napoli",14.27,40.85],["Bari",16.87,41.12],["Potenza",15.80,40.64],["Catanzaro",16.59,38.91],["Palermo",13.36,38.12],["Cagliari",9.12,39.22]];
+ if(mapCities){ctx.save();cities.forEach(([name,lon,lat])=>{const p={x:(lon-6.6)/12*560,y:(47.1-lat)/11.6*640};ctx.beginPath();ctx.arc(p.x,p.y,2.7,0,Math.PI*2);ctx.fillStyle="#f7e5b4";ctx.fill();ctx.lineWidth=1;ctx.strokeStyle="#24343a";ctx.stroke();if(mapView.scale>=1.18){ctx.font="bold 8px system-ui";ctx.textAlign="left";ctx.lineWidth=2.5;ctx.strokeStyle="rgba(9,24,31,.9)";ctx.fillStyle="#fff4d6";ctx.strokeText(name,p.x+4,p.y-4);ctx.fillText(name,p.x+4,p.y-4)}});ctx.restore();}
+ ctx.restore();
+}
 function drawMap(){
  const c=$("map"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.save();ctx.translate(c.width/2+mapView.offsetX,c.height/2+mapView.offsetY);ctx.scale(mapView.scale,mapView.scale);ctx.translate(-c.width/2,-c.height/2);
  const sea=ctx.createLinearGradient(0,0,c.width,c.height);sea.addColorStop(0,"#244c59");sea.addColorStop(1,"#102a35");ctx.fillStyle=sea;ctx.fillRect(0,0,c.width,c.height);
- ctx.save();ctx.strokeStyle="rgba(220,211,179,.10)";ctx.lineWidth=1;
- for(let lon=7;lon<19;lon+=2){const p=projectItalyMap(lon,41);ctx.beginPath();ctx.moveTo(p.x,25);ctx.lineTo(p.x,870);ctx.stroke()}
- for(let lat=36;lat<48;lat+=2){const p=projectItalyMap(6.2,lat);ctx.beginPath();ctx.moveTo(35,p.y);ctx.lineTo(735,p.y);ctx.stroke()}
- ctx.restore();
  // Confini amministrativi regionali ISTAT al 1 gennaio 2026, generalizzati per la resa su schermo.
  ctx.save();ctx.scale(c.width/560,c.height/640);
  italyIstatRegions.forEach(feature=>{
@@ -487,18 +552,8 @@ function drawMap(){
   ctx.strokeStyle=region?.id===state.selected?"#ffe4a0":"rgba(37,48,43,.92)";ctx.lineWidth=region?.id===state.selected?2.8:1.15;ctx.lineJoin="round";ctx.stroke(path);
  });
  ctx.restore();
- // Rilievi, fiumi, laghi e centri urbani come livelli geografici indipendenti.
- drawPhysicalGeography(ctx,c);
- drawTransportLayers(ctx,c);
- drawProvinceBoundaries(ctx);
- drawMunicipalityBoundary(ctx,c);
- // Rotte terrestri strategiche tra regioni confinanti.
- ctx.save();ctx.strokeStyle="rgba(255,229,166,.38)";ctx.lineWidth=2;ctx.setLineDash([5,6]);
- links.forEach(([a,b])=>{const from=state.regions[a],to=state.regions[b];ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke()});
- ctx.setLineDash([]);ctx.restore();
- ctx.save();ctx.fillStyle="rgba(230,225,201,.76)";ctx.font="italic 15px Georgia";ctx.textAlign="center";
- ctx.fillText("MAR LIGURE",215,290);ctx.fillText("MAR TIRRENO",245,665);ctx.fillText("MAR ADRIATICO",655,455);ctx.fillText("MAR IONIO",535,850);
- ctx.restore();
+ // La cartografia strategica mostra esclusivamente regioni e capoluoghi.
+ drawRegionalCapitals(ctx,c);
  // Marker e nomi sono ancorati ai centroidi delle regioni, non a posizioni disegnate a mano.
  state.regions.forEach(r=>{
   const color=r.owner==="player"?"#e8bd58":r.owner==="enemy"?"#d58a78":"#c4d0cc";
@@ -507,10 +562,7 @@ function drawMap(){
   ctx.strokeText(r.name,r.x,r.y-13);ctx.fillText(r.name,r.x,r.y-13);
   if(r.owner==="player"){ctx.font="bold 9px system-ui";ctx.fillStyle="#172027";ctx.fillText("✦",r.x,r.y+3)}
  });
- ctx.save();ctx.fillStyle="#e8d9ad";ctx.font="bold 18px Georgia";ctx.textAlign="right";ctx.fillText("N",724,58);ctx.strokeStyle="#e8d9ad";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(714,75);ctx.lineTo(714,98);ctx.lineTo(708,89);ctx.moveTo(714,98);ctx.lineTo(720,89);ctx.stroke();ctx.restore();
-ctx.restore();
- // Scala grafica indicativa: 100 km a latitudine centrale italiana.
- ctx.save();ctx.strokeStyle="#f3e7c6";ctx.fillStyle="#f3e7c6";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(610,858);ctx.lineTo(666,858);ctx.moveTo(610,852);ctx.lineTo(610,864);ctx.moveTo(666,852);ctx.lineTo(666,864);ctx.stroke();ctx.font="bold 11px Georgia";ctx.textAlign="center";ctx.fillText("100 km",638,846);ctx.restore();
+
 }
 function renderLog(){$("log").innerHTML=state.log.map(x=>"<p>"+x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+"</p>").join("")||"<p>La cronaca è ancora vuota.</p>"}
 function render(){
