@@ -531,6 +531,8 @@ function drawMunicipalityBoundary(ctx,c){
  polygons.forEach(polygon=>polygon.forEach(ring=>{if(!ring.length)return;ring.forEach(([lon,lat],i)=>{const x=(lon-6.6)/12*560,y=(47.1-lat)/11.6*640;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.closePath()}));
  ctx.strokeStyle="#ffe08a";ctx.lineWidth=2.1;ctx.setLineDash([3,1.5]);ctx.lineJoin="round";ctx.stroke();ctx.setLineDash([]);ctx.restore();
 }
+ ctx.restore();
+}
 function drawRegionalCapitals(ctx,c){
  ctx.save();ctx.scale(c.width/560,c.height/640);
  const cities=[["Aosta",7.32,45.74],["Torino",7.68,45.07],["Milano",9.19,45.46],["Trento",11.12,46.07],["Venezia",12.32,45.44],["Trieste",13.77,45.65],["Genova",8.93,44.41],["Bologna",11.34,44.49],["Firenze",11.25,43.77],["Perugia",12.39,43.11],["Ancona",13.52,43.62],["Roma",12.50,41.90],["L'Aquila",13.40,42.35],["Campobasso",14.66,41.56],["Napoli",14.27,40.85],["Bari",16.87,41.12],["Potenza",15.80,40.64],["Catanzaro",16.59,38.91],["Palermo",13.36,38.12],["Cagliari",9.12,39.22]];
