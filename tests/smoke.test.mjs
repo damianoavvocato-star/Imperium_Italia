@@ -306,6 +306,26 @@ test('i confini comunali ISTAT 2026 sono ricercabili e caricati solo su richiest
   assert.match(html, /Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4\.0/);
 });
 
+test('la mappa mostra capoluoghi regionali, porti principali e autostrade schematiche con livelli indipendenti', () => {
+  for (const id of ['mapCitiesToggle', 'mapRoadsToggle', 'mapPortsToggle']) assert.ok(html.includes('id="' + id + '"'), 'layer cartografico mancante: ' + id);
+  assert.match(script, /const cities=\[\["Aosta"/);
+  assert.match(script, /\["Campobasso",14\.66,41\.56\]/);
+  assert.match(script, /\["Cagliari",9\.12,39\.22\]/);
+  assert.match(script, /const italyMajorPorts=\[/);
+  assert.match(script, /\["Gioia Tauro",15\.90,38\.43\]/);
+  assert.match(script, /\["Catania",15\.09,37\.50\]/);
+  assert.match(script, /\["Olbia",9\.50,40\.92\]/);
+  assert.match(script, /const italyMotorwayRoutes=\[/);
+  for (const road of ['A1','A4','A5','A2','A14','A19','A20','A29']) assert.ok(script.includes('["' + road + '",'), 'tracciato autostradale mancante: ' + road);
+  assert.match(script, /function drawTransportLayers\(ctx,c\)/);
+  assert.match(script, /if\(mapRoads\)/);
+  assert.match(script, /if\(mapPorts\)/);
+  assert.match(script, /drawTransportLayers\(ctx,c\)/);
+  assert.match(script, /mapRoads=!mapRoads/);
+  assert.match(script, /mapPorts=!mapPorts/);
+  assert.match(html, /Autostrade principali: tracciati schematici, non navigabili/);
+});
+
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
   for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
     assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
