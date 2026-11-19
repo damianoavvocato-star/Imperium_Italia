@@ -96,6 +96,26 @@
  .layout>aside>section:nth-of-type(2) button{font-size:8px}
 }
 
+
+/* Pannello territoriale: comandi raggruppati, leggibili e sempre nella schermata della mappa */
+#regionPanel .command-group{margin-top:13px;padding-top:10px;border-top:1px solid #52656b66}
+#regionPanel .command-heading{margin:0 0 7px;color:#d8b45a;font-size:10px;letter-spacing:1.25px;font-weight:800}
+#regionPanel .command-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 9px}
+#regionPanel .command-grid .resource{margin:0;padding:6px 8px;min-width:0;background:#0d1b22a8;border-radius:7px;gap:6px}
+#regionPanel .command-grid .resource span{font-size:10px;color:#aebbb7}
+#regionPanel .command-grid .resource b{font-size:12px;text-align:right;overflow-wrap:anywhere}
+#regionPanel .command-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:7px}
+#regionPanel .command-actions button{width:100%;min-width:0;margin:0;padding:9px 6px;font-size:10px;line-height:1.25}
+#regionPanel .command-group>.wide{margin-top:7px}
+#regionPanel .command-group select{min-width:0;font-size:11px}
+@media(max-width:720px){
+ #regionPanel .command-grid{gap:5px}
+ #regionPanel .command-grid .resource{padding:7px 6px}
+ #regionPanel .command-actions button{min-height:39px}
+ #regionPanel .actions{gap:6px}
+ #regionPanel .actions button{min-height:43px;padding:8px 5px;font-size:9px}
+}
+@media(min-width:721px){#regionPanel .command-group{margin-top:11px;padding-top:8px}}
 </style>
 </head>
 <body>
@@ -114,31 +134,45 @@
  <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi e idrografia: livelli illustrativi. Capoluoghi e porti: localizzazione indicativa per il gioco. Autostrade principali: tracciati schematici, non navigabili.</p></section>
  <aside>
   <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div>
-   <div class="resource"><span>Terreno</span><b id="terrainLabel">Pianura</b></div><div class="resource"><span>Morale esercito</span><b id="moraleLabel">100/100</b></div>
-   <div class="resource"><span>Controllo</span><b id="regionOwner">Tuo</b></div>
-   <div class="resource"><span>Fazione</span><b id="regionFaction">Roma</b></div>
-   <div class="resource"><span>Diplomazia</span><b id="diplomacyStatus">—</b></div>
-   <button class="wide secondary" id="offerTruce">PROPONI TREGUA · 300</button>
-   <button class="wide secondary" id="offerAlliance">PROPOSTA DI ALLEANZA · 700</button>
-   <div class="resource"><span>Denaro regionale</span><b id="regionGold">0</b></div>
-   <div class="resource"><span>Entrate per turno</span><b id="regionIncome">0</b></div>
-   <div class="resource"><span>Popolazione</span><b id="regionPopulation">0</b></div>
-   <div class="resource"><span>Fanteria</span><b id="infantryCount">0</b></div>
-   <div class="resource"><span>Arcieri</span><b id="archerCount">0</b></div>
-   <div class="resource"><span>Cavalleria</span><b id="cavalryCount">0</b></div>
-   <div class="resource"><span>Comandante</span><b id="generalName">Nessuno</b></div>
-   <div class="resource"><span>Abilità comando</span><b id="generalSkill">—</b></div>
-   <div class="resource"><span>Guarnigione difensiva</span><b id="garrisonCount">0</b></div>
-   <button class="wide secondary" id="recruitGeneral">NOMINA GENERALE · 900</button>
-   <div class="resource"><span>Destinazione esercito</span><select id="moveDestination" aria-label="Provincia di destinazione" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
-   <button class="wide secondary" id="moveArmy">SPOSTA TUTTO L'ESERCITO</button>
-   <button class="wide secondary" id="retreatArmy">RITIRATA STRATEGICA</button>
-   <div class="resource"><span>Obiettivo militare</span><select id="attackDestination" aria-label="Provincia da attaccare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
-   <div class="resource"><span>Dottrina di combattimento</span><select id="battleTactic" aria-label="Dottrina militare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea equilibrata</option><option value="phalanx">Falange</option><option value="cavalry">Carica di cavalleria</option><option value="archers">Pioggia di frecce</option></select></div><div class="resource"><span>Schieramento iniziale</span><select id="battleFormation" aria-label="Schieramento iniziale" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea romana</option><option value="wedge">Cuneo offensivo</option><option value="defensive">Schieramento difensivo</option></select></div>
-   <button class="wide" id="attackProvince">ATTACCA LA PROVINCIA</button>
-   <button class="wide secondary" id="startSiege">INIZIA ASSEDIO</button>
-   <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
-   <button class="wide secondary" id="claim">PRENDI IL CONTROLLO · 1.200</button>
+   <div class="command-group">
+    <h3 class="command-heading">PROVINCIA E RISORSE</h3>
+    <div class="command-grid">
+     <div class="resource"><span>Terreno</span><b id="terrainLabel">Pianura</b></div><div class="resource"><span>Morale esercito</span><b id="moraleLabel">100/100</b></div>
+     <div class="resource"><span>Controllo</span><b id="regionOwner">Tuo</b></div><div class="resource"><span>Fazione</span><b id="regionFaction">Roma</b></div>
+     <div class="resource"><span>Denaro regionale</span><b id="regionGold">0</b></div><div class="resource"><span>Entrate per turno</span><b id="regionIncome">0</b></div>
+     <div class="resource"><span>Popolazione</span><b id="regionPopulation">0</b></div>
+    </div>
+   </div>
+   <div class="command-group">
+    <h3 class="command-heading">DIPLOMAZIA</h3>
+    <div class="resource"><span>Relazioni</span><b id="diplomacyStatus">—</b></div>
+    <div class="command-actions"><button class="secondary" id="offerTruce">PROPONI TREGUA · 300</button><button class="secondary" id="offerAlliance">PROPOSTA DI ALLEANZA · 700</button></div>
+   </div>
+   <div class="command-group">
+    <h3 class="command-heading">ESERCITO E MOVIMENTO</h3>
+    <div class="command-grid">
+     <div class="resource"><span>Fanteria</span><b id="infantryCount">0</b></div><div class="resource"><span>Arcieri</span><b id="archerCount">0</b></div>
+     <div class="resource"><span>Cavalleria</span><b id="cavalryCount">0</b></div><div class="resource"><span>Guarnigione</span><b id="garrisonCount">0</b></div>
+     <div class="resource"><span>Comandante</span><b id="generalName">Nessuno</b></div><div class="resource"><span>Abilità comando</span><b id="generalSkill">—</b></div>
+    </div>
+    <button class="wide secondary" id="recruitGeneral">NOMINA GENERALE · 900</button>
+    <div class="resource"><span>Destinazione esercito</span><select id="moveDestination" aria-label="Provincia di destinazione" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
+    <div class="command-actions"><button class="secondary" id="moveArmy">SPOSTA ESERCITO</button><button class="secondary" id="retreatArmy">RITIRATA STRATEGICA</button></div>
+   </div>
+   <div class="command-group">
+    <h3 class="command-heading">OPERAZIONI MILITARI</h3>
+    <div class="resource"><span>Obiettivo</span><select id="attackDestination" aria-label="Provincia da attaccare" style="max-width:58%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"></select></div>
+    <div class="command-grid">
+     <div class="resource"><span>Dottrina</span><select id="battleTactic" aria-label="Dottrina di combattimento" style="max-width:100%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea equilibrata</option><option value="phalanx">Falange</option><option value="cavalry">Carica di cavalleria</option><option value="archers">Pioggia di frecce</option></select></div>
+     <div class="resource"><span>Formazione</span><select id="battleFormation" aria-label="Schieramento iniziale" style="max-width:100%;background:#263c47;color:#f0e8d2;border:1px solid #52656a;border-radius:7px;padding:7px"><option value="line">Linea romana</option><option value="wedge">Cuneo offensivo</option><option value="defensive">Schieramento difensivo</option></select></div>
+    </div>
+    <div class="command-actions"><button id="attackProvince">ATTACCA</button><button class="secondary" id="startSiege">INIZIA ASSEDIO</button></div>
+   </div>
+   <div class="command-group">
+    <h3 class="command-heading">RECLUTAMENTO E SVILUPPO</h3>
+    <div class="actions"><button id="recruitInfantry">RECLUTA FANTERIA · 250</button><button id="recruitArchers">RECLUTA ARCIERI · 320</button><button id="recruitCavalry">RECLUTA CAVALLERIA · 500</button><button class="secondary" id="develop">SVILUPPA ECONOMIA · 700</button></div>
+    <button class="wide secondary" id="claim">PRENDI IL CONTROLLO · 1.200</button>
+   </div>
   </section>
   <section class="panel"><div class="topline"><h2>TESORERIA NAZIONALE</h2><span class="tag">BILANCIO</span></div><div class="resource"><span>Entrate previste</span><b id="income">0</b></div><div class="resource"><span>Regioni produttive</span><b id="incomeRegions">0</b></div><button class="wide" id="endTurn">CONCLUDI TURNO</button><button class="wide secondary" id="save">SALVA CAMPAGNA</button><button class="wide secondary" id="reset">NUOVA CAMPAGNA</button></section>
   <section class="panel"><h2>CRONACA DEL REGNO</h2><div id="log" class="log" aria-live="polite"></div></section>
