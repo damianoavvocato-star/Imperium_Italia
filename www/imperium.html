@@ -59,37 +59,9 @@
 </style>
 </head>
 <body>
-<section class="start-screen" id="startScreen" aria-label="Menu principale di Imperium Italia">
- <div class="start-card">
-  <div class="start-emblem" aria-hidden="true">SPQR</div>
-  <div class="start-kicker">ROMA · ITALIA · 300 A.C.</div>
-  <h1 class="start-title">IMPERIUM<br>ITALIA</h1>
-  <p class="start-subtitle">Il destino della penisola è nelle tue mani</p>
-  <div class="start-divider"></div>
-  <div class="start-actions">
-   <button id="newCampaign">NUOVA CAMPAGNA</button>
-   <button id="continueCampaign" class="secondary">CONTINUA CAMPAGNA</button>
-   <button id="openHelp" class="secondary">COME SI GIOCA</button>
-  </div>
-  <div class="start-foot">UNA REPUBBLICA · VENTI REGIONI · UN SOLO DESTINO</div>
- </div>
-</section>
-<div class="help-overlay" id="helpOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
- <section class="help-card">
-  <div class="topline"><h2 id="helpTitle">COME SI GIOCA</h2><span class="tag">GUIDA RAPIDA</span></div>
-  <ul>
-   <li>Amministra le province romane e raccogli denari a ogni turno.</li>
-   <li>Recluta fanteria, arcieri e cavalleria; sviluppa l'economia.</li>
-   <li>Sposta gli eserciti tra province confinanti e conquista nuovi territori.</li>
-   <li>Usa diplomazia, assedi e ordini tattici per prevalere sulle fazioni rivali.</li>
-   <li>La campagna viene salvata su questo dispositivo: usa Continua per riprendere.</li>
-  </ul>
-  <button class="wide" id="closeHelp">TORNA AL MENU</button>
- </section>
-</div>
-<div id="gameScreen" hidden>
+<div id="gameScreen">
 <div class="app">
-<header><div><div class="brand">IMPERIUM_ITALIA</div><div class="sub">CAMPAGNA STRATEGICA · EDIZIONE 1.0</div></div><span class="tag" id="turn">TURNO 1</span></header>
+<header><div><div class="brand">IMPERIUM_ITALIA</div><div class="sub">CAMPAGNA STRATEGICA · EDIZIONE 1.0</div></div><div style="display:flex;align-items:center;gap:8px"><button class="secondary" id="returnMenu" type="button">MENU PRINCIPALE</button><span class="tag" id="turn">TURNO 1</span></div></header>
 <section class="stats">
  <div class="stat"><b id="totalGold">0</b><span>TESORO TOTALE · DENARI</span></div>
  <div class="stat"><b id="ownedCount">0/20</b><span>REGIONI CONTROLLATE</span></div>
@@ -451,19 +423,18 @@ $("offerAlliance").onclick=()=>{const target=selected();if(target.owner!=="enemy
 $("save").onclick=()=>save(true);
 $("reset").onclick=()=>{if(!confirm("Vuoi iniziare una nuova campagna? Il salvataggio attuale verrà sostituito."))return;localStorage.removeItem("imperium_italia_save");localStorage.removeItem("imperiumItaliaeSave");state={turn:1,selected:11,regions:initialCampaignRegions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};note("Nuova campagna iniziata. Roma e le province centrali sono il tuo punto di partenza.");render()};
 $("map").addEventListener("click",event=>{const rect=$("map").getBoundingClientRect();const x=(event.clientX-rect.left)*$("map").width/rect.width,y=(event.clientY-rect.top)*$("map").height/rect.height;let nearest=-1,distance=Infinity;state.regions.forEach(r=>{const d=Math.hypot(x-r.x,y-r.y);if(d<distance){distance=d;nearest=r.id}});if(nearest>=0&&distance<40){state.selected=nearest;render()}});
-function showGame(){ $("startScreen").hidden=true; $("gameScreen").hidden=false; render(); }
-$("newCampaign").onclick=()=>{
- const hasSave=!!(localStorage.getItem("imperium_italia_save")||localStorage.getItem("imperiumItaliaeSave"));
- if(hasSave&&!confirm("Iniziare una nuova campagna? Il salvataggio precedente verrà sostituito."))return;
- localStorage.removeItem("imperium_italia_save");localStorage.removeItem("imperiumItaliaeSave");
+const launchParams=new URLSearchParams(location.search);
+if(launchParams.has("new")){
  state={turn:1,selected:11,regions:initialCampaignRegions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};
- showGame();note("Campagna inaugurale avviata. Amministra Lazio, Toscana e Campania, poi espandi il tuo dominio.");save(false);
-};
-$("continueCampaign").onclick=()=>{if(!load()){alert("Nessuna campagna valida trovata su questo dispositivo.");$("continueCampaign").disabled=true;return;}showGame();};
-$("openHelp").onclick=()=>$("helpOverlay").hidden=false;
-$("closeHelp").onclick=()=>$("helpOverlay").hidden=true;
-$("helpOverlay").addEventListener("click",event=>{if(event.target===$("helpOverlay"))$("helpOverlay").hidden=true});
-$("continueCampaign").disabled=!(localStorage.getItem("imperium_italia_save")||localStorage.getItem("imperiumItaliaeSave"));
+ note("Campagna inaugurale avviata. Amministra Lazio, Toscana e Campania, poi espandi il tuo dominio.");
+ save(false);
+}else if(launchParams.has("continue")){
+ if(!load()){alert("Nessuna campagna valida trovata. Torna al menu e avvia una nuova campagna.");location.replace("index.html");}
+}else if(!load()){
+ state={turn:1,selected:11,regions:initialCampaignRegions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};
+ save(false);
+}
+$("returnMenu").onclick=()=>{save(false);location.href="index.html"};
 render();
 </script>
 </body>
