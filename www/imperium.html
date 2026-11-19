@@ -296,7 +296,7 @@ const italyRegionNamesByCode={"10":"Umbria","11":"Marche","12":"Lazio","13":"Abr
 const mapView={scale:1,offsetX:0,offsetY:0};
 let mapPhysical=true;
 function projectItalyMap(lon,lat){return {x:(lon-6.6)/12*760,y:(47.1-lat)/11.6*900};}
-function istatPathCenter(path){const points=[...path.matchAll(/[ML]\\s*([-\\d.]+)\\s+([-\\d.]+)/g)];if(!points.length)return {x:280,y:320};const sum=points.reduce((a,m)=>({x:a+Number(m[1]),y:a+Number(m[2])}),{x:0,y:0});return {x:sum.x/points.length,y:sum.y/points.length};}
+function istatPathCenter(path){const points=[...path.matchAll(/[ML]\s*([-\d.]+)\s+([-\d.]+)/g)];if(!points.length)return {x:280,y:320};const sum=points.reduce((a,m)=>({x:a+Number(m[1]),y:a+Number(m[2])}),{x:0,y:0});return {x:sum.x/points.length,y:sum.y/points.length};}
 function drawPhysicalGeography(ctx,c){
  if(!mapPhysical)return;
  ctx.save();ctx.scale(c.width/560,c.height/640);
