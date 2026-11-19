@@ -279,7 +279,9 @@ test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () =>
   assert.match(script, /function drawProvinceBoundaries\(ctx\)/);
   assert.match(script, /italyProvincePaths\.forEach/);
   assert.match(script, /PROVINCE: OFF/);
-  assert.match(script, /prov_istat_code/);
+  assert.ok(html.includes('"name":"Sassari"'));
+  assert.ok(html.includes('"name":"Catania"'));
+  assert.ok(html.includes('"name":"Palermo"'));
   assert.match(script, /let mapCities=true/);
   assert.match(script, /if\(mapCities\)\{ctx\.save\(\);cities\.forEach/);
   assert.match(script, /100 km/);
