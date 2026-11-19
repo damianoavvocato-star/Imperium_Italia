@@ -272,33 +272,35 @@ test('la mappa usa i confini regionali ISTAT aggiornati al 1 gennaio 2026', () =
   }
 });
 test('la mappa strategica mostra soltanto confini regionali, nomi e capoluoghi', () => {
-  assert.match(script, /function drawRegionalCapitals\\(ctx,c\\)/);
-  assert.match(script, /const cities=\\[\\["Aosta"/);
-  assert.match(script, /drawRegionalCapitals\\(ctx,c\\)/);
-  assert.doesNotMatch(script, /drawPhysicalGeography\\(ctx,c\\)/);
-  assert.doesNotMatch(script, /drawTransportLayers\\(ctx,c\\)/);
-  assert.doesNotMatch(script, /drawProvinceBoundaries\\(ctx\\)/);
-  assert.doesNotMatch(script, /drawMunicipalityBoundary\\(ctx,c\\)/);
-});test('la schermata di gioco non espone strumenti per comuni o province', () => {
-  assert.match(html, /map-tools \.map-zoom button:nth-child\\(n\\+6\\)\\{display:none!important\\}/);
-  assert.match(html, /map-tools \.map-zoom button:nth-child\\(4\\),/);
-  assert.match(html, /map-tools \.map-zoom button:nth-child\\(n\\+6\\)/);
-  assert.match(html, /map-tools \.map-hint,\.legend,\.layout>\.panel:first-child>p\\{display:none!important\\}/);
-});test('i venti capoluoghi regionali sono gli unici punti urbani disegnati sulla mappa', () => {
-  assert.match(script, /const cities=\\[\\["Aosta"/);
-  assert.match(script, /\\["Campobasso",14\\.66,41\\.56\\]/);
-  assert.match(script, /\\["Cagliari",9\\.12,39\\.22\\]/);
-  assert.match(script, /function drawRegionalCapitals\\(ctx,c\\)/);
-  assert.match(script, /ctx\\.fillText\\(name,p\\.x\\+4,p\\.y-4\\)/);
-});test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () => {
-  assert.match(html, /class="command-hud"/);
-  assert.match(html, /\.command-hud\\{position:absolute/);
-  assert.match(html, /\.command-hud>\.panel\\{min-width:0/);
-  assert.match(html, /\.map-wrap\\{position:absolute;inset:0/);
-  assert.match(html, /grid-template-columns:minmax\\(0,2\\.1fr\\)/);
+  assert.ok(script.includes('function drawRegionalCapitals(ctx,c)'));
+  assert.ok(script.includes('const cities=[["Aosta"'));
+  assert.ok(script.includes('drawRegionalCapitals(ctx,c)'));
+  assert.ok(!script.includes('drawPhysicalGeography(ctx,c);'));
+  assert.ok(!script.includes('drawTransportLayers(ctx,c);'));
+  assert.ok(!script.includes('drawProvinceBoundaries(ctx);'));
+  assert.ok(!script.includes('drawMunicipalityBoundary(ctx,c);'));
+});
+test('la schermata di gioco non espone strumenti per comuni o province', () => {
+  assert.ok(html.includes('.map-tools .map-zoom button:nth-child(4),.map-tools .map-zoom button:nth-child(n+6)'));
+  assert.ok(html.includes('.map-tools .map-hint,.legend,.layout>.panel:first-child>p{display:none!important}'));
+});
+test('i venti capoluoghi regionali sono gli unici punti urbani disegnati sulla mappa', () => {
+  assert.ok(script.includes('const cities=[["Aosta"'));
+  assert.ok(script.includes('["Campobasso",14.66,41.56]'));
+  assert.ok(script.includes('["Cagliari",9.12,39.22]'));
+  assert.ok(script.includes('function drawRegionalCapitals(ctx,c)'));
+  assert.ok(script.includes('ctx.fillText(name,p.x+4,p.y-4)'));
+});
+test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () => {
+  assert.ok(html.includes('class="command-hud"'));
+  assert.ok(html.includes('.command-hud{position:absolute'));
+  assert.ok(html.includes('.command-hud>.panel{min-width:0'));
+  assert.ok(html.includes('.map-wrap{position:absolute;inset:0'));
+  assert.ok(html.includes('grid-template-columns:minmax(0,2.1fr)'));
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
   for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) assert.ok(html.includes('id="' + id + '"'));
-});test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
+});
+test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
   for (const heading of ['PROVINCIA E RISORSE','DIPLOMAZIA','ESERCITO E MOVIMENTO','OPERAZIONI MILITARI','RECLUTAMENTO E SVILUPPO']) {
     assert.ok(html.includes(heading), 'gruppo di comandi mancante: ' + heading);
   }
