@@ -326,6 +326,18 @@ test('la mappa mostra capoluoghi regionali, porti principali e autostrade schema
   assert.match(html, /Autostrade principali: tracciati schematici, non navigabili/);
 });
 
+test('la campagna usa un centro di comando unico senza navigazione a schede', () => {
+  assert.match(html, /Centro di comando unico/);
+  assert.match(html, /\.layout>aside\{position:sticky/);
+  assert.match(html, /\.layout>aside\{display:contents\}/);
+  assert.match(html, /\.layout>aside>section:nth-of-type\(2\)\{position:fixed/);
+  for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) {
+    assert.ok(html.includes('id="' + id + '"'), 'elemento del centro di comando mancante: ' + id);
+  }
+  assert.match(html, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
+});
+
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
   for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
     assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
