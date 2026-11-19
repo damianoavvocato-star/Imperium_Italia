@@ -315,6 +315,10 @@ function drawMap(){
   ctx.fillStyle=fill;ctx.globalAlpha=region?.id===state.selected?1:.88;ctx.fill(path,"evenodd");ctx.globalAlpha=1;
   ctx.strokeStyle=region?.id===state.selected?"#ffe4a0":"rgba(37,48,43,.9)";ctx.lineWidth=region?.id===state.selected?4:2;ctx.lineJoin="round";ctx.stroke(path);
  });
+ // Rotte terrestri strategiche tra regioni confinanti.
+ ctx.save();ctx.strokeStyle="rgba(255,229,166,.38)";ctx.lineWidth=2;ctx.setLineDash([5,6]);
+ links.forEach(([a,b])=>{const from=state.regions[a],to=state.regions[b];ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke()});
+ ctx.setLineDash([]);ctx.restore();
  ctx.save();ctx.fillStyle="rgba(230,225,201,.76)";ctx.font="italic 15px Georgia";ctx.textAlign="center";
  ctx.fillText("MAR LIGURE",215,290);ctx.fillText("MAR TIRRENO",245,665);ctx.fillText("MAR ADRIATICO",655,455);ctx.fillText("MAR IONIO",535,850);
  ctx.restore();
