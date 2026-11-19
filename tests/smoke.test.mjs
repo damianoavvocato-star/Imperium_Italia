@@ -251,3 +251,14 @@ test('la mappa strategica usa una sagoma geografica dell Italia con isole e mari
   assert.match(script, /MAR TIRRENO/);
   assert.match(script, /Confini regionali schematici/);
 });
+
+test('la schermata iniziale offre nuova campagna, continua e guida prima di entrare nel gioco', () => {
+  for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp', 'gameScreen']) {
+    assert.ok(html.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
+  }
+  assert.match(html, /function showGame\(\)/);
+  assert.match(script, /\$\("continueCampaign"\)\.disabled=/);
+  assert.match(script, /if\(!load\(\)\)/);
+  assert.match(script, /initialCampaignRegions\.map/);
+  assert.match(html, /Il destino della penisola è nelle tue mani/);
+});
