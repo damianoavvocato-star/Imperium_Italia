@@ -56,6 +56,46 @@
 .help-card h2{color:#e5c36e;font-family:Georgia,serif}
 .help-card li{margin:9px 0;color:#d6ddd5;font-size:13px;line-height:1.5}
 @media(max-width:480px){.start-card{padding:26px 18px}.start-emblem{width:78px;height:78px;font-size:36px}}
+
+/* Centro di comando unico: mappa, territorio e azioni sempre nella stessa schermata */
+@media(min-width:721px){
+ .app{max-width:1480px}
+ .layout{grid-template-columns:minmax(0,1.35fr) minmax(330px,.8fr);align-items:start;gap:14px}
+ .layout>aside{position:sticky;top:10px;align-self:start;max-height:calc(100svh - 20px);overflow-y:auto;overscroll-behavior:contain;padding-right:3px}
+ .layout>aside::-webkit-scrollbar{width:6px}
+ .layout>aside::-webkit-scrollbar-thumb{background:#53666b;border-radius:8px}
+}
+@media(max-width:720px){
+ .app{padding-left:9px;padding-right:9px;padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+ header{position:sticky;top:0;z-index:20;background:rgba(16,24,32,.96);backdrop-filter:blur(10px);padding:10px 3px}
+ .brand{font-size:14px}
+ .stats{position:sticky;top:53px;z-index:19;gap:5px;margin:7px 0;padding:5px 0;background:rgba(16,24,32,.96);backdrop-filter:blur(8px)}
+ .stat{padding:7px 5px;border-radius:9px;text-align:center}
+ .stat b{font-size:17px}
+ .stat span{font-size:8px;letter-spacing:.35px}
+ .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+ .layout>aside{display:contents}
+ .layout>.panel:first-child{padding:9px}
+ .map-wrap{display:flex;justify-content:center;max-height:59svh}
+ .map-wrap canvas{width:auto;height:59svh;max-width:100%;max-height:59svh;object-fit:contain}
+ .map-tools{justify-content:flex-start}
+ .map-tools .map-zoom{flex-wrap:wrap}
+ .map-tools .map-zoom button{min-height:36px;padding:6px 9px}
+ #regionPanel{grid-column:1;padding:12px}
+ #regionPanel .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout>aside>section:nth-of-type(2){position:fixed;z-index:35;left:8px;right:8px;bottom:calc(7px + env(safe-area-inset-bottom));margin:0;padding:7px;background:rgba(20,34,42,.97);border:1px solid #8e7541;border-radius:13px;box-shadow:0 8px 30px #000b;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;backdrop-filter:blur(12px)}
+ .layout>aside>section:nth-of-type(2)>.topline,.layout>aside>section:nth-of-type(2)>.resource{display:none}
+ .layout>aside>section:nth-of-type(2) button{width:100%;min-height:43px;margin:0;padding:8px 4px;font-size:9px;letter-spacing:.2px}
+ .layout>aside>section:nth-of-type(2) #endTurn{grid-column:span 1}
+ .layout>aside>section:nth-of-type(3){grid-column:1}
+ .footer{padding-bottom:10px}
+}
+@media(max-width:380px){
+ .stats span{font-size:7px}
+ .map-wrap canvas{height:54svh;max-height:54svh}
+ .layout>aside>section:nth-of-type(2) button{font-size:8px}
+}
+
 </style>
 </head>
 <body>
