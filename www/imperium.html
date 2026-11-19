@@ -32,9 +32,62 @@
 
 
 .tactical-board{margin:12px 0;background:#10232a;border:1px solid #60716c;border-radius:12px;overflow:hidden}.tactical-board canvas{display:block;width:100%;height:auto;touch-action:manipulation;cursor:crosshair}.tactical-help{font-size:11px;color:var(--muted);padding:8px 10px}.tactical-selection{color:var(--gold);font-weight:700}
+
+/* Schermata iniziale */
+#gameScreen[hidden]{display:none}
+.start-screen{min-height:100svh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(ellipse at 50% 34%,#43534b 0%,#1b2b30 42%,#091219 100%);position:relative;isolation:isolate;overflow:hidden}
+.start-screen:before,.start-screen:after{content:"";position:absolute;z-index:-1;pointer-events:none}
+.start-screen:before{inset:0;background:linear-gradient(90deg,#091219d9,transparent 28%,transparent 72%,#091219d9),repeating-linear-gradient(115deg,transparent 0 42px,#d8b45a08 43px 44px)}
+.start-screen:after{width:min(78vw,620px);height:min(78vw,620px);border:1px solid #d8b45a35;border-radius:50%;box-shadow:0 0 0 22px #d8b45a0a,0 0 0 54px #d8b45a08,0 0 100px #000;top:50%;left:50%;transform:translate(-50%,-50%)}
+.start-card{width:min(620px,100%);text-align:center;padding:clamp(24px,6vw,52px);background:linear-gradient(155deg,#233943ed,#101d25f2);border:1px solid #a98b4b;border-radius:22px;box-shadow:0 26px 90px #000b;backdrop-filter:blur(8px)}
+.start-emblem{width:94px;height:94px;margin:0 auto 18px;border:2px solid #d8b45a;border-radius:50%;display:grid;place-items:center;color:#e5c36e;font-family:Georgia,serif;font-size:43px;text-shadow:0 2px 12px #d8b45a88;box-shadow:inset 0 0 0 6px #d8b45a18,0 0 35px #d8b45a25}
+.start-kicker{color:#d8b45a;font-size:11px;letter-spacing:4px;font-weight:800}
+.start-title{font-family:Georgia,serif;font-size:clamp(34px,8vw,62px);line-height:1.05;letter-spacing:2px;color:#f2e6c8;margin:12px 0 8px;text-shadow:0 4px 22px #000}
+.start-subtitle{color:#c2c9bd;font-family:Georgia,serif;font-style:italic;font-size:clamp(14px,3vw,18px);margin:0 0 28px}
+.start-divider{height:1px;background:linear-gradient(90deg,transparent,#b99a4c,transparent);margin:22px 0}
+.start-actions{display:grid;gap:11px;max-width:390px;margin:0 auto}
+.start-actions button{min-height:52px;font-size:12px;letter-spacing:1.2px}
+.start-actions button.secondary{background:#263c47;color:#f0e8d2;border-color:#806d3d}
+.start-actions button:disabled{opacity:.35;cursor:not-allowed}
+.start-foot{font-size:10px;letter-spacing:1.5px;color:#91a09e;margin-top:24px}
+.help-overlay{position:fixed;inset:0;z-index:80;background:#050b10dd;display:grid;place-items:center;padding:16px}
+.help-overlay[hidden]{display:none}
+.help-card{width:min(520px,100%);background:#1a2b34;border:1px solid #a98b4b;border-radius:16px;padding:22px;box-shadow:0 24px 80px #000b}
+.help-card h2{color:#e5c36e;font-family:Georgia,serif}
+.help-card li{margin:9px 0;color:#d6ddd5;font-size:13px;line-height:1.5}
+@media(max-width:480px){.start-card{padding:26px 18px}.start-emblem{width:78px;height:78px;font-size:36px}}
 </style>
 </head>
 <body>
+<section class="start-screen" id="startScreen" aria-label="Menu principale di Imperium Italia">
+ <div class="start-card">
+  <div class="start-emblem" aria-hidden="true">SPQR</div>
+  <div class="start-kicker">ROMA · ITALIA · 300 A.C.</div>
+  <h1 class="start-title">IMPERIUM<br>ITALIA</h1>
+  <p class="start-subtitle">Il destino della penisola è nelle tue mani</p>
+  <div class="start-divider"></div>
+  <div class="start-actions">
+   <button id="newCampaign">NUOVA CAMPAGNA</button>
+   <button id="continueCampaign" class="secondary">CONTINUA CAMPAGNA</button>
+   <button id="openHelp" class="secondary">COME SI GIOCA</button>
+  </div>
+  <div class="start-foot">UNA REPUBBLICA · VENTI REGIONI · UN SOLO DESTINO</div>
+ </div>
+</section>
+<div class="help-overlay" id="helpOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+ <section class="help-card">
+  <div class="topline"><h2 id="helpTitle">COME SI GIOCA</h2><span class="tag">GUIDA RAPIDA</span></div>
+  <ul>
+   <li>Amministra le province romane e raccogli denari a ogni turno.</li>
+   <li>Recluta fanteria, arcieri e cavalleria; sviluppa l'economia.</li>
+   <li>Sposta gli eserciti tra province confinanti e conquista nuovi territori.</li>
+   <li>Usa diplomazia, assedi e ordini tattici per prevalere sulle fazioni rivali.</li>
+   <li>La campagna viene salvata su questo dispositivo: usa Continua per riprendere.</li>
+  </ul>
+  <button class="wide" id="closeHelp">TORNA AL MENU</button>
+ </section>
+</div>
+<div id="gameScreen" hidden>
 <div class="app">
 <header><div><div class="brand">IMPERIUM_ITALIA</div><div class="sub">CAMPAGNA STRATEGICA · EDIZIONE 1.0</div></div><span class="tag" id="turn">TURNO 1</span></header>
 <section class="stats">
@@ -132,6 +185,7 @@ function seedRivals(list){
 seedRivals(regions);
 regions.forEach(r=>{r.morale=r.owner==="player"?100:75});
 regions[11].general={name:"Marco Valerio",skill:2};
+const initialCampaignRegions=regions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null}));
 let state={turn:1,selected:11,regions,log:[],diplomacy:{},alliances:{},sieges:{},battle:null};
 function fmt(n){return Math.floor(n).toLocaleString("it-IT")+" ₳"}
 function note(message){state.log.unshift("T"+state.turn+" · "+message);state.log=state.log.slice(0,12);renderLog()}
@@ -395,9 +449,22 @@ function load(){try{let raw=localStorage.getItem("imperium_italia_save");if(!raw
 $("offerTruce").onclick=()=>{const target=selected();if(target.owner!=="enemy"||isTruceActive(target.faction))return;const payer=owned().sort((a,b)=>b.gold-a.gold)[0];if(!payer||!spend(payer,300))return;state.diplomacy=state.diplomacy||{};state.diplomacy[target.faction]=state.turn+3;note("Tregua stipulata con "+target.faction+" per tre turni. Il confine resta pacificato fino al turno "+state.diplomacy[target.faction]+".");render()};
 $("offerAlliance").onclick=()=>{const target=selected();if(target.owner!=="enemy"||isPeacefulWithFaction(target.faction))return;const payer=owned().sort((a,b)=>b.gold-a.gold)[0];if(!payer||!spend(payer,700))return;state.alliances=state.alliances||{};state.alliances[target.faction]=state.turn+4;note("Alleanza stipulata con "+target.faction+" per cinque turni. Gli eserciti alleati non attaccheranno Roma.");render()};
 $("save").onclick=()=>save(true);
-$("reset").onclick=()=>{if(!confirm("Vuoi iniziare una nuova campagna? Il salvataggio attuale verrà sostituito."))return;localStorage.removeItem("imperium_italia_save");localStorage.removeItem("imperiumItaliaeSave");state={turn:1,selected:11,regions:regions.map(r=>({...r,units:{...r.units},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};note("Nuova campagna iniziata. Roma e le province centrali sono il tuo punto di partenza.");render()};
+$("reset").onclick=()=>{if(!confirm("Vuoi iniziare una nuova campagna? Il salvataggio attuale verrà sostituito."))return;localStorage.removeItem("imperium_italia_save");localStorage.removeItem("imperiumItaliaeSave");state={turn:1,selected:11,regions:initialCampaignRegions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};note("Nuova campagna iniziata. Roma e le province centrali sono il tuo punto di partenza.");render()};
 $("map").addEventListener("click",event=>{const rect=$("map").getBoundingClientRect();const x=(event.clientX-rect.left)*$("map").width/rect.width,y=(event.clientY-rect.top)*$("map").height/rect.height;let nearest=-1,distance=Infinity;state.regions.forEach(r=>{const d=Math.hypot(x-r.x,y-r.y);if(d<distance){distance=d;nearest=r.id}});if(nearest>=0&&distance<40){state.selected=nearest;render()}});
-if(!load()){note("Campagna inaugurale avviata. Amministra Lazio, Toscana e Campania, poi espandi il tuo dominio.");}render();
+function showGame(){ $("startScreen").hidden=true; $("gameScreen").hidden=false; render(); }
+$("newCampaign").onclick=()=>{
+ const hasSave=!!(localStorage.getItem("imperium_italia_save")||localStorage.getItem("imperiumItaliaeSave"));
+ if(hasSave&&!confirm("Iniziare una nuova campagna? Il salvataggio precedente verrà sostituito."))return;
+ localStorage.removeItem("imperium_italia_save");localStorage.removeItem("imperiumItaliaeSave");
+ state={turn:1,selected:11,regions:initialCampaignRegions.map(r=>({...r,units:{...r.units},garrison:{...r.garrison},general:r.general?{...r.general}:null})),log:[],diplomacy:{},alliances:{},sieges:{},battle:null};
+ showGame();note("Campagna inaugurale avviata. Amministra Lazio, Toscana e Campania, poi espandi il tuo dominio.");save(false);
+};
+$("continueCampaign").onclick=()=>{if(!load()){alert("Nessuna campagna valida trovata su questo dispositivo.");$("continueCampaign").disabled=true;return;}showGame();};
+$("openHelp").onclick=()=>$("helpOverlay").hidden=false;
+$("closeHelp").onclick=()=>$("helpOverlay").hidden=true;
+$("helpOverlay").addEventListener("click",event=>{if(event.target===$("helpOverlay"))$("helpOverlay").hidden=true});
+$("continueCampaign").disabled=!(localStorage.getItem("imperium_italia_save")||localStorage.getItem("imperiumItaliaeSave"));
+render();
 </script>
 </body>
 </html>
