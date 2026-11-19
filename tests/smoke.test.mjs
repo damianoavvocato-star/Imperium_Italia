@@ -271,74 +271,34 @@ test('la mappa usa i confini regionali ISTAT aggiornati al 1 gennaio 2026', () =
     assert.ok(script.includes('"name":"' + region + '"'), 'confine geografico mancante: ' + region);
   }
 });
-test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () => {
-  assert.ok(html.includes('id="mapPhysicalToggle"'));
-  assert.ok(html.includes('id="mapCitiesToggle"'));
-  assert.ok(html.includes('id="mapProvincesToggle"'));
-  assert.match(script, /const italyProvincePaths=/);
-  assert.match(script, /function drawProvinceBoundaries\(ctx\)/);
-  assert.match(script, /italyProvincePaths\.forEach/);
-  assert.ok(html.includes("PROVINCE: OFF"));
-  assert.ok(html.includes('"name":"Sassari"'));
-  assert.ok(html.includes('"name":"Catania"'));
-  assert.ok(html.includes('"name":"Palermo"'));
-  assert.match(script, /let mapCities=true/);
-  assert.match(script, /if\(mapCities\)\{ctx\.save\(\);cities\.forEach/);
-  assert.match(script, /100 km/);
-  assert.match(script, /function drawPhysicalGeography\(ctx,c\)/);
-  assert.match(script, /const cities=\[/);
-  assert.match(script, /ctx\.ellipse\(/);
-  assert.match(script, /mapPhysical=!mapPhysical/);
-  assert.match(script, /Catanzaro/);
-});
-test('i confini comunali ISTAT 2026 sono ricercabili e caricati solo su richiesta', () => {
-  for (const id of ['municipalitySearch', 'municipalityFind', 'municipalityResults', 'municipalityShow', 'municipalityStatus', 'mapMunicipalityToggle']) {
-    assert.ok(html.includes('id="' + id + '"'), 'controllo comuni mancante: ' + id);
-  }
-  assert.ok(script.includes('const municipalityBaseURL="https://l1n00.github.io/confini-comuni-istat/2026"'));
-  assert.match(script, /async function getMunicipalityIndex\(\)/);
-  assert.match(script, /normalizeMunicipalityName\(item\.name\)===query/);
-  assert.match(script, /comuni\/"\+code\+"\.geojson/);
-  assert.match(script, /function drawMunicipalityBoundary\(ctx,c\)/);
-  assert.match(script, /geometry\.type==="MultiPolygon"/);
-  assert.match(script, /drawMunicipalityBoundary\(ctx,c\)/);
-  assert.match(script, /mapMunicipalityVisible=!mapMunicipalityVisible/);
-  assert.match(html, /Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4\.0/);
-});
-
-test('la mappa mostra capoluoghi regionali, porti principali e autostrade schematiche con livelli indipendenti', () => {
-  for (const id of ['mapCitiesToggle', 'mapRoadsToggle', 'mapPortsToggle']) assert.ok(html.includes('id="' + id + '"'), 'layer cartografico mancante: ' + id);
-  assert.match(script, /const cities=\[\["Aosta"/);
-  assert.match(script, /\["Campobasso",14\.66,41\.56\]/);
-  assert.match(script, /\["Cagliari",9\.12,39\.22\]/);
-  assert.match(script, /const italyMajorPorts=\[/);
-  assert.match(script, /\["Gioia Tauro",15\.90,38\.43\]/);
-  assert.match(script, /\["Catania",15\.09,37\.50\]/);
-  assert.match(script, /\["Olbia",9\.50,40\.92\]/);
-  assert.match(script, /const italyMotorwayRoutes=\[/);
-  for (const road of ['A1','A4','A5','A2','A14','A19','A20','A29']) assert.ok(script.includes('["' + road + '",'), 'tracciato autostradale mancante: ' + road);
-  assert.match(script, /function drawTransportLayers\(ctx,c\)/);
-  assert.match(script, /if\(mapRoads\)/);
-  assert.match(script, /if\(mapPorts\)/);
-  assert.match(script, /drawTransportLayers\(ctx,c\)/);
-  assert.match(script, /mapRoads=!mapRoads/);
-  assert.match(script, /mapPorts=!mapPorts/);
-  assert.match(html, /Autostrade principali: tracciati schematici, non navigabili/);
-});
-
-test('la campagna usa un centro di comando unico senza navigazione a schede', () => {
-  assert.match(html, /Centro di comando unico/);
-  assert.match(html, /\.layout>aside\{position:sticky/);
-  assert.match(html, /\.layout>aside\{display:contents\}/);
-  assert.match(html, /\.layout>aside>section:nth-of-type\(2\)\{position:fixed/);
-  for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) {
-    assert.ok(html.includes('id="' + id + '"'), 'elemento del centro di comando mancante: ' + id);
-  }
-  assert.match(html, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+test('la mappa strategica mostra soltanto confini regionali, nomi e capoluoghi', () => {
+  assert.match(script, /function drawRegionalCapitals\\(ctx,c\\)/);
+  assert.match(script, /const cities=\\[\\["Aosta"/);
+  assert.match(script, /drawRegionalCapitals\\(ctx,c\\)/);
+  assert.doesNotMatch(script, /drawPhysicalGeography\\(ctx,c\\)/);
+  assert.doesNotMatch(script, /drawTransportLayers\\(ctx,c\\)/);
+  assert.doesNotMatch(script, /drawProvinceBoundaries\\(ctx\\)/);
+  assert.doesNotMatch(script, /drawMunicipalityBoundary\\(ctx,c\\)/);
+});test('la schermata di gioco non espone strumenti per comuni o province', () => {
+  assert.match(html, /map-tools \.map-zoom button:nth-child\\(n\\+6\\)\\{display:none!important\\}/);
+  assert.match(html, /map-tools \.map-zoom button:nth-child\\(4\\),/);
+  assert.match(html, /map-tools \.map-zoom button:nth-child\\(n\\+6\\)/);
+  assert.match(html, /map-tools \.map-hint,\.legend,\.layout>\.panel:first-child>p\\{display:none!important\\}/);
+});test('i venti capoluoghi regionali sono gli unici punti urbani disegnati sulla mappa', () => {
+  assert.match(script, /const cities=\\[\\["Aosta"/);
+  assert.match(script, /\\["Campobasso",14\\.66,41\\.56\\]/);
+  assert.match(script, /\\["Cagliari",9\\.12,39\\.22\\]/);
+  assert.match(script, /function drawRegionalCapitals\\(ctx,c\\)/);
+  assert.match(script, /ctx\\.fillText\\(name,p\\.x\\+4,p\\.y-4\\)/);
+});test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () => {
+  assert.match(html, /class="command-hud"/);
+  assert.match(html, /\.command-hud\\{position:absolute/);
+  assert.match(html, /\.command-hud>\.panel\\{min-width:0/);
+  assert.match(html, /\.map-wrap\\{position:absolute;inset:0/);
+  assert.match(html, /grid-template-columns:minmax\\(0,2\\.1fr\\)/);
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
-});
-
-test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
+  for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) assert.ok(html.includes('id="' + id + '"'));
+});test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
   for (const heading of ['PROVINCIA E RISORSE','DIPLOMAZIA','ESERCITO E MOVIMENTO','OPERAZIONI MILITARI','RECLUTAMENTO E SVILUPPO']) {
     assert.ok(html.includes(heading), 'gruppo di comandi mancante: ' + heading);
   }
