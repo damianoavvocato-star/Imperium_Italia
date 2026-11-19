@@ -256,20 +256,29 @@ test('la mappa geografica supporta zoom, panoramica touch e centratura senza per
   assert.match(html, /touch-action:none/);
 });
 
-test('la mappa strategica usa i confini geografici delle 20 regioni italiane', () => {
-  assert.match(script, /const italyRegionMapData=/);
-  assert.match(script, /function projectItalyMap\(lon,lat\)/);
-  assert.match(script, /function drawMap\(\)/);
-  assert.match(script, /ctx\.fill\(path,"evenodd"\)/);
-  assert.match(script, /state\.regions\.find\(r=>r\.name===feature\.name\)/);
-  for (const region of ['Piemonte', 'Valle d\'Aosta', 'Lombardia', 'Trentino-Alto Adige', 'Veneto', 'Friuli-Venezia Giulia', 'Liguria', 'Emilia-Romagna', 'Toscana', 'Umbria', 'Marche', 'Lazio', 'Abruzzo', 'Molise', 'Campania', 'Puglia', 'Basilicata', 'Calabria', 'Sicilia', 'Sardegna']) {
+test('la mappa usa i confini regionali ISTAT aggiornati al 1 gennaio 2026', () => {
+  assert.match(script, /const italyIstatRegions=/);
+  assert.match(script, /function istatPathCenter\\(path\\)/);
+  assert.match(script, /function drawMap\\(\\)/);
+  assert.match(script, /ctx\\.fill\\(path,"evenodd"\\)/);
+  assert.match(script, /state\\.regions\\.find\\(r=>r\\.name===feature\\.name\\)/);
+  assert.match(script, /const italyRegionNamesByCode=/);
+  assert.match(html, /Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4\\.0/);
+  for (const code of ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20']) {
+    assert.ok(script.includes('"code":"' + code + '"'), 'codice ISTAT mancante: ' + code);
+  }
+  for (const region of ['Piemonte', 'Valle d\\'Aosta', 'Lombardia', 'Trentino-Alto Adige', 'Veneto', 'Friuli-Venezia Giulia', 'Liguria', 'Emilia-Romagna', 'Toscana', 'Umbria', 'Marche', 'Lazio', 'Abruzzo', 'Molise', 'Campania', 'Puglia', 'Basilicata', 'Calabria', 'Sicilia', 'Sardegna']) {
     assert.ok(script.includes('"name":"' + region + '"'), 'confine geografico mancante: ' + region);
   }
-  assert.match(html, /Cartografia regionale: amCharts Italy Low · CC BY 4\.0/);
-  assert.match(script, /MAR TIRRENO/);
-  assert.match(script, /MAR ADRIATICO/);
 });
-
+test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () => {
+  assert.ok(html.includes('id="mapPhysicalToggle"'));
+  assert.match(script, /function drawPhysicalGeography\\(ctx,c\\)/);
+  assert.match(script, /const cities=\\[/);
+  assert.match(script, /ctx\\.ellipse\\(/);
+  assert.match(script, /mapPhysical=!mapPhysical/);
+  assert.match(script, /Catanzaro/);
+});
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
   for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
     assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
