@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-const html = readFileSync(new URL('../www/index.html', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../www/imperium.html', import.meta.url), 'utf8');
+const menuHtml = readFileSync(new URL('../www/index.html', import.meta.url), 'utf8');
 const scriptStart = html.indexOf('<script>');
 const scriptEnd = html.indexOf('</script>', scriptStart);
 const script = html.slice(scriptStart + 8, scriptEnd);
@@ -252,13 +253,18 @@ test('la mappa strategica usa una sagoma geografica dell Italia con isole e mari
   assert.match(script, /Confini regionali schematici/);
 });
 
-test('la schermata iniziale offre nuova campagna, continua e guida prima di entrare nel gioco', () => {
-  for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp', 'gameScreen']) {
-    assert.ok(html.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
+test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
+  for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
+    assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
   }
-  assert.match(html, /function showGame\(\)/);
-  assert.match(script, /\$\("continueCampaign"\)\.disabled=/);
-  assert.match(script, /if\(!load\(\)\)/);
+  assert.doesNotMatch(menuHtml, /id="gameScreen"|id="map"|id="totalGold"/);
+  assert.match(menuHtml, /location\.href="imperium\.html\?new=1"/);
+  assert.match(menuHtml, /location\.href="imperium\.html\?continue=1"/);
+  assert.match(menuHtml, /Il destino della penisola è nelle tue mani/);
+  assert.ok(html.includes('id="map"'), 'mappa di gioco non trovata nella pagina autonoma');
+  assert.ok(html.includes('id="returnMenu"'), 'pulsante per tornare al menu mancante');
+  assert.match(script, /new URLSearchParams\(location\.search\)/);
+  assert.match(script, /launchParams\.has\("new"\)/);
+  assert.match(script, /launchParams\.has\("continue"\)/);
   assert.match(script, /initialCampaignRegions\.map/);
-  assert.match(html, /Il destino della penisola è nelle tue mani/);
 });
