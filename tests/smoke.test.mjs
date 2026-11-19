@@ -338,6 +338,20 @@ test('la campagna usa un centro di comando unico senza navigazione a schede', ()
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
 });
 
+test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
+  for (const heading of ['PROVINCIA E RISORSE','DIPLOMAZIA','ESERCITO E MOVIMENTO','OPERAZIONI MILITARI','RECLUTAMENTO E SVILUPPO']) {
+    assert.ok(html.includes(heading), 'gruppo di comandi mancante: ' + heading);
+  }
+  for (const id of ['offerTruce','offerAlliance','recruitGeneral','moveArmy','retreatArmy','attackProvince','startSiege','recruitInfantry','recruitArchers','recruitCavalry','develop','claim']) {
+    assert.equal((html.match(new RegExp('id="' + id + '"','g')) || []).length, 1, 'controllo duplicato o mancante: ' + id);
+  }
+  assert.match(html, /#regionPanel \.command-group\{margin-top:/);
+  assert.match(html, /#regionPanel \.command-grid\{display:grid/);
+  assert.match(html, /#regionPanel \.command-actions\{display:grid/);
+  assert.match(html, /@media\(max-width:720px\)[\s\S]*?#regionPanel \.command-actions button/);
+  assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
+});
+
 test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina separata', () => {
   for (const id of ['startScreen', 'newCampaign', 'continueCampaign', 'openHelp', 'helpOverlay', 'closeHelp']) {
     assert.ok(menuHtml.includes('id="' + id + '"'), 'elemento del menu mancante: ' + id);
