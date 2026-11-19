@@ -237,3 +237,9 @@ test('gli schieramenti tattici modificano dispiegamento, forza e perdite', () =>
   assert.match(script, /tactic\.loss\*formation\.loss/);
   assert.match(script, /if\(!b\.formation\)b\.formation="line"/);
 });
+
+test('la griglia evidenzia le caselle libere raggiungibili dal reparto selezionato', () => {
+  assert.match(script, /if\(b\.selectedUnit\)\{const reachable=tacticalReachable\(b,b\.selectedUnit\)/);
+  assert.match(script, /rgba\(232,195,91,\.34\)/);
+  assert.match(script, /if\(!occupied\)\{ctx\.fillStyle=/);
+});
