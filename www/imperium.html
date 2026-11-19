@@ -564,7 +564,7 @@ function drawMap(){
   ctx.strokeText(r.name,r.x,r.y-13);ctx.fillText(r.name,r.x,r.y-13);
   if(r.owner==="player"){ctx.font="bold 9px system-ui";ctx.fillStyle="#172027";ctx.fillText("✦",r.x,r.y+3)}
  });
-
+ ctx.restore();
 }
 function renderLog(){$("log").innerHTML=state.log.map(x=>"<p>"+x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+"</p>").join("")||"<p>La cronaca è ancora vuota.</p>"}
 function render(){
