@@ -367,3 +367,41 @@ test('il menu iniziale è una pagina autonoma e il gioco si apre in una pagina s
   assert.match(script, /launchParams\.has\("continue"\)/);
   assert.match(script, /initialCampaignRegions\.map/);
 });
+
+
+test('il menu gestisce davvero nuova campagna, ripresa e assenza di salvataggi', () => {
+  const menuScriptMatch = menuHtml.match(/<script>([\\s\\S]*?)<\\/script>/);
+  assert.ok(menuScriptMatch, 'script del menu non trovato');
+  const runMenu = ({saved = null, confirmResult = true} = {}) => {
+    const values = new Map(saved ? [['imperium_italia_save', saved]] : []);
+    const elements = new Map();
+    for (const id of ['continueCampaign', 'newCampaign', 'openHelp', 'closeHelp', 'helpOverlay']) {
+      elements.set(id, {disabled: false, hidden: id === 'helpOverlay', onclick: null, listeners: {}, addEventListener(type, fn) { this.listeners[type] = fn; }});
+    }
+    const location = {href: '', replace(url) { this.href = url; }};
+    const sandbox = {
+      localStorage: {getItem(key) { return values.get(key) || null; }, removeItem(key) { values.delete(key); }},
+      document: {getElementById(id) { return elements.get(id); }},
+      location,
+      confirm() { return confirmResult; },
+    };
+    vm.runInNewContext(menuScriptMatch[1], sandbox);
+    return {values, elements, location};
+  };
+
+  const empty = runMenu();
+  assert.equal(empty.elements.get('continueCampaign').disabled, true, 'continua deve essere disabilitato senza salvataggio');
+  empty.elements.get('continueCampaign').onclick();
+  assert.equal(empty.location.href, '', 'non deve navigare se non esiste una campagna');
+
+  const existing = runMenu({saved: 'campagna-salvata'});
+  assert.equal(existing.elements.get('continueCampaign').disabled, false);
+  existing.elements.get('continueCampaign').onclick();
+  assert.equal(existing.location.href, 'imperium.html?continue=1');
+  assert.equal(existing.values.get('imperium_italia_save'), 'campagna-salvata', 'riprendere non deve cancellare il salvataggio');
+
+  const fresh = runMenu({saved: 'vecchia-campagna'});
+  fresh.elements.get('newCampaign').onclick();
+  assert.equal(fresh.location.href, 'imperium.html?new=1');
+  assert.equal(fresh.values.has('imperium_italia_save'), false, 'nuova campagna deve rimuovere il vecchio salvataggio dopo conferma');
+});
