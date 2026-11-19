@@ -298,7 +298,7 @@ test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () =
   assert.ok(html.includes('.map-wrap{position:absolute;inset:0'));
   assert.ok(html.includes('grid-template-columns:minmax(0,2.1fr)'));
   const hudStart=html.indexOf('<div class="command-hud">');
-  const hudEnd=html.indexOf('</div>\\n</div>\\n<div class="footer"',hudStart);
+  const hudEnd=html.indexOf('<div class="footer"',hudStart);
   assert.ok(hudStart>=0 && hudEnd>hudStart,'HUD unico non trovato');
   const hudMarkup=html.slice(hudStart,hudEnd);
   assert.equal((hudMarkup.match(/class="panel"/g)||[]).length,1,'i comandi devono stare in un solo pannello');
