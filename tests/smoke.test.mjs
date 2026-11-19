@@ -274,6 +274,12 @@ test('la mappa usa i confini regionali ISTAT aggiornati al 1 gennaio 2026', () =
 test('la mappa può mostrare o nascondere rilievi, fiumi, laghi e città', () => {
   assert.ok(html.includes('id="mapPhysicalToggle"'));
   assert.ok(html.includes('id="mapCitiesToggle"'));
+  assert.ok(html.includes('id="mapProvincesToggle"'));
+  assert.match(script, /const italyProvincePaths=/);
+  assert.match(script, /function drawProvinceBoundaries\(ctx\)/);
+  assert.match(script, /italyProvincePaths\.forEach/);
+  assert.match(script, /PROVINCE: OFF/);
+  assert.match(script, /prov_istat_code/);
   assert.match(script, /let mapCities=true/);
   assert.match(script, /if\(mapCities\)\{ctx\.save\(\);cities\.forEach/);
   assert.match(script, /100 km/);
