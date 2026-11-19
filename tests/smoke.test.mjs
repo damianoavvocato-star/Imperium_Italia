@@ -245,7 +245,7 @@ test('la griglia evidenzia le caselle libere raggiungibili dal reparto seleziona
 });
 
 test('la mappa strategica usa una sagoma geografica dell Italia con isole e mari', () => {
-  assert.match(script, /Carta geografica stilizzata dell Italia/);
+  assert.match(script, /Carta geografica stilizzata dell.?Italia/);
   assert.match(script, /const land=new Path2D\(\)/);
   assert.match(script, /Sardegna e Corsica/);
   assert.match(script, /MAR TIRRENO/);
