@@ -280,6 +280,13 @@ test('la mappa strategica mostra soltanto confini regionali, nomi e capoluoghi',
   assert.ok(!script.includes('drawProvinceBoundaries(ctx);'));
   assert.ok(!script.includes('drawMunicipalityBoundary(ctx,c);'));
 });
+test('la selezione sulla mappa usa i confini effettivi delle regioni e non la distanza dal centroide', () => {
+  assert.match(script, /function regionAtMapPoint\(canvasX,canvasY\)/);
+  assert.match(script, /context\.isPointInPath\(new Path2D\(item\.path\),mapX,mapY,"evenodd"\)/);
+  assert.match(script, /selectedRegion=regionAtMapPoint\(x,y\)/);
+  assert.match(script, /if\(selectedRegion>=0\)\{state\.selected=selectedRegion;render\(\)\}/);
+});
+
 test('la schermata di gioco non espone strumenti per comuni o province', () => {
   assert.ok(html.includes('.map-tools .map-zoom button:nth-child(4),.map-tools .map-zoom button:nth-child(n+6)'));
   assert.ok(html.includes('.map-tools .map-hint,.legend,.layout>.panel:first-child>p{display:none!important}'));
@@ -304,7 +311,8 @@ test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () =
   assert.equal((hudMarkup.match(/class="panel"/g)||[]).length,1,'i comandi devono stare in un solo pannello');
   for(const heading of ['TESORERIA NAZIONALE','CRONACA DEL REGNO']) assert.ok(hudMarkup.includes(heading));
   assert.ok(html.includes('.map-tools .map-zoom button:nth-child(n+4){display:none!important}'));
-  assert.ok(html.includes('.map-wrap>.map-tools:nth-of-type(2){display:none!important}'));
+  assert.ok(html.includes('#mapAdvancedTools{display:none!important}'));
+  assert.ok(html.includes('id="mapAdvancedTools"'));
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
   for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) assert.ok(html.includes('id="' + id + '"'));
 });
