@@ -316,6 +316,13 @@ test('la campagna usa mappa ampia e un unico HUD sovrapposto senza schede', () =
   assert.doesNotMatch(html, /id="(?:navigationTabs|sectionTabs|gameTabs)"/);
   for (const id of ['map', 'regionPanel', 'endTurn', 'save', 'reset', 'log']) assert.ok(html.includes('id="' + id + '"'));
 });
+test('sui telefoni piccoli il pannello strategico mantiene due colonne per lasciare più mappa visibile', () => {
+  assert.match(html, /@media\(max-width:420px\)\{[\s\S]*?\.command-hud #regionPanel\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(html, /\.command-hud\{max-height:40svh/);
+  assert.match(html, /\.command-hud #regionPanel \.command-actions button\{min-height:36px/);
+  assert.doesNotMatch(html, /@media\(max-width:420px\)[^}]*grid-template-columns:minmax\(0,1fr\)/);
+});
+
 test('il pannello territoriale raggruppa risorse, diplomazia, eserciti e operazioni nella schermata unica', () => {
   for (const heading of ['PROVINCIA E RISORSE','DIPLOMAZIA','ESERCITO E MOVIMENTO','OPERAZIONI MILITARI','RECLUTAMENTO E SVILUPPO']) {
     assert.ok(html.includes(heading), 'gruppo di comandi mancante: ' + heading);
