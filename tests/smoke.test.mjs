@@ -392,3 +392,10 @@ test('il menu gestisce davvero nuova campagna, ripresa e assenza di salvataggi',
   assert.equal(fresh.location.href, 'imperium.html?new=1');
   assert.equal(fresh.values.has('imperium_italia_save'), false, 'nuova campagna deve rimuovere il vecchio salvataggio dopo conferma');
 });
+
+test('la mappa mostra il numero di unità degli eserciti presenti in ogni regione', () => {
+  assert.match(script, /const troops=unitCount\(r\.units\);if\(troops>0\)/);
+  assert.match(script, /const badgeWidth=Math\.max\(17,ctx\.measureText\(label\)\.width\+8\)/);
+  assert.match(script, /r\.owner==="player"\?"#f0c96b":r\.owner==="enemy"\?"#c97868"/);
+  assert.match(script, /ctx\.fillText\(label,badgeX\+badgeWidth\/2,badgeY\+10\)/);
+});
