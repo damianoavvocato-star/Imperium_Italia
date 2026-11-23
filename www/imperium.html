@@ -204,7 +204,18 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  .command-hud #regionPanel>.command-chronicle #log{max-height:54px}
  .command-hud #regionPanel .command-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-width:420px){.command-hud{max-height:42svh}.command-hud #regionPanel{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){
+ .command-hud{max-height:40svh;left:3px;right:3px;bottom:3px}
+ .command-hud #regionPanel{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 6px}
+ .command-hud #regionPanel>.sub,.command-hud #regionPanel>.region-name,.command-hud #regionPanel>#regionInfo{grid-column:1/-1}
+ .command-hud #regionPanel>.command-national,.command-hud #regionPanel>.command-chronicle{grid-column:1/-1}
+ .command-hud #regionPanel .command-heading{font-size:7.5px;letter-spacing:.65px}
+ .command-hud #regionPanel .command-actions{gap:3px}
+ .command-hud #regionPanel .command-actions button{min-height:36px;padding:5px 3px;font-size:7.5px;overflow-wrap:anywhere}
+ .command-hud #regionPanel .command-grid .resource span,.command-hud #regionPanel .resource span{font-size:7.5px}
+ .command-hud #regionPanel .command-grid .resource b,.command-hud #regionPanel .resource b{font-size:8.5px}
+ .command-hud #regionPanel select{max-width:56%!important;font-size:8px!important}
+}
 </style>
 </head>
 <body>
