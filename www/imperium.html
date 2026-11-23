@@ -605,6 +605,7 @@ function drawMap(){
   ctx.font="bold 11px system-ui";ctx.textAlign="center";ctx.lineWidth=3;ctx.strokeStyle="rgba(12,25,31,.88)";ctx.fillStyle="#fff5d9";
   ctx.strokeText(r.name,r.x,r.y-13);ctx.fillText(r.name,r.x,r.y-13);
   if(r.owner==="player"){ctx.font="bold 9px system-ui";ctx.fillStyle="#172027";ctx.fillText("✦",r.x,r.y+3)}
+  const troops=unitCount(r.units);if(troops>0){const label=String(troops);ctx.font="bold 9px system-ui";const badgeWidth=Math.max(17,ctx.measureText(label).width+8);const badgeX=r.x+9,badgeY=r.y+5;ctx.fillStyle=r.owner==="player"?"#f0c96b":r.owner==="enemy"?"#c97868":"#aab8b5";ctx.beginPath();ctx.roundRect(badgeX,badgeY,badgeWidth,14,5);ctx.fill();ctx.strokeStyle="#17252a";ctx.lineWidth=1;ctx.stroke();ctx.fillStyle="#172027";ctx.textAlign="center";ctx.fillText(label,badgeX+badgeWidth/2,badgeY+10)}
  });
  ctx.restore();
 }
