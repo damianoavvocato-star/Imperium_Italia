@@ -216,6 +216,7 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  .command-hud #regionPanel .command-grid .resource b,.command-hud #regionPanel .resource b{font-size:8.5px}
  .command-hud #regionPanel select{max-width:56%!important;font-size:8px!important}
 }
+.army-selection-status{display:inline-flex;align-items:center;gap:5px;width:max-content;max-width:100%;margin:5px 0 2px;padding:4px 8px;border:1px solid #d8b45a88;border-radius:20px;background:#d8b45a18;color:#f0d58b;font-size:9px;font-weight:800;letter-spacing:.55px}.army-selection-status.empty{border-color:#71858a88;background:#71858a18;color:#c0ccca}@media(max-width:420px){.army-selection-status{font-size:8px;padding:3px 7px}}
 </style>
 </head>
 <body>
@@ -233,7 +234,7 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  <div class="legend"><span><i class="dot" style="background:#b58a3b"></i>Tuoi territori</span><span><i class="dot" style="background:#8d4d45"></i>Altre fazioni</span><span><i class="dot" style="background:#536d78"></i>Neutrali</span></div>
  <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi e idrografia: livelli illustrativi. Capoluoghi e porti: localizzazione indicativa per il gioco. Autostrade principali: tracciati schematici, non navigabili.</p></section>
  <div class="command-hud">
-  <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div>
+  <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div><div id="armySelectionStatus" class="army-selection-status" role="status" aria-live="polite">ARMATA ATTIVA · 0 UNITÀ</div>
    <div class="command-group">
     <h3 class="command-heading">PROVINCIA E RISORSE</h3>
     <div class="command-grid">
@@ -601,6 +602,7 @@ function drawMap(){
  // Marker e nomi sono ancorati ai centroidi delle regioni, non a posizioni disegnate a mano.
  state.regions.forEach(r=>{
   const color=r.owner==="player"?"#e8bd58":r.owner==="enemy"?"#d58a78":"#c4d0cc";
+  if(r.id===state.selected&&unitCount(r.units)>0){ctx.beginPath();ctx.arc(r.x,r.y,16,0,Math.PI*2);ctx.strokeStyle="#ffe4a0";ctx.lineWidth=2.5;ctx.setLineDash([3,2]);ctx.stroke();ctx.setLineDash([])}
   ctx.beginPath();ctx.arc(r.x,r.y,r.id===state.selected?10:7,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=r.id===state.selected?3:1.5;ctx.strokeStyle="#17252a";ctx.stroke();
   ctx.font="bold 11px system-ui";ctx.textAlign="center";ctx.lineWidth=3;ctx.strokeStyle="rgba(12,25,31,.88)";ctx.fillStyle="#fff5d9";
   ctx.strokeText(r.name,r.x,r.y-13);ctx.fillText(r.name,r.x,r.y-13);
@@ -612,7 +614,7 @@ function drawMap(){
 function renderLog(){$("log").innerHTML=state.log.map(x=>"<p>"+x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+"</p>").join("")||"<p>La cronaca è ancora vuota.</p>"}
 function render(){
  const r=selected();$("turn").textContent="TURNO "+state.turn;$("totalGold").textContent=fmt(goldTotal());$("ownedCount").textContent=owned().length+"/20";$("totalArmy").textContent=armyTotal();$("income").textContent=fmt(incomeTotal());$("incomeRegions").textContent=owned().length;
- $("regionName").textContent=r.name;$("regionInfo").textContent="Provincia strategica · sviluppo livello "+r.level+(state.sieges&&state.sieges[r.id]?" · Assedio: "+state.sieges[r.id].turns+" turni":"");$("terrainLabel").textContent=terrainFor(r);$("moraleLabel").textContent=Math.round(r.morale??75)+"/100";
+ $("regionName").textContent=r.name;$("regionInfo").textContent="Provincia strategica · sviluppo livello "+r.level+(state.sieges&&state.sieges[r.id]?" · Assedio: "+state.sieges[r.id].turns+" turni":"");const selectedTroops=unitCount(r.units);const armyStatus=$("armySelectionStatus");armyStatus.textContent=(r.owner==="player"?"ARMATA ATTIVA":r.owner==="enemy"?"FORZE NEMICHE":"FORZE NEUTRALI")+" · "+selectedTroops+" UNITÀ"+(r.general?" · "+r.general.name:"");armyStatus.classList.toggle("empty",selectedTroops===0);$("terrainLabel").textContent=terrainFor(r);$("moraleLabel").textContent=Math.round(r.morale??75)+"/100";
  $("regionOwner").textContent=r.owner==="player"?"Tuo":r.owner==="enemy"?"Avversario":"Neutrale";$("regionFaction").textContent=r.faction|| (r.owner==="player"?"Roma":"Indipendenti");$("diplomacyStatus").textContent=r.owner==="enemy"?(isAllianceActive(r.faction)?"Alleanza fino al turno "+state.alliances[r.faction]:isTruceActive(r.faction)?"Tregua fino al turno "+state.diplomacy[r.faction]:"In guerra"):r.owner==="player"?"Alleati":"Neutrali";$("offerTruce").disabled=r.owner!=="enemy"||isPeacefulWithFaction(r.faction)||!owned().some(p=>p.gold>=300);$("offerTruce").textContent=isTruceActive(r.faction)?"TREGUA ATTIVA":"PROPONI TREGUA · 300";$("offerAlliance").disabled=r.owner!=="enemy"||isPeacefulWithFaction(r.faction)||!owned().some(p=>p.gold>=700);$("offerAlliance").textContent=isAllianceActive(r.faction)?"ALLEANZA ATTIVA":"PROPOSTA DI ALLEANZA · 700";$("regionGold").textContent=fmt(r.gold);$("regionIncome").textContent=fmt(r.income*r.level);$("regionPopulation").textContent=r.pop+" mila";
  $("infantryCount").textContent=r.units.infantry;$("archerCount").textContent=r.units.archers;$("cavalryCount").textContent=r.units.cavalry;$("generalName").textContent=r.general?.name||"Nessuno";$("generalSkill").textContent=r.general?""+r.general.skill+"/3":"—";$("garrisonCount").textContent=unitCount(r.garrison||{infantry:0,archers:0,cavalry:0});
  const active=r.owner==="player";["recruitInfantry","recruitArchers","recruitCavalry","develop"].forEach(id=>$(id).disabled=!active);$("recruitGeneral").disabled=!active||!!r.general;$("recruitGeneral").textContent=r.general?"GENERALE GIÀ NOMINATO":"NOMINA GENERALE · 900";$("claim").disabled=active||r.owner==="enemy";$("claim").textContent=active?"TERRITORIO GIÀ TUO":"PRENDI IL CONTROLLO · 1.200";
