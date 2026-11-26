@@ -399,3 +399,14 @@ test('la mappa mostra il numero di unità degli eserciti presenti in ogni region
   assert.match(script, /r\.owner==="player"\?"#f0c96b":r\.owner==="enemy"\?"#c97868"/);
   assert.match(script, /ctx\.fillText\(label,badgeX\+badgeWidth\/2,badgeY\+10\)/);
 });
+
+test('la regione selezionata identifica subito esercito attivo, consistenza e comandante', () => {
+  assert.ok(html.includes('id="armySelectionStatus"'));
+  assert.match(script, /const selectedTroops=unitCount\(r\.units\);const armyStatus=\$\("armySelectionStatus"\)/);
+  assert.match(script, /ARMATA ATTIVA/);
+  assert.match(script, /FORZE NEMICHE/);
+  assert.match(script, /selectedTroops\+" UNITÀ"\+\(r\.general\?/);
+  assert.match(script, /armyStatus\.classList\.toggle\("empty",selectedTroops===0\)/);
+  assert.match(script, /r\.id===state\.selected&&unitCount\(r\.units\)>0/);
+  assert.match(script, /ctx\.setLineDash\(\[3,2\]\)/);
+});
