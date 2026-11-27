@@ -216,7 +216,7 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  .command-hud #regionPanel .command-grid .resource b,.command-hud #regionPanel .resource b{font-size:8.5px}
  .command-hud #regionPanel select{max-width:56%!important;font-size:8px!important}
 }
-.army-selection-status{display:inline-flex;align-items:center;gap:5px;width:max-content;max-width:100%;margin:5px 0 2px;padding:4px 8px;border:1px solid #d8b45a88;border-radius:20px;background:#d8b45a18;color:#f0d58b;font-size:9px;font-weight:800;letter-spacing:.55px}.army-selection-status.empty{border-color:#71858a88;background:#71858a18;color:#c0ccca}@media(max-width:420px){.army-selection-status{font-size:8px;padding:3px 7px}}
+.army-order-hint{display:block;max-width:100%;margin:2px 0 5px;color:#c5d2ce;font-size:9px;line-height:1.35}.army-order-hint b{color:#e8c66d}.army-selection-status{display:inline-flex;align-items:center;gap:5px;width:max-content;max-width:100%;margin:5px 0 2px;padding:4px 8px;border:1px solid #d8b45a88;border-radius:20px;background:#d8b45a18;color:#f0d58b;font-size:9px;font-weight:800;letter-spacing:.55px}.army-selection-status.empty{border-color:#71858a88;background:#71858a18;color:#c0ccca}@media(max-width:420px){.army-selection-status{font-size:8px;padding:3px 7px}}
 </style>
 </head>
 <body>
@@ -234,7 +234,7 @@ header{flex:0 0 auto;padding:7px 4px;border-bottom:1px solid #9b814b55}
  <div class="legend"><span><i class="dot" style="background:#b58a3b"></i>Tuoi territori</span><span><i class="dot" style="background:#8d4d45"></i>Altre fazioni</span><span><i class="dot" style="background:#536d78"></i>Neutrali</span></div>
  <p class="muted">Seleziona una delle 20 regioni per amministrarla, vedere le entrate e reclutare il suo esercito.</p><p class="muted" style="font-size:10px">Confini regionali: ISTAT, 1 gennaio 2026 · CC BY 4.0. Confini provinciali derivati da ISTAT 2026, distribuzione CC BY. Confini comunali: ISTAT 2026, caricati su richiesta · CC BY 4.0. Rilievi e idrografia: livelli illustrativi. Capoluoghi e porti: localizzazione indicativa per il gioco. Autostrade principali: tracciati schematici, non navigabili.</p></section>
  <div class="command-hud">
-  <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div><div id="armySelectionStatus" class="army-selection-status" role="status" aria-live="polite">ARMATA ATTIVA · 0 UNITÀ</div>
+  <section class="panel" id="regionPanel"><div class="sub">TERRITORIO SELEZIONATO</div><h2 class="region-name" id="regionName">Lazio</h2><div id="regionInfo" class="muted">Cuore della campagna.</div><div id="armySelectionStatus" class="army-selection-status" role="status" aria-live="polite">ARMATA ATTIVA · 0 UNITÀ</div><div id="armyOrderHint" class="army-order-hint">Seleziona un esercito per vedere gli spostamenti e gli obiettivi disponibili.</div>
    <div class="command-group">
     <h3 class="command-heading">PROVINCIA E RISORSE</h3>
     <div class="command-grid">
@@ -587,6 +587,7 @@ function drawMap(){
  const sea=ctx.createLinearGradient(0,0,c.width,c.height);sea.addColorStop(0,"#244c59");sea.addColorStop(1,"#102a35");ctx.fillStyle=sea;ctx.fillRect(0,0,c.width,c.height);
  // Confini amministrativi regionali ISTAT al 1 gennaio 2026, generalizzati per la resa su schermo.
  ctx.save();ctx.scale(c.width/560,c.height/640);
+ const selectedArmy=state.regions[state.selected];const canIssueOrders=selectedArmy?.owner==="player"&&unitCount(selectedArmy.units)>0;const movementTargets=canIssueOrders?availableDestinations(selectedArmy.id):[];const attackTargets=canIssueOrders?availableAttackTargets(selectedArmy.id):[];
  italyIstatRegions.forEach(feature=>{
   const region=state.regions.find(r=>r.name===feature.name);
   const center=istatPathCenter(feature.path);
@@ -594,7 +595,7 @@ function drawMap(){
   const path=new Path2D(feature.path);
   const fill=region?(region.owner==="player"?"#b58a3b":region.owner==="enemy"?"#8d4d45":"#647d83"):"#8d9a8b";
   ctx.fillStyle=fill;ctx.globalAlpha=region?.id===state.selected?1:.9;ctx.fill(path,"evenodd");ctx.globalAlpha=1;
-  ctx.strokeStyle=region?.id===state.selected?"#ffe4a0":"rgba(37,48,43,.92)";ctx.lineWidth=region?.id===state.selected?2.8:1.15;ctx.lineJoin="round";ctx.stroke(path);
+  ctx.strokeStyle=region?.id===state.selected?"#ffe4a0":"rgba(37,48,43,.92)";ctx.lineWidth=region?.id===state.selected?2.8:1.15;ctx.lineJoin="round";ctx.stroke(path);if(region&&movementTargets.includes(region.id)){ctx.strokeStyle="#79d8b0";ctx.lineWidth=3.1;ctx.stroke(path)}else if(region&&attackTargets.includes(region.id)){ctx.strokeStyle="#f08a78";ctx.lineWidth=3.1;ctx.stroke(path)}
  });
  ctx.restore();
  // La cartografia strategica mostra esclusivamente regioni e capoluoghi.
@@ -621,7 +622,7 @@ function render(){
  const destinations=active?availableDestinations(r.id):[];const destinationSelect=$("moveDestination");destinationSelect.innerHTML=destinations.map(id=>`<option value="${id}">${state.regions[id].name}</option>`).join("");$("moveArmy").disabled=!active||destinations.length===0||(r.units.infantry+r.units.archers+r.units.cavalry===0);
  $("retreatArmy").disabled=!active||destinations.length===0||unitCount(r.units)===0;
  const attackTargets=active?availableAttackTargets(r.id):[];const attackSelect=$("attackDestination");attackSelect.innerHTML=attackTargets.map(id=>`<option value="${id}">${state.regions[id].name}</option>`).join("");$("attackProvince").disabled=!!state.battle||!active||attackTargets.length===0||unitCount(r.units)===0;
- const siegeTarget=state.regions[Number(attackSelect.value)];$("startSiege").disabled=!active||!siegeTarget||siegeTarget.owner==="player"||!!(state.sieges&&state.sieges[siegeTarget.id])||unitCount(r.units)<2;
+ const orderHint=$("armyOrderHint");if(!active)orderHint.textContent="Seleziona una provincia romana con un esercito per impartire ordini.";else if(!selectedTroops)orderHint.textContent="Nessuna unità disponibile: recluta truppe prima di muovere o attaccare.";else orderHint.innerHTML="<b>"+destinations.length+" destinazioni verdi</b> per spostare l’esercito · <b>"+attackTargets.length+" obiettivi rossi</b> da attaccare. Seleziona il territorio e scegli l’ordine.";const siegeTarget=state.regions[Number(attackSelect.value)];$("startSiege").disabled=!active||!siegeTarget||siegeTarget.owner==="player"||!!(state.sieges&&state.sieges[siegeTarget.id])||unitCount(r.units)<2;
  renderLog();drawMap();renderBattle();$("endTurn").disabled=!!state.battle;
 }
 function spend(r,cost){if(r.gold<cost){note("Fondi insufficienti a "+r.name+". Entrate necessarie: "+fmt(cost)+".");return false}r.gold-=cost;return true}
