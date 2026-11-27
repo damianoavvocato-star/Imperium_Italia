@@ -410,3 +410,17 @@ test('la regione selezionata identifica subito esercito attivo, consistenza e co
   assert.match(script, /r\.id===state\.selected&&unitCount\(r\.units\)>0/);
   assert.match(script, /ctx\.setLineDash\(\[3,2\]\)/);
 });
+
+
+test('la mappa evidenzia destinazioni di movimento e obiettivi di attacco dell’esercito selezionato', () => {
+  assert.ok(html.includes('id="armyOrderHint"'));
+  assert.match(script, /const selectedArmy=state\.regions\[state\.selected\]/);
+  assert.match(script, /const movementTargets=canIssueOrders\?availableDestinations\(selectedArmy\.id\):\[\]/);
+  assert.match(script, /const attackTargets=canIssueOrders\?availableAttackTargets\(selectedArmy\.id\):\[\]/);
+  assert.match(script, /movementTargets\.includes\(region\.id\)/);
+  assert.match(script, /attackTargets\.includes\(region\.id\)/);
+  assert.match(script, /ctx\.strokeStyle="#79d8b0"/);
+  assert.match(script, /ctx\.strokeStyle="#f08a78"/);
+  assert.match(script, /destinazioni verdi/);
+  assert.match(script, /obiettivi rossi/);
+});
